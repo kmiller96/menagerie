@@ -1,0 +1,17 @@
+# ================== #
+# = Global Ignores = #
+# ================== #
+
+# Python
+__pycache__/
+.venv/
+
+# VSCode
+.vscode/
+
+# ==================== #
+# = Specific Ignores = #
+# ==================== #
+
+/compile_python/dist/
+/compile_python/data.csv
