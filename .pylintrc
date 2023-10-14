@@ -1,0 +1,26 @@
+[MAIN]
+recursive=yes
+
+[MASTER]
+extension-pkg-whitelist=pydantic
+
+[BASIC]
+good-names-rgxs=
+	^[_a-z][_a-z0-9]?$  # allow 1 or 2 character variable names
+
+
+[MESSAGES CONTROL]
+disable=
+	fixme,
+	redefined-outer-name,
+	logging-fstring-interpolation,
+	too-few-public-methods,
+	too-many-arguments,
+	invalid-name,
+	no-else-continue,
+	no-else-return,
+	no-else-raise,
+	duplicate-code,
+	missing-class-docstring,
+	missing-function-docstring,
+	missing-module-docstring,
