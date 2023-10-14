@@ -13,5 +13,4 @@ __pycache__/
 # = Specific Ignores = #
 # ==================== #
 
-/compile_python/dist/
-/compile_python/data.csv
+dist/
