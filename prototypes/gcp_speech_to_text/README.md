@@ -5,7 +5,7 @@ Showcasing how to convert speech to text in GCP.
 ## Setup
 
 - Set your `GOOGLE_APPLICATION_CREDENTIALS` environment variable with your GCP 
-  account key.
+  account key (e.g. `export GOOGLE_APPLICATION_CREDENTIALS=${PWD}/secret.json`).
 
 ## Installation
 
