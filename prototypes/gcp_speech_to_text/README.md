@@ -4,9 +4,8 @@ Showcasing how to convert speech to text in GCP.
 
 ## Setup
 
-- Create a service account in GCP
-- Download the API key
-- Name it `secret.json` and save it alongside this `README.md` file.
+- Set your `GOOGLE_APPLICATION_CREDENTIALS` environment variable with your GCP 
+  account key.
 
 ## Installation
 
@@ -18,6 +17,9 @@ pip install -e .
 
 ```bash
 s2t <audio file> <output file>
+
+# e.g.
+s2t audio.m4a transcription.txt
 ```
 
 ## Tips/Ideas
@@ -35,11 +37,6 @@ I know that there are alternatives to GCP. Some stuff I found:
 - [PocketSphinx](https://github.com/cmusphinx/pocketsphinx)
 - [PocketSphinx example](https://stackoverflow.com/a/38877903)
 - [OpenAI Whisper](https://github.com/openai/whisper)
-
-### High-Level Framework
-
-I am using a very low-level interface into GCP. There are frameworks for this. 
-Here is one that I found that looks promising: https://github.com/Uberi/speech_recognition.
 
 ### Correcting Transcription Errors
 

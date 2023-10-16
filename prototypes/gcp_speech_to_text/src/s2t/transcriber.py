@@ -1,28 +1,16 @@
-import argparse
+from pathlib import Path
 
-from google.cloud import speech
+import speech_recognition as sr
 
 
-def transcribe_file(speech_file: str) -> speech.RecognizeResponse:
-    """Transcribe the given audio file."""
-    client = speech.SpeechClient()
+def transcribe(input_file: Path) -> str:
+    """Transcribes the WAV file using GCP."""
+    ## Setup recognizer class
+    recognizer = sr.Recognizer()
 
-    with open(speech_file, "rb") as audio_file:
-        content = audio_file.read()
+    ## Load the audio data.
+    with sr.AudioFile(str(input_file.absolute())) as source:
+        audio_data = recognizer.record(source)
 
-    audio = speech.RecognitionAudio(content=content)
-    config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
-        language_code="en-US",
-    )
-
-    response = client.recognize(config=config, audio=audio)
-
-    # Each result is for a consecutive portion of the audio. Iterate through
-    # them to get the transcripts for the entire audio file.
-    for result in response.results:
-        # The first alternative is the most likely one for this portion.
-        print(f"Transcript: {result.alternatives[0].transcript}")
-
-    return response
+    ## Submit it to GCP
+    return recognizer.recognize_google_cloud(audio_data)
