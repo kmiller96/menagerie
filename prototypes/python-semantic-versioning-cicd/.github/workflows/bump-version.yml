@@ -1,0 +1,19 @@
+name: Bump version workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: fregante/setup-git-user@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: pip install -e .[dev]
+      - run: bump2version patch
+      - run: git push
