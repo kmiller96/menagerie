@@ -5,12 +5,11 @@
 # Python
 __pycache__/
 .venv/
+*.egg-info/
 
 # VSCode
 .vscode/
 
-# ==================== #
-# = Specific Ignores = #
-# ==================== #
-
+# Custom ignores
 dist/
+secret.json
