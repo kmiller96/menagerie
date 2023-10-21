@@ -9,6 +9,10 @@ Prototype showcasing how to download pages from Notion.
    ignored in the git history).
 3. Navigate to Notion and authorize the integration to access the page you wish
    to download via `... --> Add connections --> <connection name>`
+4. Create a virutal environment (`python -m venv .venv`), activate it 
+   (`source .venv/bin/activate`) and install the necessary dependencies 
+   (`pip install -r requirements.txt`).
+5. Run the application.
 
 ## Usage
 
@@ -37,4 +41,9 @@ python run.py https://www.notion.so/Notion-Markdown-Example-421e9202cd2d485997a3
 
 ## Limitations
 
-I believe that this request isn't _recursive_.
+I believe that this request isn't _recursive_. That is, you couldn't retreive any
+nested content (e.g. a database within the page, a page within a page, etc.) so
+this doesn't work in all occurances.
+
+There is an endpoint called [append block children](https://developers.notion.com/reference/patch-block-children)
+which might do some of the desired behaviour, but I didn't explore this.
