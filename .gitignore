@@ -13,3 +13,4 @@ __pycache__/
 # Custom ignores
 dist/
 secret.json
+secret.txt
