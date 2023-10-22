@@ -1,4 +1,4 @@
-# Workshop
+# Menagerie
 
 My collection of random prototypes and proof of concepts.
 
