@@ -1,10 +1,3 @@
-BUG:
-    [ ] Another example of a puzzle with a unique identifier.
-    [ ] This is a bug puzzle.
-
-REFACTOR:
-    [ ] This is a refactor puzzle. Useful when something is working but
-
 TODO:
     [ ] Here is an example of a single-line puzzle.
     [ ] Here is an example of a multi-line puzzle. The package will collect
@@ -13,8 +6,15 @@ TODO:
     [ ] We can even track puzzles in docstrings!
     [ ] This puzzle has a unique identifier. It is already being tracked
 
+REFACTOR:
+    [ ] This is a refactor puzzle. Useful when something is working but
+
 FIXME:
     [ ] This is a fixme puzzle. Useful when something is very broken.
+
+BUG:
+    [ ] This is a bug puzzle.
+    [ ] Another example of a puzzle with a unique identifier.
 
 PUZZLE:
     [ ] A generic puzzle tag. Useful for non-broken things that need work.

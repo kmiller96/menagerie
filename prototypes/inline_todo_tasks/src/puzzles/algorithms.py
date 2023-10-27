@@ -46,7 +46,7 @@ class PuzzleFinder:
             puzzle_type, puzzle_id, puzzle_content = m.groups()
             puzzles.add(
                 Puzzle(
-                    id=puzzle_id or None,
+                    id=int(puzzle_id) if puzzle_id else None,
                     type=puzzle_type or None,
                     description=puzzle_content.strip() or None,
                 )
