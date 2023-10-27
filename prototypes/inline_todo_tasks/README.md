@@ -12,5 +12,13 @@ refactoring).
 ## Quickstart
 
 ```bash
-puzzles run PUZZLES.todo example/  # Writes out the results to `PUZZLES.todo`
+# Extract all puzzles from the path
+puzzles extract example/               > PUZZLES.todo
+puzzles extract --format=json example/ > PUZZLES.json
+
+# Assign all puzzles IDs 
+puzzles assign example/
+
+# Assign IDs and then extract puzzles
+puzzles run example/ > PUZZLES.todo
 ```

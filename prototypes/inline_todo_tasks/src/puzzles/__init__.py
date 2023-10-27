@@ -1,4 +1,6 @@
 __version__ = "0.0.0"
 
-from .structs import Puzzle
-from .main import search
+# pylint: disable=unused-import
+
+from .puzzles import Puzzle, search  # noqa: F401
+from .main import assign, extract, run  # noqa: F401

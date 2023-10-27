@@ -1,6 +1,6 @@
 """Validates the puzzle finder works as expected."""
 
-from puzzles.algorithms import PuzzleFinder
+from puzzles.puzzles import PuzzleFinder
 
 
 def test_can_find_single_line_comment_puzzle():

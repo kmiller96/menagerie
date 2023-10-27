@@ -1,8 +1,45 @@
 """Defines the collection of algorithms used in the package."""
 
 import re
+import logging
+from pathlib import Path
+from dataclasses import dataclass
 
-from .structs import Puzzle
+
+@dataclass
+class Puzzle:
+    """Represents an individual puzzle."""
+
+    id: int
+    type: str
+    description: str
+
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def __repr__(self) -> str:
+        return f"Puzzle(id={self.id})"
+
+
+def search(path: Path) -> set[Puzzle]:
+    """Searches over the provided path for puzzles."""
+    puzzles = set()
+    finder = PuzzleFinder()
+
+    for f in path.rglob("*"):
+        if not f.is_file():
+            logging.debug("%s is a folder; skipping.", f)
+            continue
+        else:
+            logging.debug("Searching %s", f)
+
+        content = f.read_text()
+
+        for puzzle in finder.find(content):
+            logging.info("Found puzzle %s", puzzle)
+            puzzles.add(puzzle)
+
+    return puzzles
 
 
 class PuzzleFinder:

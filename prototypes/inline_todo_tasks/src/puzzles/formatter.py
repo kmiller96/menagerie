@@ -4,7 +4,7 @@ import json
 from dataclasses import dataclass
 from typing import Iterable, Callable
 
-from .structs import Puzzle
+from .puzzles import Puzzle
 
 
 def groupby(
