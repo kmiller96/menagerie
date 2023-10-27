@@ -1,10 +1,12 @@
 """Defines the CLI of the application."""
 
+# pylint: disable=import-error,redefined-builtin
+
 from pathlib import Path
 
 import click
 
-from . import main, formatter  # pylint: disable=import-error
+from . import main, formatter
 
 
 @click.group()

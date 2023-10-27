@@ -1,28 +1,20 @@
 """Defines the collection of algorithms used in the package."""
 
 import re
-from typing import Iterable, Callable
 
 from .structs import Puzzle
 
 
-def groupby(iterable: Iterable, key: Callable):
-    """Groups the provided iterable by the provided key."""
-    groups: dict[str, list] = {}
-
-    for item in iterable:
-        val = key(item)
-
-        if val not in groups:
-            groups[val] = []
-
-        groups[val].append(item)
-
-    return groups.items()
-
-
 class PuzzleFinder:
-    """Discovers puzzles in the codebase."""
+    """Discovers puzzles in the codebase.
+
+    A puzzle is defined via the following syntax:
+
+        [PUZZLE 1] This is a puzzle.
+
+    Where `PUZZLE` is the puzzle type, `1` is the puzzle ID, and
+    `This is a puzzle.` is the puzzle description.
+    """
 
     # pylint: disable=consider-using-f-string
     pattern: str = r"\[({})\s*(\d*)\](.*)".format(

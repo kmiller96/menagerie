@@ -6,10 +6,6 @@ from pathlib import Path
 from .structs import Puzzle
 from .algorithms import PuzzleFinder
 
-##############
-## Routines ##
-##############
-
 
 def search(path: Path) -> set[Puzzle]:
     """Searches over the provided path for puzzles."""
