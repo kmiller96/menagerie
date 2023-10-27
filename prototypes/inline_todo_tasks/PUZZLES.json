@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "type": "BUG",
+    "description": "This is a bug puzzle."
+  },
+  {
+    "id": 2,
+    "type": "TODO",
+    "description": "Here is an example of a single-line puzzle."
+  },
+  {
+    "id": 3,
+    "type": "FIXME",
+    "description": "This is a fixme puzzle. Useful when something is very broken."
+  },
+  {
+    "id": 4,
+    "type": "REFACTOR",
+    "description": "This is a refactor puzzle. Useful when something is working but"
+  },
+  {
+    "id": 5,
+    "type": "TODO",
+    "description": "Here is an example of a multi-line puzzle. The package will collect"
+  },
+  {
+    "id": 6,
+    "type": "PUZZLE",
+    "description": "A generic puzzle tag. Useful for non-broken things that need work."
+  },
+  {
+    "id": 7,
+    "type": "TODO",
+    "description": "Validate that a and b are strings"
+  },
+  {
+    "id": "111",
+    "type": "BUG",
+    "description": "Another example of a puzzle with a unique identifier."
+  },
+  {
+    "id": 1,
+    "type": "TODO",
+    "description": "Did you know that we can track puzzles in docstrings too? We just need to"
+  },
+  {
+    "id": 2,
+    "type": "TODO",
+    "description": "We can even track puzzles in docstrings!"
+  },
+  {
+    "id": "123",
+    "type": "TODO",
+    "description": "This puzzle has a unique identifier. It is already being tracked"
+  }
+]

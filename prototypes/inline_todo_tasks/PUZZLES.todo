@@ -1,6 +1,9 @@
 BUG:
-    [ ] This is a bug puzzle.
     [ ] Another example of a puzzle with a unique identifier.
+    [ ] This is a bug puzzle.
+
+REFACTOR:
+    [ ] This is a refactor puzzle. Useful when something is working but
 
 TODO:
     [ ] Here is an example of a single-line puzzle.
@@ -9,9 +12,6 @@ TODO:
     [ ] Did you know that we can track puzzles in docstrings too? We just need to
     [ ] We can even track puzzles in docstrings!
     [ ] This puzzle has a unique identifier. It is already being tracked
-
-REFACTOR:
-    [ ] This is a refactor puzzle. Useful when something is working but
 
 FIXME:
     [ ] This is a fixme puzzle. Useful when something is very broken.
