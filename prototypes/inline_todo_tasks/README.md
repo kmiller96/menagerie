@@ -12,5 +12,5 @@ refactoring).
 ## Quickstart
 
 ```bash
-puzzles run example/  # Writes out the results to PUZZLES.md
+puzzles run PUZZLES.todo example/  # Writes out the results to `PUZZLES.todo`
 ```

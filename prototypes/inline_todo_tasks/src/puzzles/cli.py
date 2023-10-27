@@ -4,9 +4,7 @@ from pathlib import Path
 
 import click
 
-from . import main, algorithms  # pylint: disable=import-error
-
-OUTPATH = Path("PUZZLES")
+from . import main, formatter  # pylint: disable=import-error
 
 
 @click.group()
@@ -15,18 +13,14 @@ def cli():
 
 
 @cli.command()
+@click.argument("outpath", type=click.Path(file_okay=True, dir_okay=False))
 @click.argument("path", type=click.Path(exists=True))
-def run(path: str):
+def run(outpath: str, path: str):
+    """Extracts all puzzles from the supplied path."""
+    outpath: Path = Path(outpath)
+    path: Path = Path(path)
+
     puzzles = main.search(Path(path))
+    fmt = formatter.Formatter(puzzles)
 
-    output = ""
-
-    for t, puzzle in algorithms.groupby(puzzles, lambda p: p.type):
-        output += f"{t}:\n"
-
-        for p in puzzle:
-            output += f"    [ ] {p.description}\n"
-
-        output += "\n"
-
-    OUTPATH.write_text(output, encoding="utf-8")
+    outpath.write_text(fmt.to_todo(), encoding="utf-8")

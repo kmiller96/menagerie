@@ -6,8 +6,8 @@ TODO:
     [ ] Here is an example of a single-line puzzle.
     [ ] Here is an example of a multi-line puzzle. The package will collect
     [ ] Validate that a and b are strings
-    [ ] We can even track puzzles in docstrings!
     [ ] Did you know that we can track puzzles in docstrings too? We just need to
+    [ ] We can even track puzzles in docstrings!
     [ ] This puzzle has a unique identifier. It is already being tracked
 
 REFACTOR:
