@@ -1,4 +1,8 @@
-"""A nested file to show how the algorithm is recursive."""
+"""A nested file to show how the algorithm is recursive.
+
+[TODO] Did you know that we can track puzzles in docstrings too? We just need to
+    ensure it's tracked over many files like comments!
+"""
 
 # [TODO 123] This puzzle has a unique identifier. It is already being tracked
 # by the package. Changing the contents of this puzzle will update the

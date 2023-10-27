@@ -4,7 +4,9 @@ from pathlib import Path
 
 import click
 
-OUTPATH = Path("PUZZLES.md")
+from . import main, algorithms  # pylint: disable=import-error
+
+OUTPATH = Path("PUZZLES")
 
 
 @click.group()
@@ -14,6 +16,17 @@ def cli():
 
 @cli.command()
 @click.argument("path", type=click.Path(exists=True))
-def run(path: Path):
-    click.echo(path)
-    OUTPATH.touch()
+def run(path: str):
+    puzzles = main.search(Path(path))
+
+    output = ""
+
+    for t, puzzle in algorithms.groupby(puzzles, lambda p: p.type):
+        output += f"{t}:\n"
+
+        for p in puzzle:
+            output += f"    [ ] {p.description}\n"
+
+        output += "\n"
+
+    OUTPATH.write_text(output, encoding="utf-8")
