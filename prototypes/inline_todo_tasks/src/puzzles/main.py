@@ -47,6 +47,18 @@ def assign(path: Path):
             f.write(content)
 
 
+def check(path: Path):
+    """Validates that all puzzles have IDs."""
+    puzzles = PuzzleFinder().search(path)
+    errors = []
+
+    for puzzle in puzzles:
+        if puzzle.id is None:
+            errors.append((False, f"[{puzzle.path}:{puzzle.line}] Puzzle has no ID."))
+
+    return errors
+
+
 def run(path: Path, format: str = "todo"):
     """Searches over the provided path for puzzles, writing IDs if not present."""
     assign(path)
