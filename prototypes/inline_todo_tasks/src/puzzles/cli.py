@@ -20,7 +20,7 @@ def run(outpath: str, path: str):
     outpath: Path = Path(outpath)
     path: Path = Path(path)
 
-    puzzles = main.search(Path(path))
+    puzzles = main.search(path)
     fmt = formatter.Formatter(puzzles)
 
     outpath.write_text(fmt.to_todo(), encoding="utf-8")
