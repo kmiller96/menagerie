@@ -1,10 +1,11 @@
 """Defines the collection of algorithms used in the package."""
 
 import re
-import logging
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Iterable, Optional
+
+from loguru import logger
 
 
 @dataclass
@@ -28,6 +29,11 @@ class Puzzle:
 
     def __str__(self) -> str:
         return self.format()
+
+    @property
+    def reference(self) -> str:
+        """Returns the shorthand for where to find the puzzle."""
+        return f"{self.path}:{self.line}"
 
     def format(self) -> str:
         """Formats the puzzle string."""
@@ -64,16 +70,16 @@ class PuzzleFinder:
 
         for f in path.rglob("*"):
             if not f.is_file():
-                logging.debug("%s is a folder; skipping.", f)
+                logger.debug(f"`{f}` is a folder; skipping.")
                 continue
 
-            logging.debug("Searching %s", f)
+            logger.info(f"Searching `{f}`")
             content = f.read_text()
 
             for puzzle in self.find(content):
                 puzzle.path = f
 
-                logging.info("Found puzzle %s", puzzle)
+                logger.info(f"Found puzzle [{puzzle.reference}]")
                 puzzles.add(puzzle)
 
         return puzzles
@@ -91,15 +97,6 @@ class PuzzleFinder:
                 line=puzzle_line,
                 raw=m.group(0),
             )
-
-        ## Assign IDs to the puzzles if required
-        # i = 1
-        # for puzzle in puzzles:
-        #     if puzzle.id is None:
-        #         puzzle.id = i
-        #         i += 1
-
-        # return puzzles
 
     @staticmethod
     def _pos2line(content: str, pos: int) -> int:

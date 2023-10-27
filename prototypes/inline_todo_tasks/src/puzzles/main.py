@@ -4,6 +4,8 @@
 
 from pathlib import Path
 
+from loguru import logger
+
 from .puzzles import PuzzleFinder
 from .formatter import Formatter
 
@@ -30,6 +32,7 @@ def assign(path: Path):
 
     for puzzle in puzzles:
         if puzzle.id is not None:
+            logger.debug(f"Puzzle [{puzzle.reference}] already has an ID. Continuing.")
             continue  # Skip if already has an id
 
         ## Assign ID
@@ -37,8 +40,10 @@ def assign(path: Path):
             i += 1  # Find the next valid ID
 
         puzzle.id = i
+        logger.debug(f"Assigned ID {i} to puzzle [{puzzle.reference}]")
 
         ## Update the file
+        logger.debug(f"Writing changes to file {puzzle.path}.")
         with open(puzzle.path, "r+", encoding="utf-8") as f:
             content = f.read()
             content = content.replace(puzzle.raw, puzzle.format())
@@ -54,7 +59,10 @@ def check(path: Path):
 
     for puzzle in puzzles:
         if puzzle.id is None:
-            errors.append((False, f"[{puzzle.path}:{puzzle.line}] Puzzle has no ID."))
+            err = f"[{puzzle.reference}] Puzzle has no ID."
+
+            logger.error(err)
+            errors.append(err)
 
     return errors
 

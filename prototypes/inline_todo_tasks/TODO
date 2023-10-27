@@ -6,9 +6,12 @@ Features:
 	
 	UIDs:
 		Associate a unique identifier with each puzzle (e.g. a counter) so they can be tracked.
+		✔ Assign IDs to puzzles and write to disk. @done(23-10-27 20:30)
 	
 	Logging:
 		Provide a way for a user to get the logs from the package for debugging purposes.
+		✔ Setup loguru @done(23-10-27 20:30)
+		[ ] Allow for verbosity flag (`-v`) on the CLI
 	
 	Parsing:
 		[ ] Support multi-line puzzles

@@ -6,13 +6,15 @@ import sys
 from pathlib import Path
 
 import click
+from loguru import logger
 
 from . import main
 
 
 @click.group()
 def cli():
-    pass
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
 
 
 @cli.command()
@@ -36,12 +38,8 @@ def check(path: str):
     """Validates that all puzzles have IDs."""
     errors = main.check(Path(path))
 
-    if len(errors) > 0:
-        for error in errors:
-            click.echo(error[1], err=True)
-
+    if len(errors) == 0:
         sys.exit(1)
-
     else:
         sys.exit(0)
 
