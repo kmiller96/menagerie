@@ -19,7 +19,7 @@ def cli():
 @click.argument("path", type=click.Path(exists=True))
 def extract(path: str, *, format: str = "todo"):
     """Extracts all puzzles from the supplied path."""
-    main.extract(Path(path), format)
+    click.echo(main.extract(Path(path), format))
 
 
 @cli.command()
@@ -34,5 +34,4 @@ def assign(path: str):
 @click.argument("path", type=click.Path(exists=True))
 def run(path: str, *, format: str = "todo"):
     """Assigns all puzzles an ID and then extracts."""
-    main.assign(Path(path))
-    main.extract(Path(path), format)
+    click.echo(main.run(Path(path), format))

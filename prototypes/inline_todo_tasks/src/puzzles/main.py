@@ -4,13 +4,13 @@
 
 from pathlib import Path
 
-from .puzzles import search
+from .puzzles import PuzzleFinder
 from .formatter import Formatter
 
 
 def extract(path: Path, format: str = "todo"):
     """Extracts all puzzles from the supplied path."""
-    puzzles = search(path)
+    puzzles = PuzzleFinder().search(path)
     fmt = Formatter(puzzles)
 
     if format == "json":
@@ -23,10 +23,31 @@ def extract(path: Path, format: str = "todo"):
 
 def assign(path: Path):
     """Finds puzzles with IDs and assign them an ID."""
-    puzzles = search(path)
+    ## Locate puzzles
+    puzzles = PuzzleFinder().search(path)
 
-    ...
+    i = 1
+
+    for puzzle in puzzles:
+        if puzzle.id is not None:
+            continue  # Skip if already has an id
+
+        ## Assign ID
+        while i in set(p.id for p in puzzles):
+            i += 1  # Find the next valid ID
+
+        puzzle.id = i
+
+        ## Update the file
+        with open(puzzle.path, "r+", encoding="utf-8") as f:
+            content = f.read()
+            content = content.replace(puzzle.raw, puzzle.format())
+
+            f.seek(0)
+            f.write(content)
 
 
-def run(path: Path):
+def run(path: Path, format: str = "todo"):
     """Searches over the provided path for puzzles, writing IDs if not present."""
+    assign(path)
+    extract(path=path, format=format)

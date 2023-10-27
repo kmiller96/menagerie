@@ -1,6 +1,6 @@
 """A nested file to show how the algorithm is recursive.
 
-[TODO] Did you know that we can track puzzles in docstrings too? We just need to
+[TODO 8] Did you know that we can track puzzles in docstrings too? We just need to
     ensure it's tracked over many files like comments!
 """
 
@@ -14,6 +14,6 @@
 def welcome(name: str) -> str:
     """Welcome a user to the package.
 
-    [TODO] We can even track puzzles in docstrings!
+    [TODO 9] We can even track puzzles in docstrings!
     """
     return f"Welcome to the package, {name}!"
