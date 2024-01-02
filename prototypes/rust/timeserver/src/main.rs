@@ -3,9 +3,12 @@ use chrono::prelude::*;
 #[macro_use]
 extern crate rocket;
 
-#[get("/")]
-fn index() -> String {
-    format!("{}", Utc::now().format("%Y-%m-%d %H:%M:%S"))
+#[get("/?<format>")]
+fn index(format: Option<&str>) -> String {
+    format!(
+        "{}",
+        Utc::now().format(format.unwrap_or("%Y-%m-%d %H:%M:%S"))
+    )
 }
 
 #[launch]
