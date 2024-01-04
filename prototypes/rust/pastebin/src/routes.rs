@@ -3,7 +3,7 @@ use std::{fs, io::Write};
 use md5;
 use rocket::State;
 
-use crate::{config::Config, handlers};
+use crate::config::Config;
 
 /// Returns the vector of routes for the application.
 ///
@@ -15,7 +15,7 @@ pub fn routes() -> Vec<rocket::Route> {
 /// Returns the README for the application
 #[get("/")]
 fn index() -> String {
-    handlers::get_homepage()
+    String::from(include_str!("homepage.txt"))
 }
 
 /// Uploads a new file to the application

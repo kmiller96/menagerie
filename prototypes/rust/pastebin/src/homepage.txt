@@ -1,0 +1,20 @@
+PASTEBIN
+=========
+
+Uploading
+-----------
+You can upload a new file into the service by `POST`-ing data into it. The body
+of your request will be the contents that will be uploaded to the service.
+
+The response to your request will be a unique ID that you can use to retrieve 
+your data. 
+
+Retrieval
+-----------
+You can retrieve an uploaded file by supplying the ID in the path like so:
+
+```
+http://<host>/<id>
+```
+
+The response will be the file you uploaded.

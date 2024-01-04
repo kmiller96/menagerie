@@ -2,7 +2,6 @@
 extern crate rocket;
 
 mod config;
-mod handlers;
 mod routes;
 
 use routes::routes;
