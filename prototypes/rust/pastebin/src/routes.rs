@@ -38,7 +38,11 @@ fn upload(data: String, conf: &State<Config>) -> String {
 
 /// Retrieve an already uploaded file
 #[get("/<id>")]
-fn retrieve(id: &str) -> String {
-    // Get the
-    String::from(format!("ID: {}", id))
+fn retrieve(id: &str, conf: &State<Config>) -> Option<String> {
+    // Build the filepath
+    let mut path = conf.path.to_owned();
+    path.push(&id);
+
+    // Read the file contents
+    fs::read_to_string(path).ok()
 }
