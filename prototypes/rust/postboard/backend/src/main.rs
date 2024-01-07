@@ -2,6 +2,7 @@
 extern crate rocket;
 
 mod routes;
+mod serde;
 mod structs;
 
 /// Launches the Rocket application

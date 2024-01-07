@@ -14,12 +14,19 @@ fn index() -> &'static str {
 }
 
 /// Returns a collection of posts
-///
-/// TODO: Order the posts in creation date order.
 #[get("/feed")]
 fn feed() -> Json<Vec<Post>> {
-    Json(vec![
-        Post::new(None, String::from("Post #1")),
-        Post::new(None, String::from("Post #2")),
-    ])
+    ///////////////////////////////////////////
+    // NOTE: Temporary data used for testing //
+    ///////////////////////////////////////////
+
+    let post1 = Post::new(None, String::from("Post #1"));
+    let post2 = Post::new(None, String::from("Post #2"));
+
+    let mut data = vec![post2, post1]; // Simulates results being out of order
+
+    ///////////////////////////////////////////
+
+    data.sort_by_key(|el| el.created); // NOTE: Should sorting be delegated to the DB?
+    Json(data)
 }

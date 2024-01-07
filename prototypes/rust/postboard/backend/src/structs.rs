@@ -1,29 +1,24 @@
 //! Defines the data structures for the server
 
 use chrono::{DateTime, Utc};
-use rocket::serde::{Serialize, Serializer};
+use rocket::serde::Serialize;
 
-fn serialize_datetime<S>(dt: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    serializer.serialize_str(&dt.to_rfc3339())
-}
-
+/// Data structure representing a post by a user.
 #[derive(Debug, Serialize)]
 pub struct Post {
-    author: String,
-    content: String,
-    // #[serde(serialize_with = "serialize_datetime")]
-    // created: DateTime<Utc>,
+    pub author: String,
+    pub content: String,
+    #[serde(serialize_with = "crate::serde::serialize_datetime")]
+    pub created: DateTime<Utc>,
 }
 
 impl Post {
+    /// Creates a new post, optionally with an author
     pub fn new(author: Option<String>, content: String) -> Self {
         Self {
             author: author.unwrap_or("Anonymous".to_string()),
             content,
-            // created: Utc::now(),
+            created: Utc::now(),
         }
     }
 }
