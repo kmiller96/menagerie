@@ -1,7 +1,14 @@
 //! Defines the data structures for the server
 
 use chrono::{DateTime, Utc};
-use rocket::serde::Serialize;
+use serde::{Deserialize, Serialize};
+
+/// Data structure representing a submission
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Submission {
+    pub author: Option<String>,
+    pub content: String,
+}
 
 /// Data structure representing a post by a user.
 #[derive(Debug, Serialize)]
@@ -20,5 +27,10 @@ impl Post {
             content,
             created: Utc::now(),
         }
+    }
+
+    /// Creates a post from a user submission
+    pub fn from_submission(submission: Submission) -> Self {
+        Self::new(submission.author, submission.content)
     }
 }
