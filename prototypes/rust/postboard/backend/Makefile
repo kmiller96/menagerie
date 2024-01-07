@@ -2,4 +2,4 @@ release:
 	cargo build --release
 
 serve:
-	cargo run
+	cargo watch -x run

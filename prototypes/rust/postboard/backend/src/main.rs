@@ -1,12 +1,11 @@
 #[macro_use]
 extern crate rocket;
 
-#[get("/")]
-fn index() -> String {
-    String::from("Hello, world!")
-}
+mod routes;
+mod structs;
 
+/// Launches the Rocket application
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/api", routes![index])
+    rocket::build().mount("/api", routes::all())
 }
