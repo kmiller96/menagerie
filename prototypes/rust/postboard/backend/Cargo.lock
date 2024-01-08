@@ -776,7 +776,16 @@ name = "postboard-backend"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "postboard-types",
  "rocket",
+ "serde",
+]
+
+[[package]]
+name = "postboard-types"
+version = "0.1.0"
+dependencies = [
+ "chrono",
  "serde",
 ]
 

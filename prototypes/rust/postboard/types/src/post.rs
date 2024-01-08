@@ -1,21 +1,17 @@
-//! Defines the data structures for the server
-
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-/// Data structure representing a submission
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Submission {
-    pub author: Option<String>,
-    pub content: String,
-}
+use crate::Submission;
 
 /// Data structure representing a post by a user.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Post {
     pub author: String,
     pub content: String,
-    #[serde(serialize_with = "crate::serde::serialize_datetime")]
+    #[serde(
+        serialize_with = "crate::serde::serialize_datetime",
+        deserialize_with = "crate::serde::deserialize_datetime_from_string"
+    )]
     pub created: DateTime<Utc>,
 }
 

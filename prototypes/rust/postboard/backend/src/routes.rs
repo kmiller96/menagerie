@@ -5,7 +5,7 @@ pub fn all() -> Vec<rocket::Route> {
 
 /// Contains all of the individual handlers
 mod handlers {
-    use crate::structs::{Post, Submission};
+    use postboard_types::{Post, Submission};
     use rocket::serde::json::Json;
 
     /// Simple health check to ensure that the server is working.
