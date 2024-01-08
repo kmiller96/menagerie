@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::Submission;
 
 /// Data structure representing a post by a user.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Post {
     pub author: String,
     pub content: String,
