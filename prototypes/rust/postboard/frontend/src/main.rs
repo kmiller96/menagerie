@@ -1,12 +1,5 @@
-use yew::prelude::*;
-
-#[function_component]
-fn App() -> Html {
-    html! {
-        <p>{ "Hello World!" } </p>
-    }
-}
+mod app;
 
 fn main() {
-    yew::Renderer::<App>::new().render();
+    yew::Renderer::<app::App>::new().render();
 }
