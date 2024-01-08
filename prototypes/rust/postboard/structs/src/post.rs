@@ -1,3 +1,5 @@
+use std::fmt;
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -28,5 +30,13 @@ impl Post {
     /// Creates a post from a user submission
     pub fn from_submission(submission: Submission) -> Self {
         Self::new(submission.author, submission.content)
+    }
+}
+
+impl fmt::Display for Post {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Implement the formatting logic for the Post struct here
+        // For example, you can use `write!` macro to format the fields
+        write!(f, "@{}: {}", self.author, self.content)
     }
 }
