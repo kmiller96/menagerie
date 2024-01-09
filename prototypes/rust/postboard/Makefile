@@ -1,7 +1,8 @@
-frontend:
-	cd frontend/ && $(MAKE) release
-.PHONY: frontend
+app: backend
 
 backend:
 	cd backend/ && $(MAKE) release
 .PHONY: backend
+
+serve:
+	cd backend/ && $(MAKE) serve
