@@ -1,5 +1,14 @@
+import Feed from "./components/feed";
+
 export default function Home() {
+  let data = [
+    { author: "bob", content: "hello" },
+    { author: "tim", content: "world" },
+  ]
+
   return (
-    <h1>Hello World!</h1>
+    <>
+      <Feed data={data} />
+    </>
   )
 }
