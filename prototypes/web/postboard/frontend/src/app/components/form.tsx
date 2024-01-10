@@ -6,10 +6,10 @@ export default function SubmissionForm() {
 		<div className={styles.form}>
 			<form>
 				<div>
-					<textarea id="content" />
+					<textarea id="content" autoCorrect="on" placeholder="What would you like to say?" />
 				</div>
 				<div>
-					<input type="text" id="author" />
+					<input type="text" id="author" placeholder="Name (Optional)" />
 				</div>
 				<div>
 					<input type="submit" id="submit" />
