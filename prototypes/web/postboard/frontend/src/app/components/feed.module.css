@@ -38,7 +38,21 @@
   margin-bottom: 0;
 }
 
-/* Styling of the post header */
+/* Styling of the post contents */
+.post * {
+  margin: 0px;
+  padding: 0px;
+}
+
 .post h1 {
   font-size: 18px;
+}
+
+.post h2 {
+  color: grey;
+  font-size: 12px;
+}
+
+.post p {
+  margin: 15px 0px;
 }
