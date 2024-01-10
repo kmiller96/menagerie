@@ -1,3 +1,44 @@
+/* Styling of the feed */
 .feed {
-	background-color: chocolate;
+  display: flex;
+
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px;
+}
+
+/* Styling of the individual posts */
+.post {
+  background-color: #fff;
+
+  /* Flex information */
+  box-sizing: border-box;
+
+  /* Margins & paddings */
+  margin: 15px 10px;
+  padding: 10px;
+
+  /* Height & Width */
+  min-height: 50px;
+  width: 100%;
+
+  /* Box drawing */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.post:first-child {
+  margin-top: 0;
+}
+
+.post:last-child {
+  margin-bottom: 0;
+}
+
+/* Styling of the post header */
+.post h1 {
+  font-size: 18px;
 }

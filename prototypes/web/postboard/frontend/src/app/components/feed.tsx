@@ -28,8 +28,9 @@ export default function Feed() {
 /** Individual feed post */
 function FeedPost({ author, content }: { author: string, content: string }) {
 	return (
-		<div>
-			<p><b>@{author}:</b> {content}</p>
+		<div className={styles.post}>
+			<h1>@{author}</h1>
+			<p>{content}</p>
 		</div>
 	)
 }
