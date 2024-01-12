@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate rocket;
 
+mod structs;
 mod routes;
 mod db;
 

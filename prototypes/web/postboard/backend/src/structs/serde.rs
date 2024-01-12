@@ -1,5 +1,3 @@
-//! Collection of serialisation/deserialisation functions
-
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Deserializer, Serializer};
 
@@ -11,6 +9,7 @@ where
     serializer.serialize_str(&dt.to_rfc3339())
 }
 
+/// Serialiser used to load the created time from a string
 pub fn deserialize_datetime_from_string<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
 where
     D: Deserializer<'de>,
