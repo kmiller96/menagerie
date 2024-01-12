@@ -4,10 +4,16 @@ import React, { useState } from "react";
 import styles from "./form.module.css";
 
 /** Defines the submission form */
-export default function SubmissionForm() {
+export default function SubmissionForm({
+  postSubmit,
+}: {
+  postSubmit: () => void;
+}) {
+  // State
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
 
+  // Handlers
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -16,9 +22,11 @@ export default function SubmissionForm() {
       body: JSON.stringify({ author: author || null, content }),
     })
       .then((response) => response.json())
-      .then((response) => console.log(JSON.stringify(response)));
+      .then((response) => console.log(JSON.stringify(response)))
+      .then(() => postSubmit());
   };
 
+  // JSX
   return (
     <div className={styles.form}>
       <form onSubmit={handleSubmit}>
