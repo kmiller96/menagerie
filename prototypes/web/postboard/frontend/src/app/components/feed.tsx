@@ -31,7 +31,10 @@ export default function Feed() {
 
         return data;
       })
-      .then((res) => setPosts(res));
+      .then((res) => setPosts(res))
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
