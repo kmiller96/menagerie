@@ -11,9 +11,14 @@ export default function SubmissionForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const msg = {
+      author: author === "" ? null : author,
+      content,
+    };
+
     fetch("/api/post", {
       method: "POST",
-      body: JSON.stringify({ author, content }),
+      body: JSON.stringify(msg),
     })
       .then((response) => response.json())
       .then((response) => console.log(JSON.stringify(response)));

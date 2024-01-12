@@ -13,7 +13,10 @@ impl Submission {
     /// Creates a post from a submission
     pub fn to_post(&self) -> Post {
         Post::new(
-            self.author.clone().unwrap_or("Anonymous".to_string()),
+            match self.author.clone() {
+                Some(author) => author,
+                None => "Anonymous".to_string(),
+            },
             self.content.clone(),
         )
     }
