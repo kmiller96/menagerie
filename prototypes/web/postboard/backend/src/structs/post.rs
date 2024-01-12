@@ -26,16 +26,6 @@ impl Post {
             created: Utc::now(),
         }
     }
-
-    /// Provides a SQL statement to create the posts table.
-    pub fn create_table_statement() -> &'static str {
-        "CREATE TABLE IF NOT EXISTS posts (
-            id INTEGER PRIMARY KEY,
-            author TEXT NOT NULL,
-            content TEXT NOT NULL,
-            created TIMESTAMP NOT NULL
-        )"
-    }
 }
 
 impl fmt::Display for Post {

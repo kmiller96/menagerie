@@ -23,7 +23,15 @@ impl Database {
 
     /// Sets up the tables for the database.
     fn create_tables(&mut self) -> Result<()> {
-        self.conn.execute(Post::create_table_statement(), [])?;
+        self.conn.execute(
+            "CREATE TABLE IF NOT EXISTS posts (
+                id INTEGER PRIMARY KEY,
+                author TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created TIMESTAMP NOT NULL
+            )",
+            (),
+        )?;
 
         Ok(())
     }
