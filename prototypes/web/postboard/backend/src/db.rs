@@ -12,11 +12,10 @@ pub struct Database {
 impl Database {
     /// Creates a new Database object.
     pub fn new() -> Result<Self> {
-        let conn = Connection::open_in_memory()?; // TODO: Change to a file
+        let conn = Connection::open("./db.sqlite3")?;
 
         let mut self_ = Self { conn };
         self_.create_tables()?;
-        self_._seed_data()?; // TEMPORARY
 
         Ok(self_)
     }
