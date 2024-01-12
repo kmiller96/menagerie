@@ -25,7 +25,12 @@ fn index() -> &'static str {
 /// Submits a new post to the feed
 #[post("/post", data = "<data>")]
 fn post(data: Json<Submission>) -> Json<Post> {
-    let post = data.into_inner().to_post();
+    let mut post = data.into_inner().to_post();
+
+    let mut db = Database::new().unwrap();
+    let row_id = db.create_post(&post).unwrap();
+
+    post.id = Some(row_id);
 
     Json(post)
 }

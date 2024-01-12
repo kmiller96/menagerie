@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 /// Data structure representing a post by a user.
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Post {
-    pub id: Option<i32>,
+    pub id: Option<u32>,
     pub author: String,
     pub content: String,
     #[serde(

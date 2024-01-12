@@ -65,11 +65,23 @@ impl Database {
                     id: row.get(0)?,
                     author: row.get(1)?,
                     content: row.get(2)?,
-                    created: Utc::now(), // TODO: Load this from the DB
+                    created: row.get(3)?,
                 })
             })?
             .collect::<Result<Vec<Post>>>()?;
 
         Ok(posts)
+    }
+
+    /// Creates a new post in the database. Returns the ID of the new post.
+    pub fn create_post(&mut self, post: &Post) -> Result<u32> {
+        let mut statement = self.conn.prepare(
+            "INSERT INTO posts (author, content, created) 
+            VALUES (?, ?, ?)",
+        )?;
+
+        statement.execute((&post.author, &post.content, &post.created))?;
+
+        Ok(self.conn.last_insert_rowid() as u32)
     }
 }
