@@ -9,4 +9,5 @@ edition = "2021"
 chrono = "0.4.31"
 postboard-structs = {path = "../structs"}
 rocket = { version = "0.5.0", features = ["serde_json", "json"] }
+rusqlite = { version = "0.30.0", features = ["bundled"] }
 serde = "1.0.195"

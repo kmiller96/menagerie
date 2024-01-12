@@ -2,6 +2,7 @@
 extern crate rocket;
 
 mod routes;
+mod db;
 
 /// Launches the Rocket application
 #[launch]

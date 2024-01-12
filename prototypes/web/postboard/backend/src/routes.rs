@@ -8,6 +8,8 @@ mod handlers {
     use postboard_structs::{Post, Submission};
     use rocket::serde::json::Json;
 
+    use crate::db::Database;
+
     /// Simple health check to ensure that the server is working.
     #[get("/")]
     pub fn index() -> &'static str {
@@ -26,18 +28,9 @@ mod handlers {
     /// Returns a collection of posts
     #[get("/feed")]
     pub fn feed() -> Json<Vec<Post>> {
-        ///////////////////////////////////////////
-        // NOTE: Temporary data used for testing //
-        ///////////////////////////////////////////
+        let mut db = Database::new().unwrap();
+        let data = db.get_posts(10).unwrap();
 
-        let post1 = Post::new(None, String::from("Post #1"));
-        let post2 = Post::new(None, String::from("Post #2"));
-
-        let mut data = vec![post2, post1]; // Simulates results being out of order
-
-        ///////////////////////////////////////////
-
-        data.sort_by_key(|el| el.created); // NOTE: Should sorting be delegated to the DB?
         Json(data)
     }
 }
