@@ -6,5 +6,6 @@ venv: .venv
 .PHONY: .venv
 
 
+server: serve
 serve:
 	uvicorn server:app --reload
