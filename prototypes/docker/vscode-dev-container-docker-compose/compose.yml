@@ -1,0 +1,12 @@
+services:
+  service1:
+    build: 
+      context: ./src/service1/
+    ports:
+      - "8000:80"
+  service2:
+    build: 
+      context: ./src/service2/
+  service3:
+    build: 
+      context: ./src/service3/
