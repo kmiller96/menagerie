@@ -1,0 +1,70 @@
+/* Primary Styles */
+html {
+  display: flex;
+}
+
+body {
+  display: flex;
+
+  height: 100vh;
+  width: 100%;
+
+  align-items: center;
+  justify-content: center;
+
+  background-color: grey;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+button {
+  border: 2px solid #000;
+  border-radius: 3px;
+}
+
+
+/* Classes */
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Specific Styles */
+#root {
+  padding: 20px;
+
+  border: 2px solid #000;
+  border-radius: 10px;
+
+  background-color: white;
+}
+
+#content-container {
+  display: flex;
+  justify-content: center;
+}
+
+#content-container > * {
+  font-size: 64px;
+  margin: 10px;
+}
+
+#button-container {
+  display: flex;
+  justify-content: center;
+}
+
+#button-container > * {
+  width: 40px;
+  height: 40px;
+
+  margin: 0px 20px;
+}

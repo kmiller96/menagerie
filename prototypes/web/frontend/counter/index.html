@@ -5,47 +5,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
-  <div>
-    <h1>Counter</h1>
-    <p>Increment the counter up or down!</p>
-  </div>
-  <div>
-    <p>Number: <span id="content"></span></p>
-    <button id="up-button">Up</button>
-    <button id="down-button">Down</button>
+  <div id="root" class="flex-column">
+    <div id="content-container">
+      <p><span id="content"></span></p>
+    </div>
+    <div id="button-container" class="flex-row">
+      <button id="up-button">+</button>
+      <button id="down-button">-</button>
+    </div>
   </div>
 </body>
 
-<script>
-  // Elements
-  const content = document.getElementById('content');
-  const upButton = document.getElementById('up-button');
-  const downButton = document.getElementById('down-button');
-
-  // Variables
-  let value = 0;
-
-  // Functions
-  function updateContent() {
-    content.innerText = value;
-  }
-
-  // Handlers
-  upButton.onclick = () => {
-    value += 1;
-    updateContent();
-  }
-
-  downButton.onclick = () => {
-    value -= 1;
-    updateContent();
-  }
-
-  // Initial call
-  updateContent();
-</script>
+<script src="./script.js"></script>
 
 </html>
