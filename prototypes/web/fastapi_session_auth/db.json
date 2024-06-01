@@ -1,0 +1,1 @@
+{"users": {"bob": {"username": "bob", "hash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4", "salt": ""}}, "sessions": {"3395a03d016140f498450032dff590f2": {"id": "3395a03d016140f498450032dff590f2", "user": "bob", "expiration": 0}}}
