@@ -16,6 +16,10 @@ body {
 }
 
 .card {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  top: 0;
+
   /* Sizing */
   width: 300px;
   padding: 20px;
@@ -33,6 +37,10 @@ body {
   font-optical-sizing: auto;
   font-weight: 200px;
   font-style: normal;
+}
+
+.card:hover {
+  top: -5px;
 }
 
 .card > .image {
