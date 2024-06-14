@@ -1,14 +1,11 @@
 import typer
 
-from hearts.deck import Deck
+
+from hearts.main import play
 
 cli = typer.Typer()
 
 
 @cli.command()
 def run():
-    deck = Deck()
-    deck.shuffle()
-
-    for card in deck:
-        print(card)
+    play([1, 2, 3, 4])

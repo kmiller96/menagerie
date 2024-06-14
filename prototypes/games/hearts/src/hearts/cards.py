@@ -52,6 +52,9 @@ class Card:
     def __repr__(self):
         return f"{self.rank.to_string()}{self.suit.value}"
 
+    def __eq__(self, other):
+        return self.rank == other.rank and self.suit == other.suit
+
     @property
     def points(self):
         """The number of points this card is worth."""
