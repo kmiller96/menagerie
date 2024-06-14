@@ -46,6 +46,9 @@ class Card:
     """A single playing card."""
 
     def __init__(self, rank: Rank, suit: Suit):
+        assert isinstance(rank, Rank)
+        assert isinstance(suit, Suit)
+
         self.rank = rank
         self.suit = suit
 

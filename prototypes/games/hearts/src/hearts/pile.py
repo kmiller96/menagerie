@@ -13,6 +13,12 @@ class Pile:
     def __init__(self, cards: list[Card] = None):
         self.cards = cards or []
 
+    def __repr__(self) -> str:
+        return f"Pile(cards={self.cards})"
+
+    def __len__(self) -> int:
+        return len(self.cards)
+
     def __iter__(self) -> Card:
         return iter(self.cards)
 
