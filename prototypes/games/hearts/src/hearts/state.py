@@ -1,5 +1,5 @@
 from hearts.cards import Card, Suit, Rank
-from hearts.pile import Pile
+from hearts.pile import Pile, Trick
 from hearts.players import Player
 
 
@@ -8,7 +8,7 @@ class GameState:
 
     def __init__(self, players: list[Player]):
         self.players = players
-        self.trick = Pile()
+        self.trick = Trick()
         self.leader: Player = None
 
     def _find_two_of_clubs(self) -> Player:
@@ -60,11 +60,7 @@ class GameState:
         """Resolves the trick and sets the next player."""
 
         # -- Determine winner -- #
-        winner = max(
-            (card for card in self.trick if card.suit == self.trick[0].suit),
-            key=lambda card: card.rank,
-        )
-        player = self.play_order[self.trick.cards.index(winner)]
+        player = self.play_order[self.trick.cards.index(self.trick.winner)]
 
         # -- Update state -- #
         player.tricks.append(self.trick.save())

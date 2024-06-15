@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 from typing import Iterable
 
-from hearts.cards import Card
+from hearts.cards import Card, Suit
 
 
 class Pile:
@@ -53,3 +53,20 @@ class Pile:
     def clear(self):
         """Clear the pile."""
         self.cards.clear()
+
+
+class Trick(Pile):
+    """Represents a trick within the game."""
+
+    @property
+    def leading_suit(self) -> Suit:
+        """Returns the leading suit of the trick."""
+        return self.cards[0].suit
+
+    @property
+    def winner(self) -> Card:
+        """Returns the winner of the trick."""
+        return max(
+            (card for card in self if card.suit == self.leading_suit),
+            key=lambda card: card.rank,
+        )
