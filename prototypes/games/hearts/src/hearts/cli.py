@@ -1,11 +1,13 @@
 import typer
 
 
-from hearts.main import play
+from hearts.game import Game
+from hearts.players import Player
 
 cli = typer.Typer()
 
 
 @cli.command()
 def run():
-    play([1, 2, 3, 4])
+    game = Game([Player(f"Player {i}") for i in range(4)])
+    game.play_game()

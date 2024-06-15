@@ -1,4 +1,5 @@
 import random
+from copy import deepcopy
 from typing import Iterable
 
 from hearts.cards import Card
@@ -29,6 +30,10 @@ class Pile:
         """Add a card to the hand."""
         self.cards.append(card)
 
+    def remove(self, card: Card):
+        """Remove a card from the hand."""
+        self.cards.remove(card)
+
     def shuffle(self):
         """Shuffle the deck."""
         random.shuffle(self.cards)
@@ -40,3 +45,11 @@ class Pile:
     def split(self, n: int):
         """Split the deck into n piles."""
         return [Pile(self.cards[i::n]) for i in range(n)]
+
+    def save(self) -> "Pile":
+        """Save the pile."""
+        return deepcopy(self)
+
+    def clear(self):
+        """Clear the pile."""
+        self.cards.clear()
