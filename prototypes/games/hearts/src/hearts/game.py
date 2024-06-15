@@ -19,22 +19,15 @@ class Game:
         """Plays a single trick."""
 
         for player in self.state.play_order:
-            try:
-                choice = player.play(state=self.state)
-                card = self.state.validate(  # Final sanity check of the card
-                    player=player,
-                    card=choice,
-                )
+            card = self.state.validate(  # Final sanity check of the card
+                player=player,
+                card=player.play(state=self.state),
+            )
 
-            except AssertionError as e:
-                raise RuntimeError(
-                    f"{player.name} played an invalid card: {choice}"
-                ) from e
+            print(f"{player.name} plays: {card}")
 
-            else:
-                print(f"{player.name} plays: {card}")
-                player.hand.remove(card)
-                self.state.trick.add(card)
+            player.hand.remove(card)
+            self.state.trick.add(card)
 
         winner = self.state.resolve()
 

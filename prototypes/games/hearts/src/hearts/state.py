@@ -11,14 +11,6 @@ class GameState:
         self.trick = Trick()
         self.leader: Player = None
 
-    def _find_two_of_clubs(self) -> Player:
-        """Finds the player with the two of clubs."""
-        for player in self.players:
-            if Card(Rank.TWO, Suit.CLUBS) in player.hand:
-                return player
-
-        raise ValueError("No player has the two of clubs")
-
     @property
     def hands(self) -> dict[Player, Pile]:
         """Returns the current hands of all players."""
