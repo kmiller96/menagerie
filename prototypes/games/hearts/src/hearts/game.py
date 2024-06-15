@@ -61,10 +61,10 @@ class Game:
             self.play_trick()
 
         # -- Score the game -- #
-        scores = {}
-        for player in self.players:
-            scores[player] = sum(
-                card.points for trick in player.tricks for card in trick
-            )
+        scores = {
+            player: sum(card.points for trick in player.tricks for card in trick)
+            for player in self.players
+        }
 
-            print(f"{player.name} scored: {scores[player]}")
+        for player, score in scores.items():
+            print(f"{player.name} scored: {score}")
