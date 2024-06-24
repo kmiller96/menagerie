@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap');
+
+:root {
+  --color-primary: #fff;
+  --color-secondary: #eee;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--color-primary);
+}
+
+#banner {
+  position: relative;
+  height: 100vh;
+  
+  background-image: url("./background.jpg");
+  background-size: cover;
+
+  display: flex;
+  justify-content: right;
+
+  font-family: "Caveat", cursive;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+#banner #screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+#banner #callout {
+  /* Variables */
+  --radius: 15px;
+  --start-y: 65%;
+  --end-y: 90%;
+
+  /* Positioning */
+  position: absolute;
+  top: var(--start-y);
+
+  min-height: calc(var(--end-y) - var(--start-y));
+  width: 50%;
+
+  max-width: 600px;
+  min-width: 300px;
+
+  /* Text Alignment */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+
+  padding-left: 30px;
+  padding-right: 30px;
+
+  /* Text Styling */
+  color: white;
+  text-align: left;
+
+  /* Background */
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+  background-color: rgba(255, 115, 0, 0.6);
+
+  /* Animation */
+  animation-name: fadeInBottom;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeInBottom {
+  from {
+      opacity: 0;
+      transform: translateY(20%);
+  }
+  to { opacity: 1 }
+}
+
+#banner h1 {
+  font-size: 4em;
+  margin-bottom: 0.5em;
+
+}
+
+#banner h2 {
+  font-size: 1.5em;
+}
+
+#content {
+  height: 50vh;
+  background-color: var(--color-secondary);
+}
