@@ -1,0 +1,8 @@
+Welcome to my plain text file! I am mostly writing garbage; it's useful to just
+write a whole lot of crap and see what the program spits out on the other side.
+
+A bit of punctuation is good; it's also a great idea to do things like 
+apostrophies where we can.
+
+This file is (deliberately) not trying to say a lot. It's just a simple bit of
+garbage.
