@@ -8,6 +8,15 @@ export function Button({
 }) {
   return (
     <button
+      style={{
+        backgroundColor: "blue",
+        color: "white",
+        padding: "10px",
+        margin: "10px",
+        borderRadius: "5px",
+        border: "none",
+        cursor: "pointer",
+      }}
       onClick={async () => {
         const response = await fetch(`http://localhost:8000/song/${songLink}`);
 
