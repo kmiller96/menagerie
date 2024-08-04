@@ -24,6 +24,35 @@ class Player:
         return f"Player(name={self.name})"
 
     def play(self, state: GameState) -> Card:
+        """Decides which card to play."""
+        raise NotImplementedError("Subclasses must implement this method.")
+
+
+class HumanPlayer(Player):
+    """Represents a human player"""
+
+    def play(self, state: GameState) -> Card:
+        """Decides which card to play."""
+
+        print(f"Your hand: {self.hand}")
+        while True:
+            try:
+                choice = input("Choose a card to play: ")
+                card = state.validate(
+                    player=self,
+                    card=Card.from_string(choice),
+                )
+            except (AssertionError, ValueError):
+                print("Invalid card. Try again.")
+                continue  # Try again until valid.
+            else:
+                return card
+
+
+class AIPlayer(Player):
+    """Represents an AI player"""
+
+    def play(self, state: GameState) -> Card:
         """Decides which card to play.
 
         NOTE: For now, this just plays the first valid card in the player's hand.

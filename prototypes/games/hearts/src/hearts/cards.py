@@ -67,3 +67,25 @@ class Card:
             return 13
         else:
             return 0
+
+    @classmethod
+    def from_string(cls, string: str) -> "Card":
+        """Converts a string to a card."""
+        try:
+            assert len(string) == 2, "Invalid card string"
+            rank, suit = string
+
+            return cls(
+                Rank[rank],
+                Suit[
+                    {
+                        "c": Suit.CLUBS,
+                        "d": Suit.DIAMONDS,
+                        "h": Suit.HEARTS,
+                        "s": Suit.SPADES,
+                    }.get(suit)
+                    or suit
+                ],
+            )
+        except (KeyError, AssertionError):
+            raise ValueError("Invalid card string")
