@@ -4,6 +4,7 @@ import json
 from functools import cache
 
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
 import spotipy
 
 app = fastapi.FastAPI()
@@ -15,6 +16,22 @@ app = fastapi.FastAPI()
 CREDENTIALS_PATH = "credentials.json"
 SPOTIFY_SCOPE = (
     "user-read-playback-state user-modify-playback-state user-read-currently-playing"
+)
+
+################
+## Middleware ##
+################
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost",
+        "http://localhost:8080",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
