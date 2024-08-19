@@ -1,0 +1,43 @@
+version: 2
+models:
+- name: fb_ad_creatives
+  columns:
+  - name: creative_id
+    tests:
+    - not_null
+    - unique
+- name: fb_ad_creatives__child_links
+  columns:
+  - name: creative_id
+    tests:
+    - relationships:
+        field: creative_id
+        to: ref('fb_ad_creatives')
+- name: fb_ads
+  columns:
+  - name: creative_id
+    tests:
+    - not_null
+    - relationships:
+        field: creative_id
+        to: ref('fb_ad_creatives')
+  - name: ad_id
+    tests:
+    - not_null
+- name: fb_ad_insights
+  columns:
+  - name: ad_id
+    tests:
+    - not_null
+  - name: campaign_id
+    tests:
+    - not_null
+    - relationships:
+        field: campaign_id
+        to: ref('fb_campaigns')
+- name: fb_campaigns
+  columns:
+  - name: campaign_id
+    tests:
+    - not_null
+    - unique
