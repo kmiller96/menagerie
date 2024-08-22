@@ -1,5 +1,6 @@
 # Script
 requests
+loguru
 
 # Server
 fastapi[standard]

@@ -39,11 +39,11 @@ async def data():
 
     This server simulates a very slow data source, such as querying data from
     across the galaxy. We do this by sleeping for a random amount of time
-    between 0 and 5 seconds.
+    defined by SLEEP_RANGE.
 
     We also want to simulate a random "drop out" rate, where the server fails
     to respond. We do this forcing a client timeout by taking a long time to
-    respond every 20 requests.
+    respond every TIMEOUT_RATE requests.
     """
 
     if app.state.counter % TIMEOUT_RATE == 0:

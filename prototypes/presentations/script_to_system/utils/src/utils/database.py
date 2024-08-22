@@ -13,6 +13,7 @@ class Database:
             here (str): The `__file__` of the script.
         """
         self.path = Path(here).parent / "database.db"
+        self.path.unlink(missing_ok=True)
 
     def insert(self, data: list[int]):
         """Appends data to the database."""
