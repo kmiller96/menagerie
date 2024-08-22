@@ -1,0 +1,44 @@
+import asyncio
+import random
+
+import fastapi
+from fastapi.responses import PlainTextResponse
+
+PRECISION = 1000
+SLEEP_RANGE = (0, 5)
+
+####################
+## Data Generator ##
+####################
+
+
+def sample_coordinate() -> tuple[int, int]:
+    """Returns a random coordinate."""
+    return random.randint(0, PRECISION), random.randint(0, PRECISION)
+
+
+def is_in_circle(x: int, y: int) -> bool:
+    """Returns whether the coordinate is inside the circle."""
+    return x**2 + y**2 <= PRECISION**2
+
+
+############
+## Server ##
+############
+
+app = fastapi.FastAPI()
+
+
+@app.get("/", response_class=PlainTextResponse)
+async def data():
+    """Returns a random data point.
+
+    This server simulates a very slow data source, such as querying data from
+    across the galaxy. We do this by sleeping for a random amount of time
+    between 0 and 5 seconds.
+    """
+
+    await asyncio.sleep(random.randint(*SLEEP_RANGE))
+
+    x, y = sample_coordinate()
+    return f"{x},{y},{int(is_in_circle(x, y))}"
