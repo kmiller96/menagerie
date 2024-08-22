@@ -2,6 +2,7 @@
 requests
 loguru
 pytest
+notify-run
 
 # Server
 fastapi[standard]
