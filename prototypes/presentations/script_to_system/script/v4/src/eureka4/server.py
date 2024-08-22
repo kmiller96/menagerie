@@ -6,12 +6,14 @@ import fastapi
 
 from eureka4.enums import EurekaStatus
 from eureka4.main import start_main_process
+from eureka4.statistics import ServerStatistics
 
 
 @asynccontextmanager
 async def lifespan(app: fastapi.FastAPI):
     """Defines the lifespan of the server."""
     app.state.process = start_main_process()
+    app.state.statistics = ServerStatistics()
     yield
 
 
@@ -34,8 +36,8 @@ def healthcheck():
 def stats():
     """Returns the server's statistics."""
     return {
-        "rows": 0,  # TODO
-        "average_processing_time": 0,  # TODO
+        "rows": app.state.statistics.rows(),
+        "average_processing_time": app.state.statistics.average_processing_time(),
     }
 
 

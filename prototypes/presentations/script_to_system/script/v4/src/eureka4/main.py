@@ -8,29 +8,32 @@ from loguru import logger
 from utils.database import Database
 from utils.config import URL, DB_PATH
 
-from eureka4.contexts import allow_sigterm
 from eureka4.requests import fetch
 from eureka4.processing import parse
+from eureka4.statistics import ServerStatistics
 
 ERROR_MSG = "An error occurred. Skipping."
 
 
 def main(db_path: str):
-    with allow_sigterm():
-        db = Database(db_path)
+    db = Database(db_path)
 
-        i = 0
-        while True:
-            i += 1
+    stats = ServerStatistics()
+    stats.register_db(db)
 
-            logger.info(f"Initiating loop #{i}")
+    i = 0
+    while True:
+        i += 1
 
-            with logger.catch(onerror=lambda _: logger.error(ERROR_MSG)):
+        logger.info(f"Initiating loop #{i}")
+
+        with logger.catch(onerror=lambda _: logger.error(ERROR_MSG)):
+            with stats.timeit():
                 response = fetch(URL)
                 data = parse(response)
                 db.insert(data)
 
-            logger.debug(f"Loop #{i} completed")
+        logger.debug(f"Loop #{i} completed")
 
 
 def start_main_process() -> multiprocessing.Process:

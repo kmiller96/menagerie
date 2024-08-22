@@ -19,3 +19,7 @@ class Database:
         """Appends data to the database."""
         with self.path.open("a") as file:
             file.write(",".join(str(x) for x in data) + "\n")
+
+    def count(self) -> int:
+        """Returns the number of rows in the database."""
+        return sum(1 for _ in self.path.open("r"))
