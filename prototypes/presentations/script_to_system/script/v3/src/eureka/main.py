@@ -14,7 +14,7 @@ ERROR_MSG = "An error occurred. Skipping."
 
 def main():
     with allow_ctrl_c():
-        db = Database(DB_PATH or "database.db")
+        db = Database(DB_PATH or "./database.db")
 
         i = 0
         while True:

@@ -16,7 +16,7 @@ from utils.config import URL, DB_PATH
 ## Script ##
 ############
 
-db = Database(DB_PATH or Path(__file__) / "database.db")
+db = Database(DB_PATH or Path(__file__).parent / "database.db")
 
 while True:
     response = requests.get(URL, timeout=5)
