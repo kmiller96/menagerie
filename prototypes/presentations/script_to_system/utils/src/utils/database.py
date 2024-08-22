@@ -17,5 +17,5 @@ class Database:
 
     def insert(self, data: list[int]):
         """Appends data to the database."""
-        with open(self.path, "a") as file:
-            file.write(",".join(data) + "\n")
+        with self.path.open("a") as file:
+            file.write(",".join(str(x) for x in data) + "\n")

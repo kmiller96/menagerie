@@ -10,6 +10,8 @@ SLEEP_RANGE = (0, 4)
 TIMEOUT_SLEEP = 60
 TIMEOUT_RATE = 20
 
+DATA_MISFORMAT_RATE = 20
+
 ####################
 ## Data Generator ##
 ####################
@@ -30,11 +32,11 @@ def is_in_circle(x: int, y: int) -> bool:
 ############
 
 app = fastapi.FastAPI()
-app.state.counter = 1
+app.state.counter = 0
 
 
 @app.get("/", response_class=PlainTextResponse)
-async def data():
+async def data(debug: bool = False):
     """Returns a random data point.
 
     This server simulates a very slow data source, such as querying data from
@@ -45,12 +47,22 @@ async def data():
     to respond. We do this forcing a client timeout by taking a long time to
     respond every TIMEOUT_RATE requests.
     """
+    # -- Increment counter -- #
+    app.state.counter += 1
 
-    if app.state.counter % TIMEOUT_RATE == 0:
+    # -- Determine wait time -- #
+    if debug:
+        pass  # In debug mode, don't wait
+    elif app.state.counter % TIMEOUT_RATE == 0:
         await asyncio.sleep(TIMEOUT_SLEEP)  # Simulate a timeout
     else:
         lower, upper = SLEEP_RANGE
         await asyncio.sleep(random.random() * (upper - lower) + lower)
 
+    # -- Determine if data is misformatted -- #
+    if app.state.counter % DATA_MISFORMAT_RATE == 0:
+        return "⤽⟗⼭✠⎥⯜⃩◲♺⢠┣ⶇ⯉⃭◴⹆╍◨⏿⺥⳷⨰⮛⫍⿔ⴾ⃋☢⺛⻜⃭℞⼅␌◊⯯⭥✂⒔⏘ⷾ⃇⌐♽⩮⼚⁚⿸⮒"
+
+    # -- Generate data -- #
     x, y = sample_coordinate()
     return f"{x},{y},{int(is_in_circle(x, y))}"
