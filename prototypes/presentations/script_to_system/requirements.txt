@@ -7,3 +7,4 @@ fastapi[standard]
 
 # Private packages
 -e ./utils/
+-e ./scripts/v3/
