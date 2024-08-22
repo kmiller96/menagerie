@@ -5,7 +5,10 @@ import fastapi
 from fastapi.responses import PlainTextResponse
 
 PRECISION = 1000
-SLEEP_RANGE = (0, 5)
+SLEEP_RANGE = (0, 4)
+
+TIMEOUT_SLEEP = 60
+TIMEOUT_RATE = 20
 
 ####################
 ## Data Generator ##
@@ -27,6 +30,7 @@ def is_in_circle(x: int, y: int) -> bool:
 ############
 
 app = fastapi.FastAPI()
+app.state.counter = 1
 
 
 @app.get("/", response_class=PlainTextResponse)
@@ -36,9 +40,17 @@ async def data():
     This server simulates a very slow data source, such as querying data from
     across the galaxy. We do this by sleeping for a random amount of time
     between 0 and 5 seconds.
+
+    We also want to simulate a random "drop out" rate, where the server fails
+    to respond. We do this forcing a client timeout by taking a long time to
+    respond every 20 requests.
     """
 
-    await asyncio.sleep(random.randint(*SLEEP_RANGE))
+    if app.state.counter % TIMEOUT_RATE == 0:
+        await asyncio.sleep(TIMEOUT_SLEEP)  # Simulate a timeout
+    else:
+        lower, upper = SLEEP_RANGE
+        await asyncio.sleep(random.random() * (upper - lower) + lower)
 
     x, y = sample_coordinate()
     return f"{x},{y},{int(is_in_circle(x, y))}"
