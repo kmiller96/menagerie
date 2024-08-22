@@ -35,7 +35,9 @@ def main(db_path: str):
 
 def start_main_process() -> multiprocessing.Process:
     process = multiprocessing.Process(
-        target=main, name="main", args=(DB_PATH or "./database.db",)
+        target=main,
+        name="main",
+        args=(DB_PATH or "./database.db",),
     )
     process.start()
     return process
