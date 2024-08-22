@@ -7,19 +7,15 @@
 import requests
 from loguru import logger
 
-from utils import database
-
-#############
-## Globals ##
-#############
-
-URL = "http://localhost:8000"
+from utils.database import Database
+from utils.preprocessing import preprocess
+from utils.config import URL
 
 ############
 ## Script ##
 ############
 
-db = database.Database(__file__)
+db = Database(__file__)
 
 i = 0
 while True:
@@ -28,14 +24,10 @@ while True:
 
     response = requests.get(URL, timeout=5)
 
-    if not response.ok:
-        logger.error(f"Failed to fetch data: {response.status_code}")
-        continue
-
     content = response.text
     logger.debug(f"Content: {content}")
 
-    data = response.text.split(",")
+    data = preprocess(content)
     logger.debug(f"Data: {data}")
 
     db.insert(data)

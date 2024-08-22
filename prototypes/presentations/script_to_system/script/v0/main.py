@@ -6,22 +6,18 @@
 
 import requests
 
-from utils import database
-
-#############
-## Globals ##
-#############
-
-URL = "http://localhost:8000"
+from utils.database import Database
+from utils.preprocessing import preprocess
+from utils.config import URL
 
 ############
 ## Script ##
 ############
 
-db = database.Database(__file__)
+db = Database(__file__)
 
 while True:
     response = requests.get(URL, timeout=5)
 
-    data = response.text.split(",")
+    data = preprocess(response.text)
     db.insert(data)
