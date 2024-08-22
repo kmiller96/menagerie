@@ -1,6 +1,7 @@
 # Script
 requests
 loguru
+pytest
 
 # Server
 fastapi[standard]
@@ -8,3 +9,4 @@ fastapi[standard]
 # Private packages
 -e ./utils/
 -e ./scripts/v3/
+-e ./scripts/v4/
