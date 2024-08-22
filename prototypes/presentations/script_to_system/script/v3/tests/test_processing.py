@@ -5,7 +5,7 @@ from unittest.mock import Mock
 import requests
 import pytest
 
-from eureka4.processing import parse
+from eureka.processing import parse
 
 
 def test_parse_when_good_response():
