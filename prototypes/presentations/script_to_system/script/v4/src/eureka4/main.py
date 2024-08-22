@@ -10,16 +10,12 @@ from utils.config import URL, DB_PATH
 
 from eureka4.requests import fetch
 from eureka4.processing import parse
-from eureka4.statistics import ServerStatistics
 
 ERROR_MSG = "An error occurred. Skipping."
 
 
 def main(db_path: str):
     db = Database(db_path)
-
-    stats = ServerStatistics()
-    stats.register_db(db)
 
     i = 0
     while True:
@@ -28,10 +24,9 @@ def main(db_path: str):
         logger.info(f"Initiating loop #{i}")
 
         with logger.catch(onerror=lambda _: logger.error(ERROR_MSG)):
-            with stats.timeit():
-                response = fetch(URL)
-                data = parse(response)
-                db.insert(data)
+            response = fetch(URL)
+            data = parse(response)
+            db.insert(data)
 
         logger.debug(f"Loop #{i} completed")
 
