@@ -1,1 +1,8 @@
+# Script
+requests
+
+# Server
 fastapi[standard]
+
+# Private packages
+-e ./utils/
