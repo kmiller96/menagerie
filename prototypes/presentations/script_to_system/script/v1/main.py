@@ -4,18 +4,20 @@
 ## Imports ##
 #############
 
+from pathlib import Path
+
 import requests
 from loguru import logger
 
 from utils.database import Database
 from utils.preprocessing import preprocess
-from utils.config import URL
+from utils.config import URL, DB_PATH
 
 ############
 ## Script ##
 ############
 
-db = Database(__file__)
+db = Database(DB_PATH or Path(__file__) / "database.db")
 
 i = 0
 while True:

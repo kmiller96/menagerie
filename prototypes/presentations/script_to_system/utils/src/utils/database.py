@@ -6,13 +6,13 @@ from pathlib import Path
 class Database:
     """Simulates a simple database. We do this with a plain text CSV file."""
 
-    def __init__(self, here: str):
+    def __init__(self, path: str):
         """Initializes the database.
 
         Args:
             here (str): The `__file__` of the script.
         """
-        self.path = Path(here).parent / "database.db"
+        self.path = Path(path)
         self.path.unlink(missing_ok=True)
 
     def insert(self, data: list[int]):

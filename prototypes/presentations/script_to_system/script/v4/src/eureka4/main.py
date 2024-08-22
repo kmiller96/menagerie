@@ -1,20 +1,23 @@
 """Added logging to the script"""
 
+import multiprocessing
+
+import uvicorn
 from loguru import logger
 
 from utils.database import Database
 from utils.config import URL, DB_PATH
 
-from eureka.contexts import allow_ctrl_c
-from eureka.requests import fetch
-from eureka.processing import parse
+from eureka4.contexts import allow_sigterm
+from eureka4.requests import fetch
+from eureka4.processing import parse
 
 ERROR_MSG = "An error occurred. Skipping."
 
 
-def main():
-    with allow_ctrl_c():
-        db = Database(DB_PATH or "database.db")
+def main(db_path: str):
+    with allow_sigterm():
+        db = Database(db_path)
 
         i = 0
         while True:
@@ -28,3 +31,15 @@ def main():
                 db.insert(data)
 
             logger.debug(f"Loop #{i} completed")
+
+
+def start_main_process() -> multiprocessing.Process:
+    process = multiprocessing.Process(
+        target=main, name="main", args=(DB_PATH or "./database.db",)
+    )
+    process.start()
+    return process
+
+
+def start_main_server():
+    uvicorn.run("eureka4.server:app", port=8080)

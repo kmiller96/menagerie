@@ -4,17 +4,19 @@
 ## Imports ##
 #############
 
+from pathlib import Path
+
 import requests
 
 from utils.database import Database
 from utils.preprocessing import preprocess
-from utils.config import URL
+from utils.config import URL, DB_PATH
 
 ############
 ## Script ##
 ############
 
-db = Database(__file__)
+db = Database(DB_PATH or Path(__file__) / "database.db")
 
 while True:
     response = requests.get(URL, timeout=5)
