@@ -1,2 +1,3 @@
 fastapi[standard]
 fastapi-sso
+python-jose[cryptography]

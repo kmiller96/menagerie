@@ -34,3 +34,9 @@ async def google_callback(request: fastapi.Request):
     with google_sso:
         user = await google_sso.verify_and_process(request)
     return user
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, port=8000)
