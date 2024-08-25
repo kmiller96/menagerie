@@ -2,7 +2,7 @@ from typing import Annotated
 
 import fastapi
 
-from my_auth import models, auth
+from my_auth import models, auth, depends
 
 app = fastapi.FastAPI()
 
@@ -18,7 +18,9 @@ def login(
     req: models.UserLoginRequest,
     request: fastapi.Request,
     response: fastapi.Response,
-    manager: Annotated[auth.SessionManager, fastapi.Depends(auth.get_session_manager)],
+    manager: Annotated[
+        auth.SessionManager, fastapi.Depends(depends.get_session_manager)
+    ],
 ):
     """Allows the user to authenticate."""
 
@@ -39,7 +41,9 @@ def login(
 def logout(
     request: fastapi.Request,
     response: fastapi.Response,
-    manager: Annotated[auth.SessionManager, fastapi.Depends(auth.get_session_manager)],
+    manager: Annotated[
+        auth.SessionManager, fastapi.Depends(depends.get_session_manager)
+    ],
 ):
     """Allows the user to logout."""
 
@@ -62,7 +66,9 @@ def unprotected():
 
 @app.get("/protected")
 def protected(
-    user: Annotated[models.User, fastapi.Depends(auth.verify_authentication)],
+    user: Annotated[
+        models.User, fastapi.Depends(depends.verify_authentication)
+    ],
 ):
     """A protected route."""
     return {"user": user}
