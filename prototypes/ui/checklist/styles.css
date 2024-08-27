@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100vh;
+
+  background-color: #627f79;
+}
+
+#container {
+  display: flex;
+  align-items: center;
+
+  height: 200px;
+  width: 200px;
+
+  padding: 20px;
+
+  border: 2px solid #444;
+  border-radius: 10%;
+
+  background-color: #fff;
+}
+
+li {
+  color: #444;
+}
+
+li::marker {
+  content: none;
+}
+
+li > input {
+  margin-right: 10px;
+}
+
+li.checked {
+  color: #aaa;
+  text-decoration: line-through;
+}
