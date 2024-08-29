@@ -88,6 +88,7 @@ async def lifespan(app: fastapi.FastAPI):
 
     scheduler.start()
     yield
+    scheduler.shutdown()
 
 
 #################
