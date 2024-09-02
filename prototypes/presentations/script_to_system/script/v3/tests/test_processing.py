@@ -30,7 +30,7 @@ def test_parse_when_bad_response():
 def test_parse_when_response_empty():
     """Should raise an error."""
     response = Mock(requests.Response)
-    response.text = "bad data"
+    response.text = ""
 
     with pytest.raises(ValueError):
         parse(response)
