@@ -11,3 +11,6 @@ fastapi[standard]
 -e ./utils/
 -e ./scripts/v3/
 -e ./scripts/v4/
+
+# Build requirements
+wheel

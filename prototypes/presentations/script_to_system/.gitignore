@@ -1,2 +1,5 @@
 database.db
 .pytest_cache/
+
+dist/
+build/
