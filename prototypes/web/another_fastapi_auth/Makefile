@@ -4,4 +4,7 @@ venv .venv:
 	.venv/bin/pip install -r requirements.txt
 
 dev:
-	fastapi dev
+	.venv/bin/fastapi dev
+
+server:
+	.venv/bin/fastapi run
