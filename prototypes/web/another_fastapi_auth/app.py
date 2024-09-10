@@ -1,8 +1,36 @@
+from typing import Annotated
+
 import fastapi
+from fastapi.security.http import (
+    HTTPBasic,
+    HTTPBasicCredentials,
+    HTTPBearer,
+    HTTPAuthorizationCredentials,
+)
+
 from pydantic import BaseModel
 
 
 app = fastapi.FastAPI()
+
+basic = HTTPBasic()
+bearer = HTTPBearer()
+
+################
+## Decorators ##
+################
+
+
+def require_auth(
+    authorization: Annotated[HTTPAuthorizationCredentials, fastapi.Depends(bearer)],
+):
+    """Dependency that protects an endpoint to ensure that authentication is required."""
+
+    if authorization.credentials != "abc123":
+        raise fastapi.HTTPException(status_code=401, detail="Unauthorized")
+
+    return True
+
 
 ##############
 ## Standard ##
@@ -15,7 +43,7 @@ def unprotected():
 
 
 @app.get("/protected")
-def protected():
+def protected(auth: Annotated[bool, fastapi.Depends(require_auth)]):
     return {"message": "Protected route"}
 
 
@@ -35,10 +63,13 @@ class LoginRequest(BaseModel):
 
 
 @app.post("/login")
-def login(req: LoginRequest, response: fastapi.Response):
-    if req.username == "test" and req.password == "test":
+def login(
+    credentials: Annotated[HTTPBasicCredentials, fastapi.Depends(basic)],
+    response: fastapi.Response,
+):
+    if credentials.username == "test" and credentials.password == "test":
         response.status_code = 200
-        return {"message": "Login successful"}
+        return {"token": "abc123"}
 
     else:
         response.status_code = 401
