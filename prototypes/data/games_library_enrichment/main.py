@@ -14,30 +14,39 @@ from tqdm import tqdm
 def main():
     args = parse_cli()
 
-    buffer = []
-    output = []
+    buffer: list[tuple[int, str]] = []
+    output: list[dict] = []
 
-    for row in tqdm(read_csv(args.input)):
+    rows = read_csv(args.input)
+
+    for n, row in enumerate(tqdm(rows)):
         # -- Fill Buffer -- #
         link = row["BGG Link"]
 
         if not link:
             continue
 
-        buffer.append(link)
+        buffer.append((n, link))
 
         # -- Continue if buffer not full -- #
-        if len(buffer) < 10:
-            continue
-        else:
+        if len(buffer) > 10 or n == len(rows) - 1:
+            row_ids = [x[0] for x in buffer]
+            game_ids = [extract_game_id(x[1]) for x in buffer]
+
             # -- Fetch Data -- #
-            for game in fetch(buffer).findall(".//boardgame"):
-                data = extract(link, game)
+            for n, game in zip(row_ids, fetch(game_ids).findall(".//boardgame")):
+                data = extract(game)
+
+                data["row"] = n
+                data["link"] = link
 
                 output.append(data)
 
             # -- Clear Buffer -- #
             buffer = []
+
+        else:
+            continue
 
     # -- Format Output -- #
     write_csv(output, args.output)
@@ -96,10 +105,8 @@ def write_csv(data: list[dict[str, str]], csvfile: str):
 
 def fetch(game_ids: list[str]) -> ET.Element:
     """Retrieve game information from BoardGameGeek."""
-    games = ",".join([extract_game_id(x) for x in game_ids])
-
     response = httpx.get(
-        "https://boardgamegeek.com/xmlapi/boardgame/" + games,
+        "https://boardgamegeek.com/xmlapi/boardgame/" + ",".join(game_ids),
         follow_redirects=True,
     )
 
@@ -107,12 +114,11 @@ def fetch(game_ids: list[str]) -> ET.Element:
     return data
 
 
-def extract(link: str, game: ET.Element) -> dict[str, str]:
+def extract(game: ET.Element) -> dict[str, str]:
     data = {}
 
     data["name"] = game.find(".//name[@primary='true']").text
     data["year"] = game.find(".//yearpublished").text
-    data["link"] = link
 
     data["players_min"] = game.find(".//minplayers").text
     data["players_max"] = game.find(".//maxplayers").text
