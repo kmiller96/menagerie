@@ -15,31 +15,32 @@ def main():
     args = parse_cli()
 
     buffer = []
+    output = []
 
     for row in tqdm(read_csv(args.input)):
         # -- Fill Buffer -- #
         link = row["BGG Link"]
 
         if not link:
-            print("No BGG Link found.")
             continue
-        else:
-            game_id = extract_game_id(link)
-            buffer.append(game_id)
+
+        buffer.append(link)
 
         # -- Continue if buffer not full -- #
         if len(buffer) < 10:
             continue
+        else:
+            # -- Fetch Data -- #
+            for game in fetch(buffer).findall(".//boardgame"):
+                data = extract(link, game)
 
-        # -- Fetch Data -- #
-        for game in fetch(buffer).findall(".//boardgame"):
-            data = extract(game)
-            # data["BGG Link"] = link
-            print(data)
+                output.append(data)
 
-        # -- Clear Buffer -- #
-        buffer = []
-        break
+            # -- Clear Buffer -- #
+            buffer = []
+
+    # -- Format Output -- #
+    write_csv(output, args.output)
 
 
 #################
@@ -64,6 +65,13 @@ def parse_cli():
         help="Path to the output file where the enriched data will be saved.",
     )
 
+    parser.add_argument(
+        "--chunksize",
+        type=int,
+        default=10,
+        help="Number of games to fetch in each request.",
+    )
+
     return parser.parse_args()
 
 
@@ -74,16 +82,52 @@ def read_csv(csvfile: str) -> list[dict[str, str]]:
         return list(reader)
 
 
+def write_csv(data: list[dict[str, str]], csvfile: str):
+    """Write a list of dictionaries to a CSV file."""
+    keys = data[0].keys()
+
+    with open(csvfile, "w") as output_file:
+        writer = csv.DictWriter(output_file, fieldnames=keys)
+        writer.writeheader()
+
+        for row in data:
+            writer.writerow(row)
+
+
 def fetch(game_ids: list[str]) -> ET.Element:
     """Retrieve game information from BoardGameGeek."""
+    games = ",".join([extract_game_id(x) for x in game_ids])
 
     response = httpx.get(
-        "https://boardgamegeek.com/xmlapi/boardgame/" + ",".join(game_ids),
+        "https://boardgamegeek.com/xmlapi/boardgame/" + games,
         follow_redirects=True,
     )
 
     data = ET.fromstring(response.content)
     return data
+
+
+def extract(link: str, game: ET.Element) -> dict[str, str]:
+    data = {}
+
+    data["name"] = game.find(".//name[@primary='true']").text
+    data["year"] = game.find(".//yearpublished").text
+    data["link"] = link
+
+    data["players_min"] = game.find(".//minplayers").text
+    data["players_max"] = game.find(".//maxplayers").text
+    data["players_best"] = best_player_count(game)
+
+    data["playing_time_min"] = game.find(".//minplaytime").text
+    data["playing_time_max"] = game.find(".//maxplaytime").text
+    data["playing_time_avg"] = game.find(".//playingtime").text
+
+    return data
+
+
+#############
+## Helpers ##
+#############
 
 
 def extract_game_id(link: str) -> str:
@@ -101,27 +145,6 @@ def best_player_count(game: ET.Element) -> str:
         results[numplayers] = numvotes
 
     return max(results, key=results.get)
-
-
-def extract(game: ET.Element) -> dict[str, str]:
-    data = {}
-
-    data["name"] = game.find(".//name[@primary='true']").text
-    data["year"] = game.find(".//yearpublished").text
-
-    data["players"] = {
-        "min": game.find(".//minplayers").text,
-        "max": game.find(".//maxplayers").text,
-        "best": best_player_count(game),
-    }
-
-    data["playing_time"] = {
-        "min": game.find(".//minplaytime").text,
-        "max": game.find(".//maxplaytime").text,
-        "avg": game.find(".//playingtime").text,
-    }
-
-    return data
 
 
 ################################
