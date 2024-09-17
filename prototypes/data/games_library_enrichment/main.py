@@ -1,3 +1,4 @@
+import time
 import argparse
 import csv
 from xml.etree import ElementTree as ET
@@ -34,7 +35,9 @@ def main():
             game_ids = [extract_game_id(x[1]) for x in buffer]
 
             # -- Fetch Data -- #
-            for n, game in zip(row_ids, fetch(game_ids).findall(".//boardgame")):
+            games = fetch(game_ids).findall(".//boardgame")
+
+            for n, game in zip(row_ids, games):
                 data = extract(game)
 
                 data["row"] = n
@@ -44,6 +47,9 @@ def main():
 
             # -- Clear Buffer -- #
             buffer = []
+
+            # -- Sleep to avoid being rate limited -- #
+            time.sleep(2)
 
         else:
             continue
