@@ -10,6 +10,9 @@ export function Links() {
       <li>
         <a href="/private">Private</a>
       </li>
+      <li>
+        <a href="/login">Login</a>
+      </li>
     </ul>
   );
 }

@@ -1,8 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+
 import { HomePage } from "./pages/Home";
 import { PublicPage } from "./pages/Public";
 import { PrivatePage } from "./pages/Private";
+import { LoginPage } from "./pages/Login";
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +18,14 @@ export const router = createBrowserRouter([
   },
   {
     path: "/private",
-    element: <PrivatePage />,
+    element: (
+      <ProtectedRoute>
+        <PrivatePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);
