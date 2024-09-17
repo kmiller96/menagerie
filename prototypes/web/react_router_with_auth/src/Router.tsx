@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
@@ -7,25 +7,20 @@ import { PublicPage } from "./pages/Public";
 import { PrivatePage } from "./pages/Private";
 import { LoginPage } from "./pages/Login";
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/public",
-    element: <PublicPage />,
-  },
-  {
-    path: "/private",
-    element: (
-      <ProtectedRoute>
-        <PrivatePage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-]);
+export function Router() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/public" element={<PublicPage />} />
+      <Route
+        path="/private"
+        element={
+          <ProtectedRoute>
+            <PrivatePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/login" element={<LoginPage />} />
+    </Routes>
+  );
+}

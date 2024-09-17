@@ -8,16 +8,21 @@ import { useLocalStorage } from "./useLocalStorage";
 // ----------- //
 
 type AuthContextValue = {
-  user: any;
-  login?: (user: any) => void;
-  logout?: () => void;
+  user: string | null;
+  login: (user: string) => Promise<void>;
+  logout: () => void;
 };
 
 // -------------------- //
 // -- Context Object -- //
 // -------------------- //
 
-const AuthContext = createContext<AuthContextValue>({ user: null });
+const AuthContext = createContext<AuthContextValue>({
+  user: null,
+  // @ts-ignore: 6133
+  login: (user: string) => {},
+  logout: () => {},
+});
 
 // -------------- //
 // -- Provider -- //
@@ -30,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // -- Handlers -- //
   // TODO: Replace any with the actual type
-  const login = (user: any) => {
+  const login = async (user: any) => {
     setUser(user);
     navigate("/", { replace: true });
   };

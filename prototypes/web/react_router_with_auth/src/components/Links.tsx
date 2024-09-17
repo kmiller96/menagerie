@@ -1,6 +1,16 @@
 export function Links() {
   return (
-    <ul>
+    <ul
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        textDecoration: "none",
+        listStyleType: "none",
+        padding: 0,
+        margin: 0,
+        gap: "1rem",
+      }}
+    >
       <li>
         <a href="/">Home</a>
       </li>

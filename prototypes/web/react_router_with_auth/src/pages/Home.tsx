@@ -1,10 +1,9 @@
-import { Links } from "@/components/Links";
+import { BasePage } from "./Base";
 
 export function HomePage() {
   return (
-    <div>
+    <BasePage>
       <h1>Home Page</h1>
-      <Links />
-    </div>
+    </BasePage>
   );
 }
