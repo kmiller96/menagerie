@@ -20,7 +20,7 @@ export function NavBar() {
           <a href="/">Home</a>
         </li>
         <li>
-          <a href="/about">About</a>
+          <a href="/login">Login</a>
         </li>
       </ul>
     </nav>
