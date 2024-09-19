@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function useAuth({
@@ -5,14 +6,14 @@ export function useAuth({
 }: {
   redirectOnFail?: boolean;
 }) {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  if (!token && redirectOnFail) {
-    const navigate = useNavigate();
-    navigate("/login");
-    console.log("Redirecting to login page...");
-    // TODO: Navigate to login page
-  }
+  useEffect(() => {
+    if (!token && redirectOnFail) {
+      navigate("/login");
+    }
+  }, [token]);
 
   return token;
 }
