@@ -5,7 +5,11 @@ export function LoginPage() {
     <>
       <NavBar />
       <h1>Login</h1>
-      <form>
+      <form
+        onSubmit={() => {
+          localStorage.setItem("token", "myjwt");
+        }}
+      >
         <label>
           Username:
           <input type="text" />

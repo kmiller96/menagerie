@@ -22,10 +22,13 @@ export function NavBar() {
           <Link to="/">Home</Link>
         </li>
         <li>
+          <Link to="/protected">Protected</Link>
+        </li>
+        <li>
           <Link to="/login">Login</Link>
         </li>
         <li>
-          <Link to="/protected">Protected</Link>
+          <Link to="/logout">Logout</Link>
         </li>
       </ul>
     </nav>
