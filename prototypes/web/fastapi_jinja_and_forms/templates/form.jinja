@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.jinja" %}
+{% block title %} Form {% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-
-<body>
-    <h1>Form Page</h1>
-    <form method="POST" action="{{ url_for('get_form') }}">
-        <input type="text" id="username" name="username" placeholder="Username" />
-        <br />
-        <input type="password" id="password" name="password" placeholder="Password" />
-        <br />
-        <button type="submit">Submit</button>
-    </form>
-</body>
-
-</html>
+{% block content %}
+<h1>Form Page</h1>
+<form method="POST" action="{{ url_for('get_form') }}">
+    <input type="text" id="username" name="username" placeholder="Username" />
+    <br />
+    <input type="password" id="password" name="password" placeholder="Password" />
+    <br />
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}
