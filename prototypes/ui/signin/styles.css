@@ -1,0 +1,131 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+:root {
+  --border-radius: 20px;
+
+  --primary-color: #0077cc;
+  --secondary-color: #319db5;
+
+  --grey: #ccc;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #f0f0f0;
+
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+#root {
+  width: 80vw;
+
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+}
+
+#container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+}
+
+/*****************/
+/* Image Styling */
+/*****************/
+
+#image {
+  width: 100%;
+  height: 100%;
+
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+#image img {
+  --padding-width: 5px;
+
+  width: calc(100% - 1 * var(--padding-width));
+  height: calc(100% - 2 * var(--padding-width));
+
+  padding: var(--padding-width);
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+
+  object-fit: cover;
+  overflow: hidden;
+}
+
+/****************/
+/* Form Styling */
+/****************/
+
+#form {
+  padding: 20px 20px 20px 0px;
+}
+
+#form h1 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+  font-size: 2.5em;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+#form hr {
+  margin-bottom: 30px;
+
+  border-color: var(--grey);
+  background-color: var(--grey);
+  color: var(--grey);
+}
+
+#form form {
+  display: flex;
+  flex-direction: column;
+}
+
+#form form input {
+  padding: 10px;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+
+  font-size: 1.2em;
+}
+
+#form form input:focus {
+  outline: none;
+  border-color: #0077cc;
+}
+
+#form form button {
+  padding: 10px;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  border: none;
+  border-radius: var(--border-radius);
+
+  background-color: var(--primary-color);
+  color: #fff;
+
+  font-size: 1.2em;
+}
