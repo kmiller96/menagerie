@@ -1,3 +1,5 @@
+from typing import Annotated
+
 import fastapi
 from fastapi.templating import Jinja2Templates
 
@@ -15,7 +17,7 @@ def index(request: fastapi.Request):
     )
 
 
-@app.get("/{id}")
+@app.get("/page/{id}")
 def get_id_page(request: fastapi.Request, id: int):
     return templates.TemplateResponse(
         request=request,
@@ -23,5 +25,29 @@ def get_id_page(request: fastapi.Request, id: int):
         context={
             "id": id,
             # "emotion": "sad",
+        },
+    )
+
+
+@app.get("/form")
+def get_form(request: fastapi.Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="form.jinja",
+    )
+
+
+@app.post("/form")
+async def post_form(
+    request: fastapi.Request,
+    username: Annotated[str, fastapi.Form()],
+    password: Annotated[str, fastapi.Form()],
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="form.submitted.jinja",
+        context={
+            "username": username,
+            "password": password,
         },
     )
