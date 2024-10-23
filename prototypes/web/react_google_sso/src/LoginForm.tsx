@@ -3,6 +3,9 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { StyledButton } from "./StyledButton";
 import { useState } from "react";
 
+// NOTE: If I wanted to do this with Microsoft, I might be able to use a package
+// like this: https://www.npmjs.com/package/react-microsoft-login
+
 export function LoginForm() {
   const [user, setUser] = useState<null | string>(null);
 
