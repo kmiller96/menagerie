@@ -1,0 +1,7 @@
+services:
+  echoer:
+    container_name: echoer
+    command: "Hello from the compose file!"
+
+    image: echoer
+    build: .
