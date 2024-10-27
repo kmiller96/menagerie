@@ -20,10 +20,10 @@ DATABASE = "database.db"
 
 
 class Post(pydantic.BaseModel):
-    id: int
-    author: str
-    title: str
-    content: str
+    id: None | int = None
+    author: str = pydantic.Field(default="Anonymous")
+    title: str = pydantic.Field(min_length=1)
+    content: str = pydantic.Field(min_length=1)
 
 
 ###############
@@ -41,6 +41,13 @@ def connect_to_db() -> Generator[sqlite3.Connection, None, None]:
 
     conn.commit()
     conn.close()
+
+
+def insert_post(conn: sqlite3.Connection, post: Post):
+    conn.execute(
+        "INSERT OR REPLACE INTO posts (id, author, title, content) VALUES (?, ?, ?, ?)",
+        (post.id, post.author, post.title, post.content),
+    )
 
 
 ##############
@@ -62,28 +69,14 @@ def lifespan(app: fastapi.FastAPI):
             """
         )
 
-        # -- Seed Data -- #
-        # TODO: Remove seeding data
-        posts_raw = [
-            {
-                "id": 1,
-                "author": "author1",
-                "title": "title1",
-                "content": "content1",
-            },
-            {
-                "id": 2,
-                "author": "author2",
-                "title": "title2",
-                "content": "content2",
-            },
+        # -- Seed Data -- #  TODO: Remove seeding data
+        posts = [
+            Post(id=1, author="author1", title="title1", content="content1"),
+            Post(id=2, author="author2", title="title2", content="content2"),
         ]
 
-        for record in posts_raw:
-            conn.execute(
-                "INSERT OR IGNORE INTO posts (id, author, title, content) VALUES (?, ?, ?, ?)",
-                (record["id"], record["author"], record["title"], record["content"]),
-            )
+        for record in posts:
+            insert_post(conn, Post.model_validate(record))
 
     yield
 
@@ -98,7 +91,11 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/")
-def index(request: fastapi.Request):
+def index(
+    request: fastapi.Request,
+    response: fastapi.Response,
+    error: Annotated[None | str, fastapi.Cookie(alias="X-Error")] = None,
+):
     # -- Fetch Data -- #
     with connect_to_db() as conn:
         conn.row_factory = sqlite3.Row
@@ -107,29 +104,47 @@ def index(request: fastapi.Request):
         posts = [Post.model_validate(dict(obj)) for obj in cursor.fetchall()]
 
     # -- Render -- #
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request=request,
         name="index.jinja",
-        context={"posts": posts},
+        context={"posts": posts, "error": error},
     )
+
+    if error:
+        response.delete_cookie("X-Error")
+
+    return response
 
 
 @app.post("/post")
 def create_post(
-    request: fastapi.Request,
+    response: fastapi.Response,
+    author: Annotated[str, fastapi.Form()],
     title: Annotated[str, fastapi.Form()],
     content: Annotated[str, fastapi.Form()],
-    author: Annotated[str, fastapi.Form()] = "Anonymous",
 ):
+    error: None | str = None
+
     # -- Save Data -- #
-    with connect_to_db() as conn:
-        conn.execute(
-            "INSERT INTO posts (author, title, content) VALUES (?, ?, ?)",
-            (author, title, content),
-        )
+    try:
+        post = Post(author=author, title=title, content=content)
+
+        with connect_to_db() as conn:
+            insert_post(conn, post)
+
+    except pydantic.ValidationError:
+        error = "Invalid form submission."
+
+    except Exception as e:
+        error = str(e)
 
     # -- Redirect -- #
-    return fastapi.responses.RedirectResponse(
+    response = fastapi.responses.RedirectResponse(
         url="/",
         status_code=fastapi.status.HTTP_303_SEE_OTHER,
     )
+
+    if error:
+        response.set_cookie("X-Error", error)
+
+    return response

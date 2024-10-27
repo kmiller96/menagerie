@@ -61,6 +61,11 @@
 <main>
     <h1>Postboard</h1>
 
+    {% if error is not none %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+
     <div id="form-container">
         <form method="POST" action="/post">
             <input type="text" name="title" placeholder="Title">
