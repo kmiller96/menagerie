@@ -27,12 +27,25 @@
         margin: 0;
         color: #666;
     }
+
+    #form-container {
+        padding: 1em 5em;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <main>
     <h1>Postboard</h1>
+
+    <div id="form-container">
+        <form method="POST" action="/post">
+            <input type="text" name="title" placeholder="Title">
+            <input type="text" name="author" placeholder="Author">
+            <textarea name="content" placeholder="Content"></textarea>
+            <button type="submit">Post</button>
+        </form>
+    </div>
 
     <div id="post-feed">
         {% for post in posts %}

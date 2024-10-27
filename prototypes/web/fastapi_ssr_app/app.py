@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Annotated, Generator
 
 import sqlite3
 from contextlib import contextmanager
@@ -32,13 +32,14 @@ class Post(pydantic.BaseModel):
 
 
 @contextmanager
-def connect_to_db() -> Generator[sqlite3.Connection]:
+def connect_to_db() -> Generator[sqlite3.Connection, None, None]:
     """Connects to the database and returns a connection object."""
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
 
     yield conn
 
+    conn.commit()
     conn.close()
 
 
@@ -110,4 +111,25 @@ def index(request: fastapi.Request):
         request=request,
         name="index.jinja",
         context={"posts": posts},
+    )
+
+
+@app.post("/post")
+def create_post(
+    request: fastapi.Request,
+    title: Annotated[str, fastapi.Form()],
+    content: Annotated[str, fastapi.Form()],
+    author: Annotated[str, fastapi.Form()] = "Anonymous",
+):
+    # -- Save Data -- #
+    with connect_to_db() as conn:
+        conn.execute(
+            "INSERT INTO posts (author, title, content) VALUES (?, ?, ?)",
+            (author, title, content),
+        )
+
+    # -- Redirect -- #
+    return fastapi.responses.RedirectResponse(
+        url="/",
+        status_code=fastapi.status.HTTP_303_SEE_OTHER,
     )
