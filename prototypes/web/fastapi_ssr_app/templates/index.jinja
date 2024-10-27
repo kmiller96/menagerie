@@ -13,19 +13,42 @@
     }
 
     .post {
-        padding: 1rem;
+        padding: 0.7rem;
         border: 1px solid #ccc;
         border-radius: 0.5rem;
+
+        display: flex;
+        flex-direction: row;
     }
 
-    .post h2 {
+    h2,
+    h3,
+    p {
         margin: 0;
     }
 
     .post h3 {
         font-size: 16px;
-        margin: 0;
         color: #666;
+    }
+
+    .post div:first-child {
+        flex-grow: 1;
+    }
+
+    .post button {
+        color: #000;
+        background-color: #fff;
+        border: none;
+        border-radius: 0.5rem;
+        width: 2rem;
+        height: 2rem;
+        padding: 0px;
+        cursor: pointer;
+    }
+
+    .post button:hover {
+        background-color: #f0f0f0;
     }
 
     #form-container {
@@ -50,11 +73,16 @@
     <div id="post-feed">
         {% for post in posts %}
         <div class="post">
-            <div class="">
-                <h2>{{ post.title }}</h2>
-                <h3>{{ post.author }}</h3>
+            <div>
+                <div class="post-title">
+                    <h2>{{ post.title }}</h2>
+                    <h3>{{ post.author }}</h3>
+                </div>
+                <p class="post-content">{{ post.content }}</p>
             </div>
-            <p>{{ post.content }}</p>
+            <div>
+                <button>x</button>
+            </div>
         </div>
         {% endfor %}
     </div>
