@@ -1,4 +1,7 @@
+from typing import Generator
+
 import sqlite3
+from contextlib import contextmanager
 
 import fastapi
 from fastapi.templating import Jinja2Templates
@@ -23,6 +26,22 @@ class Post(pydantic.BaseModel):
     content: str
 
 
+###############
+## Utilities ##
+###############
+
+
+@contextmanager
+def connect_to_db() -> Generator[sqlite3.Connection]:
+    """Connects to the database and returns a connection object."""
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    yield conn
+
+    conn.close()
+
+
 ##############
 ## Lifespan ##
 ##############
@@ -30,7 +49,7 @@ class Post(pydantic.BaseModel):
 
 def lifespan(app: fastapi.FastAPI):
     # -- Create DB Tables -- #
-    with sqlite3.connect(DATABASE) as conn:
+    with connect_to_db() as conn:
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS posts (
@@ -80,7 +99,7 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/")
 def index(request: fastapi.Request):
     # -- Fetch Data -- #
-    with sqlite3.connect(DATABASE) as conn:
+    with connect_to_db() as conn:
         conn.row_factory = sqlite3.Row
 
         cursor = conn.execute("SELECT * FROM posts limit 20")
