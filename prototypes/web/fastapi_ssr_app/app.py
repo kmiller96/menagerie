@@ -10,5 +10,5 @@ templates = Jinja2Templates(directory="templates")
 def index(request: fastapi.Request):
     return templates.TemplateResponse(
         request=request,
-        name="index.html",
+        name="index.jinja",
     )
