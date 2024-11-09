@@ -14,9 +14,11 @@ async def main():
 
     # -- Get Users -- #
     users = await client.users.list()
-
-    # -- Print -- #
     pprint.pp(users)
+
+    # -- Load Page -- #
+    page = await client.pages.retrieve("78ed0120dc8549958b4028d2e47c0be6")
+    pprint.pp(page)
 
 
 # ----------------- #
