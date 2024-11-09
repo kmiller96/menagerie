@@ -1,0 +1,14 @@
+{% extends 'base.jinja' %}
+
+{% block body %}
+<h1>Projects Explorer</h1>
+
+{% for project in projects %}
+<div class="project">
+    <h2><a href="{{ url_for('get_page', id=project.id) }}">{{ project.title }}</a></h2>
+    <h3 class="subtitle">{{ project.id }}</h3>
+    <p>{{ project.summary }}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

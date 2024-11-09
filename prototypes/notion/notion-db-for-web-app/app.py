@@ -1,6 +1,8 @@
 import asyncio
 
 import fastapi
+from fastapi.templating import Jinja2Templates
+
 from notion_client import AsyncClient
 
 #############
@@ -8,6 +10,26 @@ from notion_client import AsyncClient
 #############
 
 DATABASE_ID = "15a57f7b16424efb940dbe8c6346e883"  # Projects DB
+
+#######################
+## Data Transformers ##
+#######################
+
+
+def extract_page_data(page):
+    """Extracts the relevant data from a Notion page."""
+    summary_raw = page["properties"]["Summary"]["rich_text"]
+
+    if summary_raw:
+        summary = summary_raw[0]["plain_text"]
+    else:
+        summary = None
+
+    return {
+        "id": page["id"],
+        "title": page["properties"]["Name"]["title"][0]["plain_text"],
+        "summary": summary,
+    }
 
 
 #####################
@@ -34,6 +56,7 @@ class DatabaseClient:
         page_size: int = 100,
     ):
         """Returns a list of pages in a database."""
+        # -- Build query -- #
         kwargs = {}
 
         if filter:
@@ -43,11 +66,15 @@ class DatabaseClient:
         if start_cursor:
             kwargs["start_cursor"] = start_cursor
 
-        return await self.client.databases.query(
+        # -- Query database -- #
+        results = await self.client.databases.query(
             self.database_id,
             page_size=page_size,
             **kwargs,
         )
+
+        # -- Format & Return -- #
+        return [extract_page_data(page) for page in results["results"]]
 
     async def get(self, id: str):
         """Returns a single row in the database by ID."""
@@ -56,8 +83,10 @@ class DatabaseClient:
 
         page, content = await asyncio.gather(page_promise, content_promise)
 
+        # TODO: format the content
+
         return {
-            "page": page,
+            **extract_page_data(page),
             "content": content,
         }
 
@@ -82,12 +111,21 @@ db = DatabaseClient(
 
 api = fastapi.FastAPI()
 
+templates = Jinja2Templates(directory="templates")
+
 
 @api.get("/")
-async def index():
+async def index(request: fastapi.Request):
     """Returns a list of pages in the database."""
     results = await db.query()
-    return results
+
+    print(results)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="home.jinja",
+        context={"projects": results},
+    )
 
 
 @api.get("/{id}")
