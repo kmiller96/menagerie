@@ -1,0 +1,1 @@
+echo 'run me!' | docker run -i --rm stdin-demo 
