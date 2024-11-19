@@ -16,11 +16,20 @@ TARGET = [
 
 AFTER = "> output/state.json"
 
+response = subprocess.run("docker run hello-world", shell=True, capture_output=True)
+print(response.stdout.decode())
+print(response.stderr.decode())
+exit(0)
+
 response = subprocess.run(
     f"{BEFORE} && {TAP} | {' '.join(TARGET)} {AFTER}",
     shell=True,
     capture_output=True,
 )
+
+if response.returncode != 0:
+    print(response.stderr.decode())
+    exit(1)
 
 stdout = response.stdout.decode()
 stderr = response.stderr.decode()

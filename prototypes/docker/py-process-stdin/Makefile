@@ -5,6 +5,7 @@ venv .venv:
 	.venv/bin/pip install -r requirements.txt
 
 images:
+	docker build -t main .
 	docker build -t tap-mock ./tap_mock/
 	docker build -t target-csv ./target_csv/
 
