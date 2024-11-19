@@ -1,21 +1,28 @@
 """Runs the same script as 'test.sh' but in Python."""
 
-import docker
+import subprocess
 
+BEFORE = "rm -rf output && mkdir output"
 
-client = docker.from_env()
+TAP = "docker run --rm tap-mock"
+TARGET = [
+    "docker run",
+    "--rm",
+    "--volume ./output:/app",
+    "--workdir /app",
+    "--interactive",
+    "target-csv",
+]
 
+AFTER = "> output/state.json"
 
-container = client.containers.run(
-    "hello-world",
-    detach=True,
+response = subprocess.run(
+    f"{BEFORE} && {TAP} | {' '.join(TARGET)} {AFTER}",
+    shell=True,
+    capture_output=True,
 )
 
-container.wait()
+stdout = response.stdout.decode()
+stderr = response.stderr.decode()
 
-stdout = container.logs(stdout=True, stderr=False)
-stderr = container.logs(stdout=False, stderr=True)
-
-container.remove()
-
-print(stdout.decode())
+print(stdout)
