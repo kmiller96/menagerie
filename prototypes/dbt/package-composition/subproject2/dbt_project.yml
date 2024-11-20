@@ -14,6 +14,11 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+seeds:
+  subproject2:
+    two:
+      +schema: two
+
 models:
   subproject2:
     +materialized: view
