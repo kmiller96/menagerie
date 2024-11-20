@@ -1,0 +1,4 @@
+packages:
+  - local: ../subproject1/
+  - local: ../subproject2/
+sha1_hash: cf2f1acd76e2c1454edfb080510ce2beedfe8af2

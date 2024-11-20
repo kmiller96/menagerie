@@ -1,0 +1,3 @@
+packages:
+  - local: ../subproject1/
+  - local: ../subproject2/
