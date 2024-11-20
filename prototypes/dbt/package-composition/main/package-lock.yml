@@ -1,4 +1,6 @@
 packages:
   - local: ../subproject1/
-  - local: ../subproject2/
-sha1_hash: cf2f1acd76e2c1454edfb080510ce2beedfe8af2
+  - git: git@github.com:kmiller96/menagerie.git
+    revision: 5866980992b9b7ec11ce6491c37c0e8582dfb8f9
+    subdirectory: prototypes/dbt/package-composition/subproject2
+sha1_hash: 83a2914541a06bc0f525add409192f352e16601f

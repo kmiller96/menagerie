@@ -1,3 +1,6 @@
 packages:
   - local: ../subproject1/
-  - local: ../subproject2/
+  # - local: ../subproject2/
+  - git: git@github.com:kmiller96/menagerie.git
+    revision: 5866980992b9b7ec11ce6491c37c0e8582dfb8f9
+    subdirectory: prototypes/dbt/package-composition/subproject2
