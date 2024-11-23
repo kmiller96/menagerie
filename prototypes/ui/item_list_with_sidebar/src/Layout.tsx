@@ -7,7 +7,7 @@ const PaddedFlex = (props: FlexProps) => <Flex px={3} py={3} {...props} />;
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <Flex h="100vh" direction="column">
+    <Flex height="100vh" direction="column" overflowY="hidden">
       <Flex
         borderBottomWidth={1}
         borderBottomStyle="solid"
@@ -15,7 +15,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       >
         <TopMenu />
       </Flex>
-      <Flex grow={1} dir="row">
+      <Flex grow={1} dir="row" overflowY="scroll">
         <PaddedFlex
           borderRightWidth={1}
           borderRightStyle="solid"
@@ -23,7 +23,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         >
           <SideMenu />
         </PaddedFlex>
-        <PaddedFlex flexGrow={1} direction="column">
+        <PaddedFlex flexGrow={1} direction="column" overflowY="scroll">
           {children}
         </PaddedFlex>
       </Flex>
