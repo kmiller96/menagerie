@@ -3,7 +3,7 @@ import { AppTitle } from "./AppTitle";
 
 export function TopMenu() {
   return (
-    <HStack justify="center" py={4}>
+    <HStack justify="center" p={4}>
       <AppTitle />
     </HStack>
   );
