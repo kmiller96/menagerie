@@ -1,24 +1,32 @@
-import { Box, BoxProps, Flex } from "@chakra-ui/react";
+import { Flex, FlexProps } from "@chakra-ui/react";
 
-const PaddedBox = (props: BoxProps) => <Box px={3} py={3} {...props} />;
+import { SideMenu } from "./components/SideMenu";
+import { TopMenu } from "./components/TopMenu";
 
-export function Layout({
-  children,
-}: {
-  children: [React.ReactNode, React.ReactNode];
-}) {
-  const [sidebar, main] = children;
+const PaddedFlex = (props: FlexProps) => <Flex px={3} py={3} {...props} />;
 
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <Flex h="100vh">
-      <PaddedBox
-        borderWidth={1}
-        borderStyle="solid"
-        borderRightColor="colorPalette.100"
+    <Flex h="100vh" direction="column">
+      <Flex
+        borderBottomWidth={1}
+        borderBottomStyle="solid"
+        borderBottomColor="colorPalette.100"
       >
-        {sidebar}
-      </PaddedBox>
-      <PaddedBox flexGrow={1}>{main}</PaddedBox>
+        <TopMenu />
+      </Flex>
+      <Flex grow={1} dir="row">
+        <PaddedFlex
+          borderRightWidth={1}
+          borderRightStyle="solid"
+          borderRightColor="colorPalette.100"
+        >
+          <SideMenu />
+        </PaddedFlex>
+        <PaddedFlex flexGrow={1} direction="column">
+          {children}
+        </PaddedFlex>
+      </Flex>
     </Flex>
   );
 }
