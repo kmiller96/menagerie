@@ -5,7 +5,7 @@ import { Item } from "@/types";
 
 export function ListItem({ item }: { item: Item }) {
   return (
-    <Card.Root variant="outline" flexDirection="row" size="md">
+    <Card.Root variant="outline" flexDirection="row" flexGrow={1} size="md">
       <Flex p={4} align="center" justify="center">
         <FaChartColumn size={32} />
       </Flex>

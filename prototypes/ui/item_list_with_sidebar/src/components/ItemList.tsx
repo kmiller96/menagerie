@@ -1,4 +1,4 @@
-import { VStack, For } from "@chakra-ui/react";
+import { VStack, For, Link } from "@chakra-ui/react";
 
 import { Item } from "@/types";
 
@@ -8,7 +8,13 @@ import { ListItem } from "./ListItem";
 export function ItemList({ items }: { items: Item[] }) {
   return (
     <VStack align="left" gap={4}>
-      <For each={items}>{(item) => <ListItem key={item.id} item={item} />}</For>
+      <For each={items}>
+        {(item) => (
+          <Link href={`/question/${item.id}`}>
+            <ListItem key={item.id} item={item} />
+          </Link>
+        )}
+      </For>
     </VStack>
   );
 }
