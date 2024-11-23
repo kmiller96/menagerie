@@ -11,10 +11,14 @@ export function Layout({
 
   return (
     <Flex h="100vh">
-      <PaddedBox bg="blue.100">{sidebar}</PaddedBox>
-      <PaddedBox flexGrow={1} bg="red.100">
-        {main}
+      <PaddedBox
+        borderWidth={1}
+        borderStyle="solid"
+        borderRightColor="colorPalette.100"
+      >
+        {sidebar}
       </PaddedBox>
+      <PaddedBox flexGrow={1}>{main}</PaddedBox>
     </Flex>
   );
 }
