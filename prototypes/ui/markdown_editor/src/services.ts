@@ -1,11 +1,11 @@
 import { Note, NoteMetadata } from "./types";
-import { NOTES } from "./data";
+import { notes } from "./data";
 
 export class NotesService {
   notes: Note[];
 
   constructor() {
-    this.notes = NOTES;
+    this.notes = notes;
   }
 
   public list(): NoteMetadata[] {
@@ -16,8 +16,14 @@ export class NotesService {
     });
   }
 
-  public get(id: string): Note | undefined {
-    return this.notes.find((note) => note.id === id);
+  public get(id: string): Note {
+    const note = this.notes.find((note) => note.id === id);
+
+    if (!note) {
+      throw new Error(`Note with id ${id} not found`);
+    }
+
+    return note;
   }
 
   public save(note: Note): void {

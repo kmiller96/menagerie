@@ -1,6 +1,6 @@
 import { Note } from "./types";
 
-export const NOTES: Note[] = [
+export let notes: Note[] = [
   {
     id: "one.md",
     content: "",
