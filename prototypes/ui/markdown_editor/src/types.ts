@@ -1,6 +1,6 @@
 export type Note = {
   id: string;
-  content: string | undefined;
+  content: string;
 };
 
 export type NoteMetadata = {

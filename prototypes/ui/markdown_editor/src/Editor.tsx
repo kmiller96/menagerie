@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Note } from "./types";
 
-export function Editor({ note }: { note: Note }) {
-  const [value, setValue] = useState<string | undefined>(note.content);
+export function Editor({ note }: { note: Note | undefined }) {
+  const [value, setValue] = useState<string | undefined>(note?.content);
 
   useEffect(() => {
-    setValue(note.content);
+    setValue(note?.content);
   }, [note]);
 
   return (

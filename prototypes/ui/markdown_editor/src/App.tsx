@@ -1,28 +1,33 @@
 import { useState } from "react";
 
-import { listNotes, getNote } from "./handlers";
+import { NotesService } from "./services";
+import { Note } from "./types";
 
 import { Navigator } from "./Navigator";
 import { Editor } from "./Editor";
 
 export default function App() {
-  const notes = listNotes();
-  const [active, setActive] = useState(getNote(notes[0].id));
+  const notes = new NotesService();
+
+  const [active, setActive] = useState<Note | undefined>(undefined);
 
   return (
     <div style={{ display: "flex", flexDirection: "row", height: "100vh" }}>
       <div style={{ backgroundColor: "crimson", width: "20vw" }}>
         <Navigator
-          notes={notes}
+          notes={notes.list()}
           onSelect={(metadata) => {
-            const match = notes.find((note) => note.id == metadata.id);
+            const match = notes.list().find((note) => note.id == metadata.id);
 
             if (!match) {
               throw new Error(`Note with id ${metadata.id} not found`);
             }
 
-            const note = getNote(metadata.id);
-            setActive(note);
+            if (active) {
+              notes.save(active);
+            }
+
+            setActive(notes.get(metadata.id));
           }}
         />
       </div>
