@@ -7,26 +7,15 @@ use crossterm::event::{self, KeyCode, KeyEventKind};
 
 use ratatui::{
     style::Color,
+    text::Text,
     widgets::canvas::{Canvas, Points},
     DefaultTerminal,
 };
 
-// fn run(mut terminal: DefaultTerminal) -> io::Result<()> {
-//     loop {
-//         terminal.draw(|frame| {
-//             let greeting = Paragraph::new("Hello Ratatui! (press 'q' to quit)")
-//                 .white()
-//                 .on_blue();
-//             frame.render_widget(greeting, frame.area());
-//         })?;
+const ROWS: usize = 10;
+const COLS: usize = 50;
 
-//         if let event::Event::Key(key) = event::read()? {
-//             if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
-//                 return Ok(());
-//             }
-//         }
-//     }
-// }
+const ALPHABET: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 enum Event {
     Quit,
@@ -36,39 +25,47 @@ enum Event {
 // Information about the current tick.
 struct App {
     clock: LoopClock,
-    canvas: [Option<char>; 50 * 50], // Canvas is a 50x50 grid
+    canvas: [Option<char>; ROWS * COLS],
 }
 
 impl App {
     fn new() -> App {
         App {
             clock: LoopClock::new(),
-            canvas: [None; 50 * 50],
+            canvas: [None; ROWS * COLS],
         }
     }
 
     // Paint a character on the canvas at a specific position
     fn paint(&mut self, x: usize, y: usize, c: char) {
-        self.canvas[y * 50 + x] = Some(c);
+        todo!();
     }
 
     // Renders the UI to the screen
     fn draw(&self, terminal: &mut DefaultTerminal) {
-        let _ = terminal.draw(|frame| {
-            frame.render_widget(
-                Canvas::default().paint(|ctx| {
-                    ctx.draw(&Points {
-                        coords: &[(0.0, 0.0), (1.0, 1.0)],
-                        color: Color::Red,
-                    })
-                }),
-                frame.area(),
-            )
-        });
+        // -- Build content -- //
+        let mut content = String::new();
+
+        for i in 0..(ROWS * COLS) {
+            let c = match self.canvas[i] {
+                Some(c) => c,
+                // None => ' ',
+                None => ALPHABET.chars().nth(i % ALPHABET.len()).unwrap(),
+            };
+
+            content.push(c);
+
+            if (i + 1) % COLS == 0 {
+                content.push('\n');
+            }
+        }
+
+        // -- Draw content -- //
+        let _ = terminal.draw(|frame| frame.render_widget(Text::raw(content), frame.area()));
     }
 
     // Handle events
-    fn handle(&self, terminal: &DefaultTerminal) -> Option<Event> {
+    fn handle(&self) -> Option<Event> {
         let keyevent = match event::read() {
             Ok(event) => event,
             Err(_) => return None,
@@ -88,7 +85,7 @@ impl App {
         loop {
             // Run event loop
             self.draw(terminal);
-            match self.handle(terminal) {
+            match self.handle() {
                 Some(Event::Quit) => break,
                 _ => (),
             }
