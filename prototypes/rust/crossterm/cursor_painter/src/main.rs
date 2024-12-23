@@ -15,74 +15,114 @@ fn main() -> io::Result<()> {
     execute!(stdout, EnterAlternateScreen)?;
     enable_raw_mode()?;
 
-    app.run(&mut stdout)?;
+    app.run()?;
 
     disable_raw_mode()?;
     execute!(stdout, LeaveAlternateScreen)?;
-    Ok(())
 
-    // for y in 0..40 {
-    //     for x in 0..150 {
-    //         if (y == 0 || y == 40 - 1) || (x == 0 || x == 150 - 1) {
-    //             // in this loop we are more efficient by not flushing the buffer.
-    //             stdout
-    //                 .queue(cursor::MoveTo(x, y))?
-    //                 .queue(style::PrintStyledContent("█".magenta()))?;
-    //         }
-    //     }
-    // }
+    Ok(())
 }
 
 #[derive(Debug)]
 struct App {
     exit: bool,
+    stdout: io::Stdout,
 }
 
 impl App {
+    /** Creates a new instance of the app. */
     pub fn init() -> Self {
-        App { exit: false }
+        let mut stdout = io::stdout();
+
+        App {
+            exit: false,
+            stdout,
+        }
     }
 
-    pub fn run(&mut self, stdout: &mut io::Stdout) -> io::Result<()> {
-        execute!(stdout, terminal::Clear(terminal::ClearType::All))?;
+    /** Runs the app. */
+    pub fn run(&mut self) -> io::Result<()> {
+        self.setup()?;
 
         while !self.exit {
-            self.draw(stdout)?;
+            self.draw()?;
             self.handle_events()?;
         }
 
-        stdout.flush()?;
+        self.stdout.flush()?;
         Ok(())
     }
 
-    fn draw(&self, stdout: &mut io::Stdout) -> io::Result<()> {
-        queue!(stdout, cursor::MoveTo(1, 1), style::Print("Hello World!"))?;
+    /** Performs the initial draw. */
+    fn setup(&mut self) -> io::Result<()> {
+        queue!(
+            self.stdout,
+            terminal::Clear(terminal::ClearType::All),
+            cursor::MoveTo(1, 1),
+            style::Print("Hello World!"),
+            cursor::MoveTo(0, 0)
+        )?;
 
-        stdout.flush()?;
+        self.stdout.flush()?;
+        Ok(())
+    }
+
+    /** Draws the terminal screen. */
+    fn draw(&mut self) -> io::Result<()> {
+        self.stdout.flush()?;
 
         Ok(())
     }
 
+    /** Handles terminal events. */
     fn handle_events(&mut self) -> io::Result<()> {
         let event = event::read()?;
 
         match event {
-            event::Event::Key(e) => {
-                if e.kind == event::KeyEventKind::Press {
+            event::Event::Key(e) => match e.kind {
+                event::KeyEventKind::Press => {
                     self.handle_keypress(e)?;
                 }
-            }
+                _ => {}
+            },
             _ => {}
         }
 
         Ok(())
     }
 
+    /** Handles keypress events. */
     fn handle_keypress(&mut self, key: event::KeyEvent) -> io::Result<()> {
         match key.code {
+            // Exit the app
             event::KeyCode::Char('q') => {
                 self.exit = true;
             }
+
+            // Move the cursor
+            event::KeyCode::Up | event::KeyCode::Char('w') => {
+                queue!(self.stdout, cursor::MoveUp(1))?;
+            }
+            event::KeyCode::Down | event::KeyCode::Char('s') => {
+                queue!(self.stdout, cursor::MoveDown(1))?;
+            }
+            event::KeyCode::Left | event::KeyCode::Char('a') => {
+                queue!(self.stdout, cursor::MoveLeft(1))?;
+            }
+            event::KeyCode::Right | event::KeyCode::Char('d') => {
+                queue!(self.stdout, cursor::MoveRight(1))?;
+            }
+
+            // Paint
+            event::KeyCode::Char(' ') => {
+                queue!(
+                    self.stdout,
+                    style::PrintStyledContent("█".bold()),
+                    cursor::MoveLeft(1) // HACK: Move the cursor back to the left
+                )?;
+            }
+
+            // Do nothing for other keys
             _ => {}
         }
 
