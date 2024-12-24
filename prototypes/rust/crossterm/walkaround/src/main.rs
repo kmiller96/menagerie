@@ -2,7 +2,7 @@ mod app;
 
 use anyhow::Result;
 use crossterm::{
-    execute,
+    cursor, execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::io;
@@ -24,7 +24,7 @@ fn main() -> Result<()> {
 
 /** Sets up the terminal. */
 fn setup(stdout: &mut io::Stdout) -> Result<()> {
-    execute!(stdout, EnterAlternateScreen)?;
+    execute!(stdout, EnterAlternateScreen, cursor::Hide)?;
     enable_raw_mode()?;
 
     Ok(())
@@ -33,7 +33,7 @@ fn setup(stdout: &mut io::Stdout) -> Result<()> {
 /** Tears down the terminal. */
 fn teardown(stdout: &mut io::Stdout) -> io::Result<()> {
     disable_raw_mode()?;
-    execute!(stdout, LeaveAlternateScreen)?;
+    execute!(stdout, LeaveAlternateScreen, cursor::Show)?;
 
     Ok(())
 }
