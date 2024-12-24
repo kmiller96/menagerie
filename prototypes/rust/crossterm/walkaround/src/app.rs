@@ -87,15 +87,35 @@ impl App {
         match event {
             // -- Handle key events -- //
             event::Event::Key(event) => {
-                if is_quit_event(event) {
-                    self.status = AppStatus::Quit;
-                }
+                self.handle_key_event(event);
             }
             // -- Default Handler -- //
             _ => {}
         }
 
         Ok(())
+    }
+
+    fn handle_key_event(&mut self, event: event::KeyEvent) {
+        if is_quit_event(event) {
+            self.status = AppStatus::Quit;
+        }
+
+        if is_left_move_event(event) {
+            self.player.position.0 -= 1;
+        }
+
+        if is_right_move_event(event) {
+            self.player.position.0 += 1;
+        }
+
+        if is_up_move_event(event) {
+            self.player.position.1 -= 1;
+        }
+
+        if is_down_move_event(event) {
+            self.player.position.1 += 1;
+        }
     }
 }
 
@@ -112,4 +132,27 @@ fn is_quit_event(event: event::KeyEvent) -> bool {
         && event.modifiers == event::KeyModifiers::CONTROL;
 
     q_press || esc_press || ctrl_c
+}
+
+fn is_left_move_event(event: event::KeyEvent) -> bool {
+    event.kind == event::KeyEventKind::Press
+        && matches!(event.code, event::KeyCode::Left | event::KeyCode::Char('a'))
+}
+
+fn is_right_move_event(event: event::KeyEvent) -> bool {
+    event.kind == event::KeyEventKind::Press
+        && matches!(
+            event.code,
+            event::KeyCode::Right | event::KeyCode::Char('d')
+        )
+}
+
+fn is_up_move_event(event: event::KeyEvent) -> bool {
+    event.kind == event::KeyEventKind::Press
+        && matches!(event.code, event::KeyCode::Up | event::KeyCode::Char('w'))
+}
+
+fn is_down_move_event(event: event::KeyEvent) -> bool {
+    event.kind == event::KeyEventKind::Press
+        && matches!(event.code, event::KeyCode::Down | event::KeyCode::Char('s'))
 }
