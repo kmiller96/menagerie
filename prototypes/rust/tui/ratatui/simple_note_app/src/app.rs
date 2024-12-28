@@ -2,7 +2,8 @@ use std::io;
 use std::thread;
 use std::time;
 
-use ratatui;
+use ratatui::style::Stylize;
+use ratatui::{style, widgets, DefaultTerminal, Frame};
 
 pub struct App;
 
@@ -11,7 +12,7 @@ impl App {
         App
     }
 
-    pub fn run(&self, terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
+    pub fn run(&self, terminal: &mut DefaultTerminal) -> io::Result<()> {
         terminal.clear()?;
 
         terminal.draw(|frame| self.draw(frame))?;
@@ -21,7 +22,11 @@ impl App {
         Ok(())
     }
 
-    pub fn draw(&self, frame: &mut ratatui::Frame) {
-        frame.render_widget("Hello World!", frame.area());
+    pub fn draw(&self, frame: &mut Frame) {
+        let list = widgets::List::new(vec!["Item 1", "Item 2", "Item 3"])
+            .highlight_style(style::Style::new().italic())
+            .highlight_symbol(">>");
+
+        frame.render_widget(list, frame.area());
     }
 }
