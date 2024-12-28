@@ -1,19 +1,15 @@
-use std::io;
-use std::thread;
-use std::time;
-
 use ratatui;
+use std::io;
+
+mod app;
+use app::App;
 
 fn main() -> io::Result<()> {
     let mut terminal = ratatui::init();
 
-    terminal.clear()?;
-    terminal.draw(|frame| {
-        frame.render_widget("Hello World!", frame.area());
-    })?;
-
-    thread::sleep(time::Duration::from_secs(2));
+    let app = App::new();
+    let result = app.run(&mut terminal);
 
     ratatui::restore();
-    Ok(())
+    result
 }
