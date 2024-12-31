@@ -1,1 +1,3 @@
 -r hello_world/requirements.txt
+-r prompt_templates/requirements.txt
+-r rag/requirements.txt
