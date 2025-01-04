@@ -6,8 +6,8 @@ export default async function Posts() {
 
   return (
     <>
-      <h1 style={{ marginBottom: 20 }}>Posts Page</h1>
       <Nav />
+      <h1 style={{ marginBottom: 20 }}>Posts Page</h1>
       {posts.map((post: { id: string; title: string; body: string }) => (
         <div
           key={post.id}
