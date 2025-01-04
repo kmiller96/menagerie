@@ -1,62 +1,40 @@
 import { Application, Assets, Sprite } from "pixi.js";
+import { square, hexagon } from "./shapes";
 
-(async () => {
-  // Create a new application
+async function initApp(): Promise<Application> {
   const app = new Application();
+  await app.init({ background: "#fff", resizeTo: window });
 
-  // Initialize the application
-  await app.init({ background: "#1099bb", resizeTo: window });
-
-  // Append the application canvas to the document body
   document.getElementById("pixi-container")!.appendChild(app.canvas);
 
-  // Load the bunny texture
-  const texture = await Assets.load("/assets/bunny.png");
+  return app;
+}
 
-  // Create a bunny Sprite
-  const bunny = new Sprite(texture);
+(async () => {
+  const app = await initApp();
 
-  // Center the sprite's anchor point
-  bunny.anchor.set(0.5);
+  const length = 100;
+  const hexWidth = 2 * length;
+  const hexHeight = Math.sqrt(3) * length;
 
-  // Move the sprite to the center of the screen
-  bunny.position.set(app.screen.width / 2, app.screen.height / 2);
+  const horizontalSpacing = (3 / 4) * hexWidth;
+  const verticalSpacing = hexHeight;
 
-  // Add the bunny to the stage
-  app.stage.addChild(bunny);
+  const x = 100;
+  const y = 100;
 
-  // Listen for animate update
-  let vx = 0;
-  let vy = 0;
+  // Starting hex
+  app.stage.addChild(hexagon({ x, y, length }));
 
-  onkeydown = (e) => {
-    if (["ArrowRight", "d"].includes(e.key)) {
-      vx = 10;
-    }
-    if (["ArrowLeft", "a"].includes(e.key)) {
-      vx = -10;
-    }
-    if (["ArrowUp", "w"].includes(e.key)) {
-      vy = -10;
-    }
-    if (["ArrowDown", "s"].includes(e.key)) {
-      vy = 10;
-    }
-  };
+  app.stage.addChild(hexagon({ x, y: y + verticalSpacing / 2, length }));
+  app.stage.addChild(hexagon({ x, y: y + (2 * verticalSpacing) / 2, length }));
 
-  onkeyup = (e) => {
-    if (["ArrowRight", "ArrowLeft", "d", "a"].includes(e.key)) {
-      vx = 0;
-    }
-    if (["ArrowUp", "ArrowDown", "w", "s"].includes(e.key)) {
-      vy = 0;
-    }
-  };
-
-  app.ticker.add((time) => {
-    bunny.x += vx;
-    bunny.y += vy;
-
-    bunny.rotation += 0.1 * time.deltaTime;
-  });
+  app.stage.addChild(
+    hexagon({
+      x: x + horizontalSpacing / 2,
+      y: y + verticalSpacing / 4,
+      length,
+    })
+  );
+  app.stage.addChild(hexagon({ x, y: y + (2 * verticalSpacing) / 2, length }));
 })();
