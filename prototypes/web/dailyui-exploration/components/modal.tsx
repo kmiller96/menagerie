@@ -14,7 +14,7 @@ export function Modal() {
 function ModalButton() {
   return (
     <button
-      className="btn"
+      className="btn btn-secondary"
       onClick={() => {
         const modal = document.getElementById(MODAL_ID) as HTMLDialogElement;
         modal.showModal();
