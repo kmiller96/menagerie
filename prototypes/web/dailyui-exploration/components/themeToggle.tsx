@@ -11,7 +11,7 @@ export function ThemeToggle() {
       <input
         type="checkbox"
         className="theme-controller"
-        value={darkMode ? "dark" : "lemonade"}
+        value={darkMode ? "dark" : "mytheme"}
         onClick={() => {
           useDarkMode((prev) => !prev);
         }}
