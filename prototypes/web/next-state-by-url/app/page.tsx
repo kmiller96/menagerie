@@ -1,3 +1,5 @@
+import { Center } from "@/components/layout";
+
 function Title() {
   return (
     <div className="mb-5">
@@ -29,11 +31,11 @@ function SearchForm() {
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-grow items-center justify-center h-min-screen">
+    <Center>
       <div className="w-6/12 flex flex-col items-center justify-center">
         <Title />
         <SearchForm />
       </div>
-    </div>
+    </Center>
   );
 }
