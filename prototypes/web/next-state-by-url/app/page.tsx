@@ -14,6 +14,7 @@ function SearchForm() {
         <div className="flex flex-row join">
           <input
             type="text"
+            name="query"
             placeholder="What are you looking for?"
             className="input input-bordered flex-grow join-item"
           />
