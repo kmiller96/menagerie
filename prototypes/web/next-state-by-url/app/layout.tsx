@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { NavBar } from "@/components/nav";
 
 export const metadata: Metadata = {
   title: "State by URL",
@@ -14,7 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+      <body data-theme className={`antialiased flex flex-col min-h-screen`}>
+        <NavBar />
+        {children}
+      </body>
     </html>
   );
 }
