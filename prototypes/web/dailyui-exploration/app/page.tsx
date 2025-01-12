@@ -1,3 +1,4 @@
+import { Card } from "@/components/card";
 import { Modal } from "@/components/modal";
 import { ThemeToggle } from "@/components/themeToggle";
 
@@ -8,6 +9,7 @@ export default function Home() {
         <ThemeToggle />
         <Modal />
         <button className="btn btn-primary">I do nothing</button>
+        <Card />
       </div>
     </div>
   );
