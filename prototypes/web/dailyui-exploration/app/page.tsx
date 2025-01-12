@@ -9,6 +9,8 @@ export default function Home() {
         <ThemeToggle />
         <Modal />
         <button className="btn btn-primary">I do nothing</button>
+        <button className="btn btn-primary btn-invert">I'm inverted!</button>
+        <button className="btn btn-spin">I'm spinning!</button>
         <Card />
       </div>
     </div>
