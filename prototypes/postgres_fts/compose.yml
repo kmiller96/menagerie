@@ -6,3 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    
+    volumes:
+      - ./data:/mnt/data
+      - ./ddl:/docker-entrypoint-initdb.d
