@@ -1,4 +1,4 @@
-COPY test(id, name)
-FROM '/mnt/data/test.csv'
+COPY movies
+FROM '/mnt/data/movies.csv'
 DELIMITER ','
 CSV HEADER;
