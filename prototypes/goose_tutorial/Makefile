@@ -5,3 +5,6 @@ export GOOSE_MIGRATION_DIR=./migrations
 migrations:
 	goose up
 .PHONY: migrations
+
+connect:
+	sqlite3 db.sqlite3
