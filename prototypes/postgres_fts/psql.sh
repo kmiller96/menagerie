@@ -1,3 +1,5 @@
+ARGS=${@}
+
 docker run \
     -it --rm --network host \
     postgres:14 \
@@ -5,4 +7,4 @@ docker run \
     --host localhost \
     --port 5432 \
     --username postgres \
-    postgres
+    postgres ${ARGS}
