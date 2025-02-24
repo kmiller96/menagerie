@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${karla.className} antialiased min-h-screen`}
-        data-theme="light"
+        data-theme="black"
       >
         {children}
       </body>
