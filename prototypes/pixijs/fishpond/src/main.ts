@@ -5,6 +5,7 @@ import assets from "./assets";
 import { Fish } from "./types";
 import { addBackground } from "./addBackground";
 import { addFishes, animateFishes } from "./addFishes";
+import { addWaterOverlay, animateWaterOverlay } from "./addWaterOverlay";
 
 (async () => {
   // Create a PixiJS application.
@@ -19,9 +20,11 @@ import { addFishes, animateFishes } from "./addFishes";
 
     addBackground(app);
     addFishes(app, fishes);
+    addWaterOverlay(app);
 
     app.ticker.add((time) => {
       animateFishes(app, fishes, time);
+      animateWaterOverlay(app, time);
     });
   })();
 
