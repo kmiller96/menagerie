@@ -1,6 +1,7 @@
 import { Application, Assets } from "pixi.js";
 
 import assets from "./assets";
+import { addBackground } from "./addBackground";
 
 (async () => {
   // Create a PixiJS application.
@@ -10,6 +11,8 @@ import assets from "./assets";
   (async () => {
     await setup();
     await preload();
+
+    addBackground(app);
   })();
 
   async function setup() {
