@@ -8,6 +8,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --terminal-bg-color: black;
+  --terminal-fg-color: #87de47;
+  --terminal-accent-color: #87de47;
+  --terminal-error-color: #ed262e;
 }
 
 @media (prefers-color-scheme: dark) {

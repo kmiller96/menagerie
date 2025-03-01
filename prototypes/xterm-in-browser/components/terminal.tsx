@@ -2,33 +2,39 @@
 
 import { useEffect } from "react";
 
-import { Terminal as XTerm } from "@xterm/xterm";
-import "@xterm/xterm/css/xterm.css";
+import { initTerminal } from "ttty";
 
 export function Terminal() {
   useEffect(() => {
-    // Initialise xterm
-    const container = document.getElementById("terminal")!;
-    const xterm = new XTerm({
-      cursorBlink: true,
+    const terminal = initTerminal({
+      host: document.getElementById("terminal")!,
+      prompt: "guest@kalemiller.com $ ",
+      commands: {
+        ls: {
+          name: "ls",
+          description: "List directory contents",
+          func: (terminal) => {
+            terminal.print("There is nothing here...");
+          },
+        },
+        clear: {
+          name: "clear",
+          description: "Clear the terminal screen",
+          func: (terminal) => {
+            terminal.commandContainer.innerHTML = "";
+          },
+        },
+      },
     });
-    xterm.open(container);
-
-    // Handlers
-    xterm.onKey((e) => {
-      console.log(e.key);
-
-      if (e.key === "\r") {
-        xterm.writeln("");
-        return;
-      } else {
-        xterm.write(e.key);
-      }
-    });
-
-    // Focus
-    xterm.focus();
   }, []);
 
-  return <div id="terminal" className="w-screen h-screen"></div>;
+  return (
+    <div
+      id="terminal"
+      style={{
+        width: "100vw",
+        height: "50vh",
+      }}
+    ></div>
+  );
 }
