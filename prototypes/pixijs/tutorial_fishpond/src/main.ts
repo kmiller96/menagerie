@@ -14,7 +14,7 @@ import { addDisplacementEffect } from "./addDisplacementEffect";
 
   const fishes: Array<Fish> = [];
 
-  // Asynchronous IIFE
+  // Asynchronous IIF
   (async () => {
     await setup();
     await preload();
