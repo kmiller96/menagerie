@@ -1,8 +1,9 @@
 import { Application, Graphics } from "pixi.js";
 
-const CIRCLE_RADIUS = [1, 5];
+const CIRCLE_RADIUS = [5, 20];
 const CIRCLE_FILL_COLOR = 0xffffff;
-const TIME_BETWEEN_REFRESH = 2000;
+const TIME_BETWEEN_DRAW = 100;
+const TIME_BETWEEN_CLEAR = 1000;
 
 // ------------- //
 // -- Helpers -- //
@@ -39,14 +40,27 @@ async function draw(app: Application) {
 (async () => {
   const app = await init();
 
-  let lastRefresh = Date.now();
+  window.addEventListener("keydown", (event) => {
+    if (event.code.toLowerCase() == "space") {
+      app.stage.removeChildren();
+    }
+  });
+
+  await draw(app);
+  let lastDraw = Date.now();
+  let lastClear = Date.now();
 
   app.ticker.add(async () => {
-    await draw(app);
+    const now = Date.now();
 
-    if (Date.now() - lastRefresh > TIME_BETWEEN_REFRESH) {
+    if (now - lastClear > TIME_BETWEEN_CLEAR) {
       app.stage.removeChildren();
-      lastRefresh = Date.now();
+      lastClear = Date.now();
+    }
+
+    if (now - lastDraw > TIME_BETWEEN_DRAW) {
+      await draw(app);
+      lastDraw = Date.now();
     }
   });
 })();
