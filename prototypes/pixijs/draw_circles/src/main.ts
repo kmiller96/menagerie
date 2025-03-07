@@ -1,35 +1,44 @@
-import { Application, Assets, Sprite } from "pixi.js";
+import { Application, Graphics } from "pixi.js";
 
-(async () => {
-  // Create a new application
+const CIRCLE_RADIUS = [1, 5];
+const CIRCLE_FILL_COLOR = 0xffffff;
+
+// ------------- //
+// -- Helpers -- //
+// ------------- //
+
+// ------------------------ //
+// -- Main Program Loops -- //
+// ------------------------ //
+
+/** Initialises the application */
+async function init() {
   const app = new Application();
-
-  // Initialize the application
   await app.init({ background: "#1099bb", resizeTo: window });
 
-  // Append the application canvas to the document body
   document.getElementById("pixi-container")!.appendChild(app.canvas);
 
-  // Load the bunny texture
-  const texture = await Assets.load("/assets/bunny.png");
+  return app;
+}
 
-  // Create a bunny Sprite
-  const bunny = new Sprite(texture);
+/** Draws the screen */
+async function draw(app: Application) {
+  for (let i = 0; i < 10; i++) {
+    const x = Math.round(Math.random() * app.screen.width);
+    const y = Math.round(Math.random() * app.screen.height);
+    const r =
+      Math.round(Math.random() * (CIRCLE_RADIUS[1] - CIRCLE_RADIUS[0])) +
+      CIRCLE_RADIUS[0];
 
-  // Center the sprite's anchor point
-  bunny.anchor.set(0.5);
+    const circle = new Graphics().circle(x, y, r).fill(CIRCLE_FILL_COLOR);
+    app.stage.addChild(circle);
+  }
+}
 
-  // Move the sprite to the center of the screen
-  bunny.position.set(app.screen.width / 2, app.screen.height / 2);
+(async () => {
+  const app = await init();
 
-  // Add the bunny to the stage
-  app.stage.addChild(bunny);
-
-  // Listen for animate update
-  app.ticker.add((time) => {
-    // Just for fun, let's rotate mr rabbit a little.
-    // * Delta is 1 if running at 100% performance *
-    // * Creates frame-independent transformation *
-    bunny.rotation += 0.1 * time.deltaTime;
+  app.ticker.add(async () => {
+    await draw(app);
   });
 })();
