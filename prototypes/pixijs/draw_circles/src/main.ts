@@ -2,6 +2,7 @@ import { Application, Graphics } from "pixi.js";
 
 const CIRCLE_RADIUS = [1, 5];
 const CIRCLE_FILL_COLOR = 0xffffff;
+const TIME_BETWEEN_REFRESH = 2000;
 
 // ------------- //
 // -- Helpers -- //
@@ -38,7 +39,14 @@ async function draw(app: Application) {
 (async () => {
   const app = await init();
 
+  let lastRefresh = Date.now();
+
   app.ticker.add(async () => {
     await draw(app);
+
+    if (Date.now() - lastRefresh > TIME_BETWEEN_REFRESH) {
+      app.stage.removeChildren();
+      lastRefresh = Date.now();
+    }
   });
 })();
