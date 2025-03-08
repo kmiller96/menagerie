@@ -1,0 +1,1 @@
+pnpm --package=create-pixi.js dlx cpa
