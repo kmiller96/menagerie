@@ -1,3 +1,3 @@
-from dnd_dungeon_generator import main
+from dnd_dungeon_generator import generate
 
-main()
+generate()
