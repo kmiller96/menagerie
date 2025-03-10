@@ -1,34 +1,35 @@
 import random
+import itertools
 
-from dnd_dungeon_generator.seeds import locations, history
-
-#############
-## Helpers ##
-#############
+from dnd_dungeon_generator.seeds import locations, history, monsters
+from dnd_dungeon_generator.types import History, Monster, Location
 
 
-def _unroll_options() -> dict[str, list[dict]]:
-    """Unrolls the options for each location."""
+def pick_location() -> Location:
+    return random.choice(locations)
+
+
+def pick_history(location: str) -> History:
+    """Picks a random history for a given location."""
 
     unrolled = {}
 
-    for location_list, options in history.items():
-        for location in location_list:
-            unrolled[location] = options
+    for config, options in history.items():
+        for loc in config.locations:
+            unrolled[loc] = options
 
-    return unrolled
-
-
-################
-## Generators ##
-################
+    return random.choice(unrolled[location])
 
 
-def pick_history(location: str) -> dict:
-    """Picks a random history for a given location."""
-    options = _unroll_options()
-    return random.choice(options[location])
+def pick_monster(location: str, history: str) -> Monster:
+    """Picks a random monster for a given location and history."""
+    unrolled = {}
 
+    for config, options in monsters.items():
+        for loc, hist in itertools.product(config.locations, config.history):
+            if (loc, hist) not in unrolled:
+                unrolled[(loc, hist)] = []
 
-def pick_location() -> dict:
-    return random.choice(locations)
+            unrolled[(loc, hist)] += options
+
+    return random.choice(unrolled[(location, history)])
