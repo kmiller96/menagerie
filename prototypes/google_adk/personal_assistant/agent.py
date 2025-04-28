@@ -1,9 +1,59 @@
+import json
+from functools import wraps
 from textwrap import dedent
 from google.adk.agents import Agent
 
-tasks = {}
+#############
+## Helpers ##
+#############
 
 
+def load_tasks():
+    """Loads the tasks from a JSON file."""
+    global tasks
+    try:
+        with open("tasks.json", "r") as f:
+            tasks = json.load(f)
+    except FileNotFoundError:
+        tasks = {}
+
+
+def save_tasks():
+    """Saves the tasks to a JSON file."""
+    with open("tasks.json", "w") as f:
+        json.dump(tasks, f, indent=4)
+
+
+def read(func):
+    """Decorator to ensure tasks are loaded before executing a function."""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        load_tasks()
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+def write(func):
+    """Decorator to ensure tasks are both loaded and saved after executing a function."""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        load_tasks()
+        result = func(*args, **kwargs)
+        save_tasks()
+        return result
+
+    return wrapper
+
+
+###########
+## Tools ##
+###########
+
+
+@read
 def list_tasks(incompleted_only: bool = False, completed_only: bool = False):
     """Returns a list of all tasks.
 
@@ -25,6 +75,7 @@ def list_tasks(incompleted_only: bool = False, completed_only: bool = False):
         return [task["text"] for task in tasks.values()]
 
 
+@read
 def search_tasks(query: str) -> list[str]:
     """Returns a list of tasks that match the query.
 
@@ -39,6 +90,7 @@ def search_tasks(query: str) -> list[str]:
     ]
 
 
+@read
 def get_task(task_id: str) -> str:
     """Returns a task by its ID.
 
@@ -54,6 +106,7 @@ def get_task(task_id: str) -> str:
         raise ValueError(f"Task with ID {task_id} not found.")
 
 
+@write
 def update_task(task_id: str, new_text: str) -> bool:
     """Updates a task's text by its ID.
 
@@ -71,6 +124,7 @@ def update_task(task_id: str, new_text: str) -> bool:
         return False
 
 
+@write
 def add_task(task: str) -> str:
     """Adds a task to the list of tasks. Initially marks the task as incomplete.
 
@@ -85,6 +139,7 @@ def add_task(task: str) -> str:
     return task_id
 
 
+@write
 def mark_task_complete(task_id: str) -> bool:
     """Marks a task as completed.
 
@@ -102,6 +157,7 @@ def mark_task_complete(task_id: str) -> bool:
         return False
 
 
+@write
 def mark_task_incomplete(task_id: str) -> bool:
     """Marks a task as incompleted.
 
@@ -119,6 +175,7 @@ def mark_task_incomplete(task_id: str) -> bool:
         return False
 
 
+@write
 def remove_task(task_id: str) -> bool:
     """Removes a task from the list of tasks.
 
@@ -135,6 +192,12 @@ def remove_task(task_id: str) -> bool:
     else:
         return False
 
+
+###########
+## Agent ##
+###########
+
+load_tasks()
 
 root_agent = Agent(
     name="personal_assistant",
