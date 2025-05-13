@@ -24,8 +24,9 @@ async function init(): Promise<Application> {
   const app = await init();
 
   // Create graph
-  const graph = createGraph(app);
+  const graph = await createGraph(12);
+  console.log(graph);
 
   // Draw
-  drawNetwork(app, graph);
+  // drawNetwork(app, graph);
 })();
