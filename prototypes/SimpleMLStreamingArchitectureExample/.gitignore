@@ -1,0 +1,8 @@
+.ipynb_checkpoints/
+.terraform/
+
+__pycache__/
+.pytest_cache/
+
+.build/
+.vscode/

@@ -1,0 +1,12 @@
+# Python ignores.
+__pycache__/
+*.egg-info
+
+
+# Terraform ignores.
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Repo-specific ignores.
+.build/

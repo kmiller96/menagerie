@@ -1,0 +1,12 @@
+Technical Debt:
+    Anything that looks that it could be improved.
+    [X] Remove code duplication across goals/tasks. @done(20-03-22 19:55)
+
+Features:
+    Any new features you want to add to the H.U.B
+    [ ] Snake game.
+    [ ] Backup of state to the cloud.
+    [ ] During project init, write hub state file which enables easier update.
+    [ ] Automatic scraping of TODO tasks for any initialised project.
+    [ ] Integrate project Trello board to CLI for quick updates.
+    [ ] Remove .state/ from git history
