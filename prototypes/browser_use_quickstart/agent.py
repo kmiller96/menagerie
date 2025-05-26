@@ -11,7 +11,7 @@ llm = ChatOpenAI(model="gpt-4o")
 
 async def main():
     agent = Agent(
-        task="Compare the price of gpt-4o and DeepSeek-V3",
+        task="Summarise the top links from Hacker News.",
         llm=llm,
     )
     result = await agent.run()
