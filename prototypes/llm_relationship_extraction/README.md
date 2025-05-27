@@ -12,3 +12,9 @@ example:
 - https://github.com/SapienzaNLP/relik
 - https://github.com/jackboyla/GLiREL
 - https://numind.ai/blog/nuextract-a-foundation-model-for-structured-extraction
+
+## Quickstart
+
+```bash
+uv run extract https://en.wikipedia.org/wiki/Bitcoin
+```
