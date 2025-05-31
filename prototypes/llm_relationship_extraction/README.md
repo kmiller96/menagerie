@@ -16,5 +16,5 @@ example:
 ## Quickstart
 
 ```bash
-uv run extract https://en.wikipedia.org/wiki/Bitcoin
+uv run extract.py https://en.wikipedia.org/wiki/Bitcoin
 ```
