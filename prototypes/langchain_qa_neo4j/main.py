@@ -1,7 +1,9 @@
 import os
 
 from dotenv import load_dotenv
-from langchain_neo4j import Neo4jGraph
+
+from langchain_openai import ChatOpenAI
+from langchain_neo4j import Neo4jGraph, GraphCypherQAChain
 
 ## Load/Set environment variables
 load_dotenv()
@@ -10,7 +12,7 @@ os.environ["NEO4J_USERNAME"] = "neo4j"
 os.environ["NEO4J_PASSWORD"] = "password"
 
 
-graph = Neo4jGraph()
+graph = Neo4jGraph(enhanced_schema=True)
 
 ## Import movie information
 movies_query = """
@@ -33,3 +35,19 @@ FOREACH (genre in split(row.genres, '|') |
 """
 
 graph.query(movies_query)
+
+## Get schema information
+graph.refresh_schema()
+
+## Traverse the graph
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+
+chain = GraphCypherQAChain.from_llm(
+    graph=graph,
+    llm=llm,
+    verbose=True,
+    allow_dangerous_requests=True,
+)
+
+response = chain.invoke({"query": "What was the cast of the Casino?"})
+print(response)
