@@ -40,13 +40,27 @@ enum Commands {
 // ----------------- //
 
 fn encrypt(text: String, secret: u32) -> String {
-    dbg!(text, secret);
-    String::new()
+    let mut output = String::new();
+
+    for c in text.chars() {
+        let shifted = c as u32 + secret;
+        output.push(shifted as u8 as char);
+    }
+
+    dbg!(&output);
+    output
 }
 
 fn decrypt(text: String, secret: u32) -> String {
-    dbg!(text, secret);
-    String::new()
+    let mut output = String::new();
+
+    for c in text.chars() {
+        let unshifted = c as u32 - secret;
+        output.push(unshifted as u8 as char);
+    }
+
+    dbg!(&output);
+    output
 }
 
 fn try_parse_input(input: &FileOrStdin<String>) -> String {
