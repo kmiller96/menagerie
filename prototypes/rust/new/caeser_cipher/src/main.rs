@@ -47,7 +47,6 @@ fn encrypt(text: String, secret: u32) -> String {
         output.push(shifted as u8 as char);
     }
 
-    dbg!(&output);
     output
 }
 
@@ -59,7 +58,6 @@ fn decrypt(text: String, secret: u32) -> String {
         output.push(unshifted as u8 as char);
     }
 
-    dbg!(&output);
     output
 }
 
@@ -84,9 +82,8 @@ fn try_parse_secret(secret: &u32) -> u32 {
 
 fn main() {
     let args = Cli::parse();
-    dbg!(&args);
 
-    match &args.command {
+    let result = match &args.command {
         Commands::Encrypt { input, secret } => {
             let content = try_parse_input(input);
             let secret = try_parse_secret(secret);
@@ -98,4 +95,6 @@ fn main() {
             decrypt(content, secret)
         }
     };
+
+    println!("{}", result);
 }
