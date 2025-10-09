@@ -1,7 +1,8 @@
-use clap::Parser;
-
 use hex;
 use sha2::{Digest, Sha256};
+
+use clap::Parser;
+use indicatif::{ProgressBar, ProgressDrawTarget};
 
 // ---------- //
 // -- Args -- //
@@ -34,6 +35,12 @@ fn parse_args() -> u32 {
 }
 
 fn find_valid_hash(difficulty: u32) -> String {
+    // Initialise progress bar
+    let pb = ProgressBar::no_length();
+    pb.set_draw_target(ProgressDrawTarget::stderr_with_hz(20));
+    pb.set_style(indicatif::ProgressStyle::with_template("{spinner:.green} {msg}").unwrap());
+
+    // Initialse function variables
     let hash: String;
     let mut nonce: u64 = 0;
 
@@ -46,9 +53,10 @@ fn find_valid_hash(difficulty: u32) -> String {
 
         if leading_zeros < difficulty {
             nonce += 1;
+            pb.tick();
+            pb.set_message(format!("Iteration: {}", nonce));
             continue;
         } else {
-            println!("Iterations: {}", nonce);
             hash = candidate;
             break;
         }
