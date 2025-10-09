@@ -1,0 +1,3 @@
+Here is a test file full of content.
+
+It even includes newline characters and emojis! ❤️
