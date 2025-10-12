@@ -12,21 +12,21 @@ fn health_check() -> &'static str {
 }
 
 /// Reverses the input string
-#[get("/reverse")]
-fn reverse() {
-    // stub
+#[get("/reverse?<input>")]
+fn reverse(input: &str) -> String {
+    input.chars().rev().collect()
 }
 
 /// Converts the input string to uppercase
-#[get("/upper")]
-fn upper() {
-    // stub
+#[get("/upper?<input>")]
+fn upper(input: String) -> String {
+    input.to_uppercase()
 }
 
 /// Converts the input string to lowercase
-#[get("/lower")]
-fn lower() {
-    // stub
+#[get("/lower?<input>")]
+fn lower(input: String) -> String {
+    input.to_lowercase()
 }
 
 #[get("/test")]
