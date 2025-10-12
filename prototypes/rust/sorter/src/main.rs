@@ -1,3 +1,6 @@
+use std::fs;
+use std::process;
+
 // ----------- //
 // -- Types -- //
 // ----------- //
@@ -36,7 +39,16 @@ const TEST_PATH: &str = "path/to/file";
 
 /// Discover files in the given path up to the specified depth
 fn find(path: &Path, depth: u32) -> PathVec {
-    vec![TEST_PATH.to_string()]
+    match fs::read_dir(path) {
+        Ok(entries) => {
+            println!("{} entries found", entries.count());
+            return vec![TEST_PATH.to_string()];
+        }
+        Err(e) => {
+            eprintln!("Error reading directory: {}", e);
+            process::exit(1);
+        }
+    }
 }
 
 /// Sorts the given paths based on metadata.
