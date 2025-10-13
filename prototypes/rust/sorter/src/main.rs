@@ -1,10 +1,12 @@
-mod algorithms;
+//! A CLI program that sorts files into folders based on metadata.
+//!
+pub mod algorithms;
 mod cli;
 mod types;
 
 fn main() {
     let args = cli::parse();
-    let paths = algorithms::find(&args.path, args.depth);
+    let paths = algorithms::find(&args.path, args.depth).unwrap();
     let targets = algorithms::sort(&paths);
 
     // TODO: Perform move command on each path
