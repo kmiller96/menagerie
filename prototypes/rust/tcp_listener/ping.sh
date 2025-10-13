@@ -1,0 +1,1 @@
+(echo 'ping!' && sleep 1) | telnet 127.0.0.1 7878
