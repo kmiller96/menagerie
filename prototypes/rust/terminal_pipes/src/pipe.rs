@@ -1,45 +1,54 @@
-use rand::prelude::*;
+use crate::coordinate::Coordinate;
 
-/// Defines a single pipeline in the terminal.
+// ------------- //
+// -- Structs -- //
+// ------------- //
+
+// /// Defines a single pipeline in the terminal.
 pub struct Pipe {
-    pub segments: Vec<(u16, u16)>,
-    pub head: (u16, u16),
+    momentum: Coordinate,
+    pub segments: Vec<Coordinate>,
 }
 
 impl Pipe {
     /// Creates a new, empty Pipe.
-    pub fn new() -> Self {
-        let head = (3, 3); // TODO: Randomize starting position
-
-        let mut segments = Vec::new();
-        segments.push(head);
-
-        Pipe { segments, head }
+    pub fn new(start: Coordinate) -> Self {
+        Pipe {
+            momentum: match start {
+                Coordinate { x: 0, y: 0 } => Coordinate { x: 1, y: 0 },
+                Coordinate { x: 0, y: _ } => Coordinate { x: 1, y: 0 },
+                Coordinate { x: _, y: 0 } => Coordinate { x: 0, y: 1 },
+                _ => panic!("Pipes must start on the top or left edge of the map"),
+            },
+            segments: vec![start],
+        }
     }
 
-    /// Grows the pipe by randomly adding a new segment.
+    /// Gets the start of the pipe.
+    pub fn start(&self) -> Coordinate {
+        self.segments[0]
+    }
+
+    /// Gets the end of the pipe.
+    pub fn end(&self) -> Coordinate {
+        *self
+            .segments
+            .last()
+            .expect("Pipe always has at least one segment")
+    }
+
+    /// Randomly grows the pipe by one segment.
+    ///
+    /// NOTE: At the moment, this is all placeholder logic. It just grows in a
+    /// straight line. But eventually it will grow in random directions.
     pub fn grow(&mut self) {
-        let dx: i16;
-        let dy: i16;
+        let head = self.end();
 
-        if self.segments.len() == 1 {
-            // First segment is always normal to wall
-            // TODO: Figure out how to do this based on wall
-            dx = 0;
-            dy = 1;
-        } else {
-            let mut rng = rand::rng();
-
-            dx = if rng.random::<bool>() { 1 } else { -1 };
-            dy = if rng.random::<bool>() { 1 } else { -1 };
-        }
-
-        let segment = (
-            (self.head.0 as i16 + dx) as u16,
-            (self.head.1 as i16 + dy) as u16,
-        );
+        let segment = Coordinate {
+            x: head.x + self.momentum.x,
+            y: head.y + self.momentum.y,
+        };
 
         self.segments.push(segment);
-        self.head = segment;
     }
 }

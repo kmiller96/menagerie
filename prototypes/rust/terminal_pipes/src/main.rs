@@ -1,34 +1,42 @@
-mod constants;
-mod graphics;
+mod coordinate;
+mod map;
 mod pipe;
 
-use crossterm::cursor;
-
-use graphics::Graphics;
+use map::Map;
 use pipe::Pipe;
 
+const XDIM: u16 = 10;
+const YDIM: u16 = 10;
+
 fn main() -> std::io::Result<()> {
-    let mut graphics = Graphics::new();
+    let map = Map::new(XDIM, YDIM);
 
-    graphics.clear()?;
-    graphics.print(0, 1, constants::Characters::HorizontalBar.as_str())?;
-    graphics.print(0, 2, constants::Characters::VerticalBar.as_str())?;
-    graphics.print(0, 3, constants::Characters::RightDown.as_str())?;
-    graphics.print(0, 4, constants::Characters::LeftDown.as_str())?;
-    graphics.print(0, 5, constants::Characters::RightUp.as_str())?;
-    graphics.print(0, 6, constants::Characters::LeftUp.as_str())?;
-    graphics.print(0, 7, constants::Characters::TeeLeft.as_str())?;
-    graphics.print(0, 8, constants::Characters::TeeRight.as_str())?;
-    graphics.print(0, 9, constants::Characters::TeeUp.as_str())?;
-    graphics.print(0, 10, constants::Characters::TeeDown.as_str())?;
+    for _ in 0..5 {
+        // Initialise pipe
+        let start = map.random_start_coordinate();
+        let mut pipe = Pipe::new(start);
 
-    let mut pipe = Pipe::new();
-    pipe.grow();
+        println!(
+            "Created pipe starting at: ({}, {})",
+            pipe.start().x,
+            pipe.start().y
+        );
 
-    graphics.print(pipe.head.0, pipe.head.1, "X")?;
+        // Grow
+        loop {
+            pipe.grow();
 
-    graphics.queue(cursor::MoveTo(0, 12))?;
-    graphics.flush()?;
+            let end = pipe.end();
+            if !map.contains(&end) {
+                break;
+            }
+        }
+
+        // Print segments
+        for segment in pipe.segments {
+            println!("Segment at: ({}, {})", segment.x, segment.y);
+        }
+    }
 
     Ok(())
 }
