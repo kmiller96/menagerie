@@ -1,9 +1,11 @@
 mod constants;
 mod graphics;
+mod pipe;
 
 use crossterm::cursor;
 
 use graphics::Graphics;
+use pipe::Pipe;
 
 fn main() -> std::io::Result<()> {
     let mut graphics = Graphics::new();
@@ -19,8 +21,13 @@ fn main() -> std::io::Result<()> {
     graphics.print(0, 8, constants::Characters::TeeRight.as_str())?;
     graphics.print(0, 9, constants::Characters::TeeUp.as_str())?;
     graphics.print(0, 10, constants::Characters::TeeDown.as_str())?;
-    graphics.queue(cursor::MoveTo(0, 12))?;
 
+    let mut pipe = Pipe::new();
+    pipe.grow();
+
+    graphics.print(pipe.head.0, pipe.head.1, "X")?;
+
+    graphics.queue(cursor::MoveTo(0, 12))?;
     graphics.flush()?;
 
     Ok(())
