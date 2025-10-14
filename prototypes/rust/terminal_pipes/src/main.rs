@@ -1,43 +1,27 @@
 mod constants;
+mod graphics;
 
-use std::io::{stdout, Write};
+use crossterm::cursor;
 
-use crossterm::{
-    event, execute,
-    style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
-    ExecutableCommand,
-};
+use graphics::Graphics;
 
 fn main() -> std::io::Result<()> {
-    // using the macro
-    execute!(
-        stdout(),
-        SetForegroundColor(Color::Blue),
-        SetBackgroundColor(Color::Red),
-        Print("Styled text here."),
-        ResetColor
-    )?;
+    let mut graphics = Graphics::new();
 
-    // or using functions
-    stdout()
-        .execute(SetForegroundColor(Color::Blue))?
-        .execute(SetBackgroundColor(Color::Red))?
-        .execute(Print("Styled text here."))?
-        .execute(ResetColor)?;
+    graphics.clear()?;
+    graphics.print(0, 1, constants::Characters::HorizontalBar.as_str())?;
+    graphics.print(0, 2, constants::Characters::VerticalBar.as_str())?;
+    graphics.print(0, 3, constants::Characters::RightDown.as_str())?;
+    graphics.print(0, 4, constants::Characters::LeftDown.as_str())?;
+    graphics.print(0, 5, constants::Characters::RightUp.as_str())?;
+    graphics.print(0, 6, constants::Characters::LeftUp.as_str())?;
+    graphics.print(0, 7, constants::Characters::TeeLeft.as_str())?;
+    graphics.print(0, 8, constants::Characters::TeeRight.as_str())?;
+    graphics.print(0, 9, constants::Characters::TeeUp.as_str())?;
+    graphics.print(0, 10, constants::Characters::TeeDown.as_str())?;
+    graphics.queue(cursor::MoveTo(0, 12))?;
+
+    graphics.flush()?;
 
     Ok(())
 }
-
-// fn main() {
-//     println!("Hello, world!");
-//     println!("{}", constants::Characters::HorizontalBar.as_str());
-//     println!("{}", constants::Characters::VerticalBar.as_str());
-//     println!("{}", constants::Characters::RightDown.as_str());
-//     println!("{}", constants::Characters::LeftDown.as_str());
-//     println!("{}", constants::Characters::RightUp.as_str());
-//     println!("{}", constants::Characters::LeftUp.as_str());
-//     println!("{}", constants::Characters::TeeLeft.as_str());
-//     println!("{}", constants::Characters::TeeRight.as_str());
-//     println!("{}", constants::Characters::TeeUp.as_str());
-//     println!("{}", constants::Characters::TeeDown.as_str());
-// }
