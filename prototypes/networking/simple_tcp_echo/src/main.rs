@@ -1,18 +1,45 @@
-use std::io::{BufRead, BufReader};
+use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 
-fn handle_client(stream: TcpStream) {
-    eprintln!("New client: {}", stream.peer_addr().unwrap());
+fn handle_client(mut stream: TcpStream) {
+    let peer = stream.peer_addr().unwrap();
+    eprintln!("New client: {}", peer);
 
-    let mut reader = BufReader::new(stream);
-    let mut buffer = String::new();
+    loop {
+        let mut buffer = [0; 1028];
+        match stream.read(&mut buffer) {
+            Ok(n) => {
+                // Check for no-bytes disconnect
+                if n == 0 {
+                    eprintln!("Client disconnected: {}", peer);
+                    break;
+                }
 
-    reader.read_line(&mut buffer).unwrap();
+                // Read buffer into string
+                let content = String::from_utf8_lossy(&buffer[..n]);
+                let message = content.trim();
 
-    let response = buffer.trim();
+                // Log raw message to stdout
+                eprintln!("Received: {}", message);
+                println!("{}", message);
 
-    eprintln!("Received: {}", response);
-    println!("{}", response);
+                // Exit on "exit" message
+                if message == "exit" {
+                    eprintln!("Client requested exit: {}", peer);
+                    break;
+                } else {
+                    // Echo message back to client and log.
+                    eprintln!("Sent: {}", message);
+                    stream
+                        .write((message.to_owned() + "\r\n").as_bytes())
+                        .unwrap();
+                }
+            }
+            Err(err) => {
+                panic!("{}", err);
+            }
+        }
+    }
 }
 
 fn main() -> std::io::Result<()> {

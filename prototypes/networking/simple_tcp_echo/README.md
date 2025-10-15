@@ -9,5 +9,5 @@ If the server is started using `server.sh`, the messages will be written to
 
 ```bash
 bash server.sh  # Starts the server up. Blocking.
-bash send.sh <message>  # Submits a TCP message to the server.
+bash connect.sh <message>  # Connects to the server with telnet.
 ```
