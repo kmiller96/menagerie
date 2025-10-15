@@ -48,11 +48,7 @@ fn main() {
     let args = CLI::parse();
 
     match args.command {
-        Commands::Server { ip, port } => {
-            server::run_server(ip, port).unwrap();
-        }
-        Commands::Client { ip, port } => {
-            client::run_client(ip, port);
-        }
+        Commands::Server { ip, port } => server::run_server(ip, port),
+        Commands::Client { ip, port } => client::run_client(ip, port),
     }
 }
