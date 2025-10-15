@@ -1,3 +1,6 @@
+mod client;
+mod server;
+
 use clap::{Parser, Subcommand};
 
 // -------------------- //
@@ -37,17 +40,6 @@ enum Commands {
     },
 }
 
-// ----------------- //
-// -- Subroutines -- //
-// ----------------- //
-
-fn run_server(ip: String, port: u16) {
-    println!("Starting server at {}:{}", ip, port);
-}
-fn run_client(ip: String, port: u16) {
-    println!("Starting client to connect to {}:{}", ip, port);
-}
-
 // ------------------ //
 // -- Main Routine -- //
 // ------------------ //
@@ -57,10 +49,10 @@ fn main() {
 
     match args.command {
         Commands::Server { ip, port } => {
-            run_server(ip, port);
+            server::run_server(ip, port);
         }
         Commands::Client { ip, port } => {
-            run_client(ip, port);
+            client::run_client(ip, port);
         }
     }
 }
