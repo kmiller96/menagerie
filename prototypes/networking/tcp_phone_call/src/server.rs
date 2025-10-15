@@ -4,8 +4,6 @@ use std::{
 };
 
 /// Handles a new client connection
-///
-/// While developing, it simply echos back the input.
 #[allow(unused_mut)] // TODO: Remove when implemented
 fn handle_new_connection(mut stream: TcpStream) {
     println!("New client: {}", stream.peer_addr().unwrap());
