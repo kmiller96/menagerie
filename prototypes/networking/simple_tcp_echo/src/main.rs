@@ -5,41 +5,34 @@ fn handle_client(mut stream: TcpStream) {
     let peer = stream.peer_addr().unwrap();
     eprintln!("New client: {}", peer);
 
-    loop {
-        let mut buffer = [0; 1028];
-        match stream.read(&mut buffer) {
-            Ok(n) => {
-                // Check for no-bytes disconnect
-                if n == 0 {
-                    eprintln!("Client disconnected: {}", peer);
-                    break;
-                }
+    let mut buffer = [0; 1028];
+    match stream.read(&mut buffer) {
+        Ok(n) => {
+            // Read buffer into string
+            let content = String::from_utf8_lossy(&buffer[..n]);
+            let message = content.trim();
 
-                // Read buffer into string
-                let content = String::from_utf8_lossy(&buffer[..n]);
-                let message = content.trim();
+            // Log raw message to stdout
+            eprintln!("Received: {}", message);
+            println!("{}", message);
 
-                // Log raw message to stdout
-                eprintln!("Received: {}", message);
-                println!("{}", message);
-
-                // Exit on "exit" message
-                if message == "exit" {
-                    eprintln!("Client requested exit: {}", peer);
-                    break;
-                } else {
-                    // Echo message back to client and log.
-                    eprintln!("Sent: {}", message);
-                    stream
-                        .write((message.to_owned() + "\r\n").as_bytes())
-                        .unwrap();
-                }
-            }
-            Err(err) => {
-                panic!("{}", err);
+            // Exit on "exit" message
+            if message == "exit" {
+                eprintln!("Client requested exit: {}", peer);
+            } else {
+                // Echo message back to client and log.
+                eprintln!("Sent: {}", message);
+                stream
+                    .write((message.to_owned() + "\r\n").as_bytes())
+                    .unwrap();
             }
         }
+        Err(err) => {
+            panic!("{}", err);
+        }
     }
+
+    eprintln!("Client disconnected: {}", peer);
 }
 
 fn main() -> std::io::Result<()> {
