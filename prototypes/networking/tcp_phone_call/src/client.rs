@@ -17,9 +17,18 @@ pub fn run_client(ip: String, port: u16) -> Result<(), std::io::Error> {
             stream.write_all(b"TEST MESSAGE").unwrap();
 
             let mut buffer = [0; 512]; // Create a buffer to store incoming data
-            let bytes_read = stream.read(&mut buffer).unwrap();
-            let received_data = String::from_utf8_lossy(&buffer[..bytes_read]);
-            println!("Received: {}", received_data);
+            match stream.read(&mut buffer) {
+                Ok(0) => {
+                    println!("Server disconnected.");
+                }
+                Ok(n) => {
+                    let received_data = String::from_utf8_lossy(&buffer[..n]);
+                    println!("Received: {}", received_data);
+                }
+                Err(e) => {
+                    eprintln!("Failed to read from server: {}", e);
+                }
+            }
         }
         Err(e) => {
             eprintln!("Failed to connect to server: {}", e);
