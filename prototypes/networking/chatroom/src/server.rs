@@ -67,8 +67,10 @@ fn handle_connection(mut stream: TcpStream) -> Result<(), std::io::Error> {
                 // TODO: Process data according to protocol
                 // TODO: Actually send the data to other clients
                 // DEBUG: print to stderr for now
-
                 eprintln!("[{}:{}] {}", addr.ip(), addr.port(), received_data);
+
+                // DEBUG: Echo the data back to the client (for testing purposes)
+                stream.write_all(&buffer[..n])?;
             }
             Err(e) => {
                 eprintln!("Error: {}", e);
