@@ -3,6 +3,12 @@ use std::{
     net::TcpStream,
 };
 
+// ---------------------- //
+// -- Public Functions -- //
+// ---------------------- //
+
+// TODO: Figure out why I can't detect server disconnection
+
 pub fn run_client(ip: String, port: u16) -> Result<(), std::io::Error> {
     match TcpStream::connect((ip.as_str(), port)) {
         Ok(mut stream) => {
@@ -23,3 +29,9 @@ pub fn run_client(ip: String, port: u16) -> Result<(), std::io::Error> {
     println!("Client disconnecting.");
     Ok(())
 }
+
+// ------------------------- //
+// -- Private Connections -- //
+// ------------------------- //
+
+// TODO

@@ -1,6 +1,6 @@
 use std::{
     io::{Read, Write},
-    net::{TcpListener, TcpStream},
+    net::{Shutdown, TcpListener, TcpStream},
 };
 
 // ---------------------- //
@@ -10,8 +10,9 @@ use std::{
 /// Starts the TCP server
 pub fn run_server(ip: String, port: u16) -> Result<(), std::io::Error> {
     let listener = initialise(ip, port)?;
+
     for stream in listener.incoming() {
-        handle_connection(stream);
+        handle_connection(stream)?;
     }
 
     Ok(())
@@ -40,21 +41,34 @@ fn initialise(ip: String, port: u16) -> Result<TcpListener, std::io::Error> {
 }
 
 /// Handles a new client connection
-fn handle_connection(stream: Result<TcpStream, std::io::Error>) {
+fn handle_connection(stream: Result<TcpStream, std::io::Error>) -> Result<(), std::io::Error> {
     match stream {
         Ok(data) => {
             let client_address = data.peer_addr().unwrap();
             eprintln!("New client: {}", client_address);
 
-            handle_stream(data);
+            match authorize_connection(&client_address) {
+                ConnectionAction::Accept => handle_stream(data),
+                ConnectionAction::Reject => {
+                    eprintln!("Rejecting connection from {}", client_address);
+                    match data.shutdown(Shutdown::Both) {
+                        Ok(_) => {}
+                        Err(e) => {
+                            eprintln!("Failed to close connection: {}", e);
+                        }
+                    }
+                }
+            };
 
             println!("Disconnected client: {}", client_address);
         }
-        Err(_) => {
-            eprintln!("Failed to accept connection: {}", stream.err().unwrap());
-            return;
+        Err(e) => {
+            eprintln!("Failed to accept connection: {}", e);
+            return Err(e);
         }
     }
+
+    Ok(())
 }
 
 /// Handles communication with a connected client
@@ -84,5 +98,24 @@ fn handle_stream(mut stream: TcpStream) {
                 break;
             }
         }
+    }
+}
+
+// ----------- //
+// -- Other -- //
+// ----------- //
+
+// TODO: Move this to a separate module
+
+enum ConnectionAction {
+    Accept,
+    Reject,
+}
+
+fn authorize_connection(client_address: &std::net::SocketAddr) -> ConnectionAction {
+    if client_address.ip().is_loopback() {
+        return ConnectionAction::Reject; // XXX: For testing purposes, reject loopback connections
+    } else {
+        return ConnectionAction::Accept;
     }
 }
