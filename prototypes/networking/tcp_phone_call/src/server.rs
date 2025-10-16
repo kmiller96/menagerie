@@ -48,9 +48,12 @@ fn handle_connection(stream: Result<TcpStream, std::io::Error>) -> Result<(), st
             eprintln!("New client: {}", client_address);
 
             match authorize_connection(&client_address) {
-                ConnectionAction::Accept => handle_stream(data),
+                ConnectionAction::Accept => {
+                    eprintln!("Accepted: {}", client_address);
+                    handle_stream(data)
+                }
                 ConnectionAction::Reject => {
-                    eprintln!("Rejecting connection from {}", client_address);
+                    eprintln!("Rejected: {}", client_address);
                     match data.shutdown(Shutdown::Both) {
                         Ok(_) => {}
                         Err(e) => {
@@ -112,10 +115,14 @@ enum ConnectionAction {
     Reject,
 }
 
+/// Authorizes a new connection
+///
+/// Currently random to test, but should be replaced with real logic.
+#[allow(unused_variables)]
 fn authorize_connection(client_address: &std::net::SocketAddr) -> ConnectionAction {
-    if client_address.ip().is_loopback() {
-        return ConnectionAction::Reject; // XXX: For testing purposes, reject loopback connections
-    } else {
+    if rand::random_bool(0.5) {
         return ConnectionAction::Accept;
+    } else {
+        return ConnectionAction::Reject;
     }
 }

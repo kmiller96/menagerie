@@ -1,7 +1,10 @@
+use rand::RngCore;
 use std::{
     io::{Read, Write},
     net::TcpStream,
 };
+
+const BUFFER_SIZE: usize = 512;
 
 // ---------------------- //
 // -- Public Functions -- //
@@ -14,19 +17,31 @@ pub fn run_client(ip: String, port: u16) -> Result<(), std::io::Error> {
         Ok(mut stream) => {
             println!("Connected to server at {}:{}", ip, port);
 
-            stream.write_all(b"TEST MESSAGE").unwrap();
+            // Send a message
+            let mut message = [0; 1000];
+            rand::rng().fill_bytes(&mut message);
+            stream.write_all(&message).unwrap();
 
-            let mut buffer = [0; 512]; // Create a buffer to store incoming data
-            match stream.read(&mut buffer) {
-                Ok(0) => {
-                    println!("Server disconnected.");
-                }
-                Ok(n) => {
-                    let received_data = String::from_utf8_lossy(&buffer[..n]);
-                    println!("Received: {}", received_data);
-                }
-                Err(e) => {
-                    eprintln!("Failed to read from server: {}", e);
+            // Read response
+            let mut buffer = [0; BUFFER_SIZE]; // Create a buffer to store incoming data
+            loop {
+                match stream.read(&mut buffer) {
+                    Ok(0) => {
+                        println!("Server disconnected.");
+                        break;
+                    }
+                    Ok(n) => {
+                        let received_data = String::from_utf8_lossy(&buffer[..n]);
+                        println!("Received: {}", received_data);
+
+                        if n < BUFFER_SIZE {
+                            // If less data was read than the buffer size, assume the server has finished sending
+                            break;
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Failed to read from server: {}", e);
+                    }
                 }
             }
         }
