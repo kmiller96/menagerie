@@ -3,7 +3,7 @@ use std::{
     net::TcpStream,
 };
 
-pub fn run_client(ip: String, port: u16) {
+pub fn run_client(ip: String, port: u16) -> Result<(), std::io::Error> {
     match TcpStream::connect((ip.as_str(), port)) {
         Ok(mut stream) => {
             println!("Connected to server at {}:{}", ip, port);
@@ -21,4 +21,5 @@ pub fn run_client(ip: String, port: u16) {
     };
 
     println!("Client disconnecting.");
+    Ok(())
 }

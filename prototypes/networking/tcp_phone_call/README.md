@@ -13,3 +13,17 @@ Extensions:
 
 Better still if we can make it one program, compile it, and run the compiled
 binary!
+
+## Quickstart
+
+To start the phone server:
+
+```bash
+<program> server  # or `cargo run server`
+```
+
+To run the phone client:
+
+```bash
+<program> client  # or `cargo run client`
+```

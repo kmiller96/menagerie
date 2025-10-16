@@ -3,66 +3,86 @@ use std::{
     net::{TcpListener, TcpStream},
 };
 
+// ---------------------- //
+// -- Public Functions -- //
+// ---------------------- //
+
+/// Starts the TCP server
+pub fn run_server(ip: String, port: u16) -> Result<(), std::io::Error> {
+    let listener = initialise(ip, port)?;
+    for stream in listener.incoming() {
+        handle_connection(stream);
+    }
+
+    Ok(())
+}
+
+// ----------------------- //
+// -- Private Functions -- //
+// ----------------------- //
+
+fn initialise(ip: String, port: u16) -> Result<TcpListener, std::io::Error> {
+    let result = TcpListener::bind((ip.as_str(), port));
+
+    match &result {
+        Ok(listener) => {
+            eprintln!(
+                "Server listening on {}",
+                listener.local_addr().expect("Failed to get local address")
+            );
+        }
+        Err(e) => {
+            eprintln!("Error binding to {}:{} - {}", &ip, port, e);
+        }
+    }
+
+    result
+}
+
 /// Handles a new client connection
-#[allow(unused_mut)] // TODO: Remove when implemented
-fn handle_new_connection(mut stream: TcpStream) {
-    println!("New client: {}", stream.peer_addr().unwrap());
+fn handle_connection(stream: Result<TcpStream, std::io::Error>) {
+    match stream {
+        Ok(data) => {
+            let client_address = data.peer_addr().unwrap();
+            eprintln!("New client: {}", client_address);
+
+            handle_stream(data);
+
+            println!("Disconnected client: {}", client_address);
+        }
+        Err(_) => {
+            eprintln!("Failed to accept connection: {}", stream.err().unwrap());
+            return;
+        }
+    }
+}
+
+/// Handles communication with a connected client
+fn handle_stream(mut stream: TcpStream) {
+    let client_address = stream.peer_addr().unwrap();
 
     let mut buffer = [0; 1024];
     loop {
         match stream.read(&mut buffer) {
-            Ok(0) => break, // Connection closed
             Ok(n) => {
-                println!(
-                    "Received from {}: {}",
-                    stream.peer_addr().unwrap(),
-                    String::from_utf8_lossy(&buffer[0..n])
-                );
+                if n == 0 {
+                    break; // Connection closed
+                };
 
-                // Echo back the received data
+                // TODO: Handle case where data is larger than buffer
+
                 match stream.write_all(&buffer[0..n]) {
                     Ok(_) => {}
                     Err(e) => {
-                        eprintln!(
-                            "Failed to send data to {}: {}",
-                            stream.peer_addr().unwrap(),
-                            e
-                        );
+                        eprintln!("Failed to send data to {}: {}", client_address, e);
                         break;
                     }
                 }
             }
             Err(e) => {
-                eprintln!("Failed to read from {}: {}", stream.peer_addr().unwrap(), e);
+                eprintln!("Failed to read from {}: {}", client_address, e);
                 break;
             }
         }
     }
-
-    println!("Disconnected client: {}", stream.peer_addr().unwrap());
-}
-
-/// Starts the TCP server
-pub fn run_server(ip: String, port: u16) {
-    // Initialise the listerner
-    let listener = match TcpListener::bind((ip.as_str(), port)) {
-        Ok(l) => l,
-        Err(e) => {
-            eprintln!("Failed to bind to {}:{} - {}", &ip, port, e);
-            return;
-        }
-    };
-
-    eprintln!(
-        "Server listening on {}",
-        listener.local_addr().expect("Failed to get local address")
-    );
-
-    // Handle incoming connections
-    for stream in listener.incoming() {
-        handle_new_connection(stream.unwrap());
-    }
-
-    // Return
-    return;
 }

@@ -47,8 +47,12 @@ enum Commands {
 fn main() {
     let args = CLI::parse();
 
-    match args.command {
+    let result = match args.command {
         Commands::Server { ip, port } => server::run_server(ip, port),
         Commands::Client { ip, port } => client::run_client(ip, port),
+    };
+
+    if let Err(e) = result {
+        eprintln!("Error: {}", e);
     }
 }
