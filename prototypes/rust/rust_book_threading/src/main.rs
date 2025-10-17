@@ -20,9 +20,17 @@ fn main() {
         println!("hi number {i} from the main thread!");
     }
 
-    // Join all the threads
-    for handle in threads {
-        handle.join().unwrap();
+    // Join all the threads in a non-blocking manner
+    let mut i = 0;
+    while threads.len() > 0 {
+        i %= threads.len();
+
+        if threads[i].is_finished() {
+            let thread = threads.remove(i);
+            thread.join().unwrap();
+        } else {
+            i += 1;
+        }
     }
 
     // Print a final completion message
