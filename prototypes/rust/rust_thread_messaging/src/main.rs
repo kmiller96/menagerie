@@ -2,7 +2,7 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Message;
 
 impl Message {
@@ -19,7 +19,8 @@ fn main() {
         thread::sleep(Duration::from_secs(1));
 
         let message = Message::new();
-        tx.send(message).unwrap();
+        tx.send(message.clone()).unwrap();
+        println!("Message sent: {:?}", message);
     });
 
     println!("Waiting for message...");
