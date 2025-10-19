@@ -1,49 +1,14 @@
 use std::fmt::{self, Display, Formatter};
 use std::ops::{Index, IndexMut};
 
+use crate::tile::{Tile, TileType};
+
 pub type Coordinate = (u32, u32); // (x, y) or (column, row)
 pub type Dimensions = (u32, u32); // (width, height)
 
 const HORIZONTAL_BORDER_STRING: char = '-';
 const VERTICAL_BORDER_CHAR: char = '|';
 const CORNER_BORDER_CHAR: char = '+';
-
-// --------------- //
-// -- Map Tiles -- //
-// --------------- //
-
-#[derive(Debug)]
-pub enum TileType {
-    Empty,
-    Wall,
-    Floor,
-}
-
-impl Display for TileType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                TileType::Empty => " ",
-                TileType::Wall => "#",
-                TileType::Floor => ".",
-            }
-        )
-    }
-}
-
-/// Represents a single tile in the map.
-#[derive(Debug)]
-pub struct Tile {
-    value: TileType,
-}
-
-impl Display for Tile {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
-}
 
 // ---------------- //
 // -- Map Object -- //
@@ -80,6 +45,10 @@ impl Map {
         }
     }
 }
+
+// ---------------------------- //
+// -- Display Implementation -- //
+// ---------------------------- //
 
 impl Display for Map {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -130,30 +99,4 @@ impl IndexMut<Coordinate> for Map {
     fn index_mut(&mut self, index: Coordinate) -> &mut Self::Output {
         &mut self.tiles[index.0 as usize][index.1 as usize]
     }
-}
-
-// ------------------- //
-// -- Map Generator -- //
-// ------------------- //
-
-// TODO: Make these randomly generated / supplied by the user.
-const MAP_WIDTH: u32 = 5;
-const MAP_HEIGHT: u32 = 5;
-
-pub fn generate(seed: u32) -> Map {
-    let mut map = Map::new(MAP_WIDTH, MAP_HEIGHT);
-
-    map[(0, 0)] = Tile {
-        value: TileType::Wall,
-    };
-    map[(0, 1)] = Tile {
-        value: TileType::Floor,
-    };
-    map[(0, 2)] = Tile {
-        value: TileType::Empty,
-    };
-
-    println!("{}", &map);
-
-    map
 }
