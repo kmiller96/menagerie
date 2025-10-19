@@ -16,3 +16,14 @@ summarised as:
    If you find an room unplaceable, then restart the algorithm.
 4. Generate corridors to connect the rooms.
 5. Print to screen.
+
+## UPDATE: Lessons Learnt
+
+As much as I want to continue with this, I already feel like it's pretty 
+convoluted 😅 it's hard figuring out good design AND the language at the same
+time. I'll have a go at this again at some point in the future.
+
+However, it did teach me about how to implement traits for Rust. Traits have 
+been really confusing to me up to this point; I'm so glad that I learnt them!
+I actually really like the design pattern and now I understand it I'm sure I'll
+want to use them everywhere.
