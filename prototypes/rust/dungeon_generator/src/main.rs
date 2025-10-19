@@ -1,4 +1,5 @@
 mod area;
+mod room;
 mod tile;
 mod utils;
 
@@ -52,17 +53,17 @@ mod graphics {
 
 mod worldgen {
     use crate::area::Area;
-    use crate::tile::Tile;
+    use crate::room::Room;
 
     // TODO: Make these randomly generated / supplied by the user.
-    const MAP_WIDTH: u32 = 5;
-    const MAP_HEIGHT: u32 = 5;
+    const MAP_WIDTH: u32 = 70;
+    const MAP_HEIGHT: u32 = 18;
 
     pub fn generate(seed: u32) -> Area {
-        let mut area = Area::new(MAP_WIDTH, MAP_HEIGHT);
+        let mut area = Area::new((MAP_WIDTH, MAP_HEIGHT));
+        let room = Room::new((3, 3));
 
-        area[(0, 0)] = Tile::Wall;
-        area[(0, 1)] = Tile::Floor;
+        area.blit(&room.area(), (1, 1));
 
         area
     }

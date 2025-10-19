@@ -18,7 +18,8 @@ pub struct Area {
 
 impl Area {
     /// Creates a new area with given dimensions.
-    pub fn new(width: u32, height: u32) -> Self {
+    pub fn new(dimensions: Dimensions) -> Self {
+        let (width, height) = dimensions;
         let mut tiles = Vec::new();
 
         for _ in 0..width {
@@ -37,12 +38,25 @@ impl Area {
         }
     }
 
+    /// Blits another area onto this one at the given top-left coordinate.
+    pub fn blit(&mut self, other: &Area, position: Coordinate) {
+        let (px, py) = position;
+
+        for x in 0..other.width() {
+            for y in 0..other.height() {
+                self[(px + x, py + y)] = other[(x, y)].clone();
+            }
+        }
+    }
+
     /// Returns the height (y) of the area.
+    #[allow(dead_code)]
     pub fn height(&self) -> u32 {
         self.dimensions.1
     }
 
     /// Returns the width (x) of the area.
+    #[allow(dead_code)]
     pub fn width(&self) -> u32 {
         self.dimensions.0
     }
