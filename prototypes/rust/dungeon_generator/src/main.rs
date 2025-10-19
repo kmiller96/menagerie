@@ -35,9 +35,10 @@ mod worldgen {
         area[(0, 0)] = Tile::Wall;
         area[(0, 1)] = Tile::Floor;
 
-        println!("{}", &area);
+        let map = Map::new(area);
+        println!("{}", &map);
 
-        Map::new(area)
+        map
     }
 }
 

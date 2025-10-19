@@ -34,10 +34,34 @@ impl Map {
 
 impl Display for Map {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        // TODO: Actually apply the borders correctly.
+        // Get dimensions
+        let (width, height) = self.area.dimensions();
 
-        write!(f, "{}", &self.area)?;
+        // Top border
+        write!(f, "{}", CORNER_BORDER_CHAR)?;
+        for _ in 0..width {
+            write!(f, "{}", HORIZONTAL_BORDER_STRING)?;
+        }
+        writeln!(f, "{}", CORNER_BORDER_CHAR)?;
 
+        // Map rows
+        for y in 0..height {
+            write!(f, "{}", VERTICAL_BORDER_CHAR)?;
+            for x in 0..width {
+                write!(f, "{}", self.area[(x, y)])?;
+            }
+            writeln!(f, "{}", VERTICAL_BORDER_CHAR)?;
+        }
+
+        // Bottom border
+        // TODO: Refactor to avoid code duplication with top border
+        write!(f, "{}", CORNER_BORDER_CHAR)?;
+        for _ in 0..width {
+            write!(f, "{}", HORIZONTAL_BORDER_STRING)?;
+        }
+        writeln!(f, "{}", CORNER_BORDER_CHAR)?;
+
+        // Success
         Ok(())
     }
 }
