@@ -1,5 +1,4 @@
 mod area;
-mod map;
 mod tile;
 mod utils;
 
@@ -8,11 +7,42 @@ mod utils;
 // -------------------- //
 
 mod graphics {
-    use crate::map::Map;
+    use crate::area::Area;
+
+    const HORIZONTAL_BORDER_STRING: char = '-';
+    const VERTICAL_BORDER_CHAR: char = '|';
+    const CORNER_BORDER_CHAR: char = '+';
 
     /// Renders the map to the screen.
-    pub fn render(map: Map) {
-        println!("{}", map);
+    pub fn render(area: Area) {
+        // Get dimensions
+        let (width, height) = area.dimensions();
+
+        // Top border
+        println!(
+            "{}{}{}",
+            CORNER_BORDER_CHAR,
+            HORIZONTAL_BORDER_STRING.to_string().repeat(width as usize),
+            CORNER_BORDER_CHAR
+        );
+
+        // Map rows
+        for y in 0..height {
+            print!("{}", VERTICAL_BORDER_CHAR);
+            for x in 0..width {
+                print!("{}", area[(x, y)]);
+            }
+            println!("{}", VERTICAL_BORDER_CHAR);
+        }
+
+        // Bottom border
+        // TODO: Refactor to avoid code duplication with top border
+        println!(
+            "{}{}{}",
+            CORNER_BORDER_CHAR,
+            HORIZONTAL_BORDER_STRING.to_string().repeat(width as usize),
+            CORNER_BORDER_CHAR
+        );
     }
 }
 
@@ -22,20 +52,19 @@ mod graphics {
 
 mod worldgen {
     use crate::area::Area;
-    use crate::map::Map;
     use crate::tile::Tile;
 
     // TODO: Make these randomly generated / supplied by the user.
     const MAP_WIDTH: u32 = 5;
     const MAP_HEIGHT: u32 = 5;
 
-    pub fn generate(seed: u32) -> Map {
+    pub fn generate(seed: u32) -> Area {
         let mut area = Area::new(MAP_WIDTH, MAP_HEIGHT);
 
         area[(0, 0)] = Tile::Wall;
         area[(0, 1)] = Tile::Floor;
 
-        Map::new(area)
+        area
     }
 }
 
