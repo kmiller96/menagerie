@@ -1,0 +1,16 @@
+MVP:
+    The absolute smallest unit of work to prove out the concept.
+    [ ] Be able to create an article
+        [ ] Article Title
+        [ ] Article body (plain text is fine for now)
+    [ ] Be able to edit existing articles
+    [ ] Be able to view a list of articles
+
+1.0.0:
+    The initial release
+    [ ] Block-based article body using Editor.js
+    [ ] Link articles to other articles
+    [ ] Add tags to articles
+    [ ] Search for articles
+        [ ] By name
+        [ ] By tag
