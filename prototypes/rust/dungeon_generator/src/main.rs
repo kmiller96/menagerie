@@ -21,6 +21,7 @@ mod graphics {
 // --------------------- //
 
 mod worldgen {
+    use crate::area::Area;
     use crate::map::Map;
     use crate::tile::Tile;
 
@@ -29,14 +30,14 @@ mod worldgen {
     const MAP_HEIGHT: u32 = 5;
 
     pub fn generate(seed: u32) -> Map {
-        let mut map = Map::new(MAP_WIDTH, MAP_HEIGHT);
+        let mut area = Area::new(MAP_WIDTH, MAP_HEIGHT);
 
-        map[(0, 0)] = Tile::Wall;
-        map[(0, 1)] = Tile::Floor;
+        area[(0, 0)] = Tile::Wall;
+        area[(0, 1)] = Tile::Floor;
 
-        println!("{}", &map);
+        println!("{}", &area);
 
-        map
+        Map::new(area)
     }
 }
 

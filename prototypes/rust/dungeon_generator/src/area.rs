@@ -12,27 +12,43 @@ use crate::utils::Dimensions;
 /// Represents an area which is made up of tiles.
 #[derive(Debug)]
 pub struct Area {
+    dimensions: Dimensions,
     tiles: Vec<Vec<Tile>>,
 }
 
 impl Area {
+    /// Creates a new area with given dimensions.
+    pub fn new(width: u32, height: u32) -> Self {
+        let mut tiles = Vec::new();
+
+        for _ in 0..width {
+            let mut column = Vec::new();
+
+            for _ in 0..height {
+                column.push(Tile::Empty);
+            }
+
+            tiles.push(column);
+        }
+
+        Area {
+            dimensions: (width, height),
+            tiles,
+        }
+    }
+
     /// Returns the height (y) of the area.
     pub fn height(&self) -> u32 {
-        self.tiles.len() as u32
+        self.dimensions.1
     }
 
     /// Returns the width (x) of the area.
     pub fn width(&self) -> u32 {
-        if self.tiles.is_empty() {
-            0
-        } else {
-            self.tiles[0].len() as u32
-            // TODO: Should we verify that all rows are the same length?
-        }
+        self.dimensions.0
     }
 
     pub fn dimensions(&self) -> Dimensions {
-        todo!("Implement dimensions method")
+        self.dimensions
     }
 }
 
