@@ -12,7 +12,7 @@ mod graphics {
 
     /// Renders the map to the screen.
     pub fn render(map: Map) {
-        // println!("{}", map);
+        println!("{}", map);
     }
 }
 
@@ -35,10 +35,7 @@ mod worldgen {
         area[(0, 0)] = Tile::Wall;
         area[(0, 1)] = Tile::Floor;
 
-        let map = Map::new(area);
-        println!("{}", &map);
-
-        map
+        Map::new(area)
     }
 }
 
