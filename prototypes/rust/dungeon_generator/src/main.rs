@@ -1,3 +1,4 @@
+mod area;
 mod map;
 mod tile;
 mod utils;

@@ -8,6 +8,8 @@ const HORIZONTAL_BORDER_STRING: char = '-';
 const VERTICAL_BORDER_CHAR: char = '|';
 const CORNER_BORDER_CHAR: char = '+';
 
+// TODO: Simplify. Isn't a map basically just an area with borders?
+
 // ---------------- //
 // -- Map Object -- //
 // ---------------- //
