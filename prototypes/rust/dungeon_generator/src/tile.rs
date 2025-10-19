@@ -1,5 +1,7 @@
 use std::fmt::{self, Display, Formatter};
 
+use crate::utils::Coordinate;
+
 // --------------- //
 // -- Tile Type -- //
 // --------------- //
@@ -33,6 +35,14 @@ impl Display for TileType {
 #[derive(Debug)]
 pub struct Tile {
     pub value: TileType,
+    pub position: Coordinate,
+}
+
+impl Tile {
+    /// Initializes a new tile with the given type and position.
+    pub fn new(value: TileType, position: Coordinate) -> Self {
+        Tile { value, position }
+    }
 }
 
 impl Display for Tile {

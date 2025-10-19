@@ -2,9 +2,7 @@ use std::fmt::{self, Display, Formatter};
 use std::ops::{Index, IndexMut};
 
 use crate::tile::{Tile, TileType};
-
-pub type Coordinate = (u32, u32); // (x, y) or (column, row)
-pub type Dimensions = (u32, u32); // (width, height)
+use crate::utils::{Coordinate, Dimensions};
 
 const HORIZONTAL_BORDER_STRING: char = '-';
 const VERTICAL_BORDER_CHAR: char = '|';
@@ -26,12 +24,13 @@ impl Map {
     pub fn new(width: u32, height: u32) -> Self {
         let mut tiles = Vec::new();
 
-        for _ in 0..width {
+        for x in 0..width {
             let mut column = Vec::new();
 
-            for _ in 0..height {
+            for y in 0..height {
                 column.push(Tile {
                     value: TileType::Empty,
+                    position: (x, y),
                 });
             }
 

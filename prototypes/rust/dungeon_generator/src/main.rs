@@ -1,5 +1,6 @@
 mod map;
 mod tile;
+mod utils;
 
 // -------------------- //
 // -- Display Module -- //
@@ -10,7 +11,7 @@ mod graphics {
 
     /// Renders the map to the screen.
     pub fn render(map: Map) {
-        println!("{}", map);
+        // println!("{}", map);
     }
 }
 
@@ -31,12 +32,15 @@ mod worldgen {
 
         map[(0, 0)] = Tile {
             value: TileType::Wall,
+            position: (0, 0),
         };
         map[(0, 1)] = Tile {
             value: TileType::Floor,
+            position: (0, 1),
         };
         map[(0, 2)] = Tile {
             value: TileType::Empty,
+            position: (0, 2),
         };
 
         println!("{}", &map);
