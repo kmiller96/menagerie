@@ -30,7 +30,6 @@ impl Map {
             let mut column = Vec::new();
 
             for _ in 0..height {
-                // Initialize each tile here if needed
                 column.push(Tile {
                     value: TileType::Empty,
                 });
@@ -100,3 +99,13 @@ impl IndexMut<Coordinate> for Map {
         &mut self.tiles[index.0 as usize][index.1 as usize]
     }
 }
+
+// ------------------- //
+// -- Map Iteration -- //
+// ------------------- //
+
+// HELPME: I think the right way to do this is to implement IntoIterator for the
+// map, but I'm not sure how to do that without it looking like a shitshow.
+//
+// ...
+//
