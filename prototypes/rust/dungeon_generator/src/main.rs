@@ -21,7 +21,7 @@ mod graphics {
 
 mod worldgen {
     use crate::map::Map;
-    use crate::tile::{Tile, TileType};
+    use crate::tile::Tile;
 
     // TODO: Make these randomly generated / supplied by the user.
     const MAP_WIDTH: u32 = 5;
@@ -30,18 +30,8 @@ mod worldgen {
     pub fn generate(seed: u32) -> Map {
         let mut map = Map::new(MAP_WIDTH, MAP_HEIGHT);
 
-        map[(0, 0)] = Tile {
-            value: TileType::Wall,
-            position: (0, 0),
-        };
-        map[(0, 1)] = Tile {
-            value: TileType::Floor,
-            position: (0, 1),
-        };
-        map[(0, 2)] = Tile {
-            value: TileType::Empty,
-            position: (0, 2),
-        };
+        map[(0, 0)] = Tile::Wall;
+        map[(0, 1)] = Tile::Floor;
 
         println!("{}", &map);
 
