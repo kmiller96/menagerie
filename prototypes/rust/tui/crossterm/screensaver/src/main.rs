@@ -8,6 +8,15 @@ use crossterm::{cursor, execute, queue, style, terminal};
 const FPS: u128 = 5;
 const TICK_DURATION: u128 = 1000 / FPS;
 
+// ----------- //
+// -- Enums -- //
+// ----------- //
+
+enum ProgramState {
+    Running,
+    Exiting,
+}
+
 // ------------------ //
 // -- Main Routine -- //
 // ------------------ //
@@ -20,10 +29,7 @@ fn main() -> io::Result<()> {
     let mut stdout = initialise()?;
 
     // Run main loop
-    loop {
-        // Start loop timer
-        let start = time::SystemTime::now();
-
+    rate_limit(move || {
         // Queue up drawing commands
         queue!(
             stdout,
@@ -35,22 +41,16 @@ fn main() -> io::Result<()> {
         // Flush all queued commands
         stdout.flush()?;
 
-        // Wait as long as required to stick to desired FPS
-        let elapsed = start.elapsed().unwrap().as_millis();
-
-        if elapsed < TICK_DURATION {
-            let delta = TICK_DURATION - elapsed;
-            let duration = time::Duration::from_millis(delta as u64);
-            thread::sleep(duration);
-        }
-
         // TEMP: For testing
         if counter >= 100 {
-            break;
+            return Ok(ProgramState::Exiting);
         } else {
             counter += 1;
         }
-    }
+
+        // Return ok
+        Ok(ProgramState::Running)
+    })?;
 
     Ok(())
 }
@@ -70,4 +70,30 @@ fn initialise() -> io::Result<io::Stdout> {
     )?;
 
     Ok(stdout)
+}
+
+/// Rate limits the execution of a function to a specified frames-per-second.
+fn rate_limit(mut func: impl FnMut() -> io::Result<ProgramState>) -> io::Result<()> {
+    loop {
+        // Start timer
+        let start = time::SystemTime::now();
+
+        // Execute function
+        let result = func()?;
+
+        // Handle execution result
+        match result {
+            ProgramState::Exiting => return Ok(()),
+            ProgramState::Running => {
+                // Rate limit loop iteration
+                let elapsed = start.elapsed().unwrap().as_millis();
+
+                if elapsed < TICK_DURATION {
+                    let delta = TICK_DURATION - elapsed;
+                    let duration = time::Duration::from_millis(delta as u64);
+                    thread::sleep(duration);
+                }
+            }
+        };
+    }
 }
