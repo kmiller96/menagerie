@@ -17,6 +17,8 @@ const EVENT_TIMEOUT_MS: u64 = 50;
 const SCREEN_WIDTH: usize = 80;
 const SCREEN_HEIGHT: usize = 24;
 
+const N_BALLS: u8 = 10;
+
 // TODO: Optimise the terminal draw by managing a virtual "screen" and only
 // rendering what changes.
 
@@ -65,7 +67,7 @@ struct Application {
     status: AppStatus,
     events: Vec<AppEvent>, // TODO: Replace with VecDeque for efficiency. Also maybe make it not possible to duplicate events?
     stdout: io::Stdout,
-    ball: Ball,
+    balls: Vec<Ball>,
 }
 
 impl Drop for Application {
@@ -96,25 +98,31 @@ impl Application {
         )
         .expect("Failed to initialise terminal");
 
-        // Setup the ball with a random position and velocity
+        // Setup the balls with a random position and velocity
+        let mut balls = vec![];
         let mut rng = rand::rng();
-        let ball = Ball::new(
-            (
-                rng.random_range(1..SCREEN_WIDTH - 1),
-                rng.random_range(1..SCREEN_HEIGHT - 1),
-            ),
-            (
-                if rng.random_bool(0.5) { 1 } else { -1 },
-                if rng.random_bool(0.5) { 1 } else { -1 },
-            ),
-        );
+
+        for _ in 0..N_BALLS {
+            let ball = Ball::new(
+                (
+                    rng.random_range(1..SCREEN_WIDTH - 1),
+                    rng.random_range(1..SCREEN_HEIGHT - 1),
+                ),
+                (
+                    if rng.random_bool(0.5) { 1 } else { -1 },
+                    if rng.random_bool(0.5) { 1 } else { -1 },
+                ),
+            );
+
+            balls.push(ball);
+        }
 
         // Return the program state
         Self {
             status: AppStatus::Running,
             events: Vec::new(),
             stdout,
-            ball,
+            balls,
         }
     }
 
@@ -178,24 +186,29 @@ impl Application {
         const BOTTOM_BOUND: usize = SCREEN_HEIGHT - 2;
 
         // Determine what the ball should be doing
-        if self.ball.position.0 <= LHS_BOUND {
-            self.ball.velocity.0 = self.ball.velocity.0.abs();
-        }
-        if self.ball.position.0 >= RHS_BOUND {
-            self.ball.velocity.0 = -self.ball.velocity.0.abs();
-        }
-        if self.ball.position.1 <= TOP_BOUND {
-            self.ball.velocity.1 = self.ball.velocity.1.abs();
-        }
-        if self.ball.position.1 >= BOTTOM_BOUND {
-            self.ball.velocity.1 = -self.ball.velocity.1.abs();
+        for ball in &mut self.balls {
+            // Bounce off walls
+            if ball.position.0 <= LHS_BOUND {
+                ball.velocity.0 = ball.velocity.0.abs();
+            }
+            if ball.position.0 >= RHS_BOUND {
+                ball.velocity.0 = -ball.velocity.0.abs();
+            }
+            if ball.position.1 <= TOP_BOUND {
+                ball.velocity.1 = ball.velocity.1.abs();
+            }
+            if ball.position.1 >= BOTTOM_BOUND {
+                ball.velocity.1 = -ball.velocity.1.abs();
+            }
         }
     }
 
     /// Updates the program state based on events.
     fn update(&mut self) {
-        // Tick the ball
-        self.ball.tick();
+        // Tick the balls
+        for ball in &mut self.balls {
+            ball.tick();
+        }
 
         // Handle User Input
         while self.events.len() > 0 {
@@ -236,12 +249,14 @@ impl Application {
             }
         }
 
-        // Draw the ball
-        queue!(
-            self.stdout,
-            cursor::MoveTo(self.ball.position.0 as u16, self.ball.position.1 as u16),
-            style::Print("O"),
-        )?;
+        // Draw the balls
+        for ball in &self.balls {
+            queue!(
+                self.stdout,
+                cursor::MoveTo(ball.position.0 as u16, ball.position.1 as u16),
+                style::Print("O"),
+            )?;
+        }
 
         // Flush all queued commands
         self.stdout.flush()?;
