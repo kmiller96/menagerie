@@ -23,7 +23,7 @@ const SCREEN_HEIGHT: usize = 24;
 // -- Enums -- //
 // ----------- //
 
-enum ProgramStatus {
+enum AppStatus {
     Running,
     Exiting,
 }
@@ -38,7 +38,7 @@ enum AppEvent {
 // ----------------- //
 
 struct Application {
-    status: ProgramStatus,
+    status: AppStatus,
     events: Vec<AppEvent>, // TODO: Replace with VecDeque for efficiency. Also maybe make it not possible to duplicate events?
     stdout: io::Stdout,
     counter: u32, // TEMP FOR TESTING ONLY
@@ -74,7 +74,7 @@ impl Application {
 
         // Return the program state
         Self {
-            status: ProgramStatus::Running,
+            status: AppStatus::Running,
             events: Vec::new(),
             stdout,
             counter: 0, // TEMP FOR TESTING ONLY
@@ -97,7 +97,7 @@ impl Application {
 
             // Special check to break from event loop
             match self.status {
-                ProgramStatus::Exiting => return Ok(()),
+                AppStatus::Exiting => return Ok(()),
                 _ => { /* Continue running */ }
             }
 
@@ -136,7 +136,7 @@ impl Application {
     /// Processes user input and application state into program events.
     fn handle(&mut self) {
         if self.counter >= 100 {
-            self.status = ProgramStatus::Exiting;
+            self.status = AppStatus::Exiting;
         }
     }
 
@@ -147,7 +147,7 @@ impl Application {
 
             match event {
                 AppEvent::Quit => {
-                    self.status = ProgramStatus::Exiting;
+                    self.status = AppStatus::Exiting;
                 }
             }
         }
