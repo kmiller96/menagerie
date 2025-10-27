@@ -9,7 +9,7 @@ use crossterm::{
     execute, queue, style, terminal,
 };
 
-const FPS: u128 = 5;
+const FPS: u128 = 32;
 const TICK_DURATION: u128 = 1000 / FPS;
 const EVENT_TIMEOUT_MS: u64 = 50;
 
@@ -19,9 +19,36 @@ const SCREEN_HEIGHT: usize = 24;
 // TODO: Optimise the terminal draw by managing a virtual "screen" and only
 // rendering what changes.
 
-// ----------- //
-// -- Enums -- //
-// ----------- //
+// ---------- //
+// -- Ball -- //
+// ---------- //
+
+struct Ball {
+    pub position: (usize, usize),
+    pub velocity: (isize, isize),
+}
+
+impl Ball {
+    /// Creates a new ball.
+    pub fn new(position: (usize, usize), velocity: (isize, isize)) -> Self {
+        Self { position, velocity }
+    }
+
+    /// Updates the ball's position based on its velocity.
+    pub fn tick(&mut self) {
+        let x0 = self.position.0;
+        let y0 = self.position.1;
+
+        let vx = self.velocity.0;
+        let vy = self.velocity.1;
+
+        self.position = (x0.saturating_add_signed(vx), y0.saturating_add_signed(vy));
+    }
+}
+
+// ----------------- //
+// -- Application -- //
+// ----------------- //
 
 enum AppStatus {
     Running,
@@ -33,15 +60,11 @@ enum AppEvent {
     // Other events can be added here
 }
 
-// ----------------- //
-// -- Application -- //
-// ----------------- //
-
 struct Application {
     status: AppStatus,
     events: Vec<AppEvent>, // TODO: Replace with VecDeque for efficiency. Also maybe make it not possible to duplicate events?
     stdout: io::Stdout,
-    counter: u32, // TEMP FOR TESTING ONLY
+    ball: Ball,
 }
 
 impl Drop for Application {
@@ -77,7 +100,7 @@ impl Application {
             status: AppStatus::Running,
             events: Vec::new(),
             stdout,
-            counter: 0, // TEMP FOR TESTING ONLY
+            ball: Ball::new((5, 5), (1, 1)),
         }
     }
 
@@ -135,13 +158,32 @@ impl Application {
 
     /// Processes user input and application state into program events.
     fn handle(&mut self) {
-        if self.counter >= 100 {
-            self.status = AppStatus::Exiting;
+        const LHS_BOUND: usize = 1;
+        const RHS_BOUND: usize = SCREEN_WIDTH - 2;
+        const TOP_BOUND: usize = 1;
+        const BOTTOM_BOUND: usize = SCREEN_HEIGHT - 2;
+
+        // Determine what the ball should be doing
+        if self.ball.position.0 <= LHS_BOUND {
+            self.ball.velocity.0 = self.ball.velocity.0.abs();
+        }
+        if self.ball.position.0 >= RHS_BOUND {
+            self.ball.velocity.0 = -self.ball.velocity.0.abs();
+        }
+        if self.ball.position.1 <= TOP_BOUND {
+            self.ball.velocity.1 = self.ball.velocity.1.abs();
+        }
+        if self.ball.position.1 >= BOTTOM_BOUND {
+            self.ball.velocity.1 = -self.ball.velocity.1.abs();
         }
     }
 
     /// Updates the program state based on events.
     fn update(&mut self) {
+        // Tick the ball
+        self.ball.tick();
+
+        // Handle User Input
         while self.events.len() > 0 {
             let event = self.events.remove(0);
 
@@ -151,8 +193,6 @@ impl Application {
                 }
             }
         }
-
-        self.counter += 1; // TEMP FOR TESTING ONLY
     }
 
     /// Draws the current program state to the terminal.
@@ -182,11 +222,11 @@ impl Application {
             }
         }
 
-        // Queue up drawing commands
+        // Draw the ball
         queue!(
             self.stdout,
-            cursor::MoveTo(1, 1),
-            style::Print(format!("Counter: {}\n", self.counter))
+            cursor::MoveTo(self.ball.position.0 as u16, self.ball.position.1 as u16),
+            style::Print("O"),
         )?;
 
         // Flush all queued commands
