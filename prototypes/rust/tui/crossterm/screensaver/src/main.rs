@@ -8,6 +8,7 @@ use crossterm::{
     event::{self, Event, KeyCode},
     execute, queue, style, terminal,
 };
+use rand::Rng;
 
 const FPS: u128 = 32;
 const TICK_DURATION: u128 = 1000 / FPS;
@@ -95,12 +96,25 @@ impl Application {
         )
         .expect("Failed to initialise terminal");
 
+        // Setup the ball with a random position and velocity
+        let mut rng = rand::rng();
+        let ball = Ball::new(
+            (
+                rng.random_range(1..SCREEN_WIDTH - 1),
+                rng.random_range(1..SCREEN_HEIGHT - 1),
+            ),
+            (
+                if rng.random_bool(0.5) { 1 } else { -1 },
+                if rng.random_bool(0.5) { 1 } else { -1 },
+            ),
+        );
+
         // Return the program state
         Self {
             status: AppStatus::Running,
             events: Vec::new(),
             stdout,
-            ball: Ball::new((5, 5), (1, 1)),
+            ball,
         }
     }
 
