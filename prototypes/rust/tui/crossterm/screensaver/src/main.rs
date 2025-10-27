@@ -13,6 +13,12 @@ const FPS: u128 = 5;
 const TICK_DURATION: u128 = 1000 / FPS;
 const EVENT_TIMEOUT_MS: u64 = 50;
 
+const SCREEN_WIDTH: usize = 80;
+const SCREEN_HEIGHT: usize = 24;
+
+// TODO: Optimise the terminal draw by managing a virtual "screen" and only
+// rendering what changes.
+
 // ----------- //
 // -- Enums -- //
 // ----------- //
@@ -33,7 +39,7 @@ enum AppEvent {
 
 struct Application {
     status: ProgramStatus,
-    events: Vec<AppEvent>, // TODO: Replace with VecDeque for efficiency
+    events: Vec<AppEvent>, // TODO: Replace with VecDeque for efficiency. Also maybe make it not possible to duplicate events?
     stdout: io::Stdout,
     counter: u32, // TEMP FOR TESTING ONLY
 }
@@ -43,8 +49,10 @@ impl Drop for Application {
         terminal::disable_raw_mode().expect("Failed to disable raw mode");
         execute!(
             self.stdout,
+            terminal::Clear(terminal::ClearType::All),
+            cursor::Show,
+            style::ResetColor,
             terminal::LeaveAlternateScreen,
-            style::ResetColor
         )
         .expect("Failed to restore terminal");
     }
@@ -59,6 +67,7 @@ impl Application {
         execute!(
             stdout,
             terminal::EnterAlternateScreen,
+            cursor::Hide,
             style::SetForegroundColor(style::Color::Green)
         )
         .expect("Failed to initialise terminal");
@@ -86,15 +95,21 @@ impl Application {
             self.update();
             self.draw()?;
 
+            // Special check to break from event loop
+            match self.status {
+                ProgramStatus::Exiting => return Ok(()),
+                _ => { /* Continue running */ }
+            }
+
             // Capture user input until tick duration reached.
             while start.elapsed().unwrap().as_millis() < TICK_DURATION {
-                self.capture_events()?;
+                self.capture_user_input()?;
             }
         }
     }
 
     /// Captures crossterm events
-    fn capture_events(&mut self) -> io::Result<()> {
+    fn capture_user_input(&mut self) -> io::Result<()> {
         // Determine if there is an event to read.
         let result = event::poll(time::Duration::from_millis(EVENT_TIMEOUT_MS))?;
 
@@ -132,8 +147,8 @@ impl Application {
 
             match event {
                 AppEvent::Quit => {
-                    std::process::exit(0);
-                } // Handle other events here
+                    self.status = ProgramStatus::Exiting;
+                }
             }
         }
 
@@ -142,11 +157,35 @@ impl Application {
 
     /// Draws the current program state to the terminal.
     fn draw(&mut self) -> io::Result<()> {
+        // Clear terminal to clean state
+        queue!(self.stdout, terminal::Clear(terminal::ClearType::All))?;
+
+        // Add border
+        for y in 0..SCREEN_HEIGHT {
+            for x in 0..SCREEN_WIDTH {
+                let char =
+                    if (x == 0 || x == SCREEN_WIDTH - 1) && (y == 0 || y == SCREEN_HEIGHT - 1) {
+                        "+"
+                    } else if y == 0 || y == SCREEN_HEIGHT - 1 {
+                        "-"
+                    } else if x == 0 || x == SCREEN_WIDTH - 1 {
+                        "|"
+                    } else {
+                        continue;
+                    };
+
+                queue!(
+                    self.stdout,
+                    cursor::MoveTo(x as u16, y as u16),
+                    style::Print(char)
+                )?;
+            }
+        }
+
         // Queue up drawing commands
         queue!(
             self.stdout,
-            terminal::Clear(terminal::ClearType::All),
-            cursor::MoveTo(0, 0),
+            cursor::MoveTo(1, 1),
             style::Print(format!("Counter: {}\n", self.counter))
         )?;
 
