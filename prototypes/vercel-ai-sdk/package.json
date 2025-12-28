@@ -1,0 +1,17 @@
+{
+  "name": "01_hello_world",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "00": "node 00_hello_world.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1",
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.1",
+    "ai": "^6.0.3"
+  }
+}
