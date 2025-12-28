@@ -7,7 +7,8 @@
     "00": "node 00_hello_world.ts",
     "01": "node 01_generate_text.ts",
     "02": "node 02_system_prompt.ts",
-    "03": "node 03_stream_responses.ts"
+    "03": "node 03_stream_responses.ts",
+    "04": "node 04_chat_history.ts"
   },
   "keywords": [],
   "author": "",
