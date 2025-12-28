@@ -1,5 +1,5 @@
 {
-  "name": "01_hello_world",
+  "name": "vercel-ai-sdk",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -8,7 +8,8 @@
     "01": "node 01_generate_text.ts",
     "02": "node 02_system_prompt.ts",
     "03": "node 03_stream_responses.ts",
-    "04": "node 04_chat_history.ts"
+    "04": "node 04_chat_history.ts",
+    "05": "node 05_structured_outputs.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +18,11 @@
   "dependencies": {
     "@ai-sdk/openai": "^3.0.1",
     "ai": "^6.0.3",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3"
+    "@types/node": "^25.0.3",
+    "prettier": "^3.7.4"
   }
 }
