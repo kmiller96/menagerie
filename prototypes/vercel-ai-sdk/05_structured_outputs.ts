@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-import { generateText, Output } from "ai";
+import { streamText, Output } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 import { z } from "zod";
@@ -26,7 +26,7 @@ const model = openai("gpt-5-mini");
 const prompt =
   "Give me a recipe for a spaghetti bolognese using lentils instead of minced meat.";
 
-const { text } = await generateText({
+const { textStream } = await streamText({
   model,
   prompt,
   system:
@@ -34,4 +34,6 @@ const { text } = await generateText({
   output: Output.object({ schema, name: "Recipe" }),
 });
 
-console.log(text);
+for await (const chunk of textStream) {
+  process.stdout.write(chunk);
+}
