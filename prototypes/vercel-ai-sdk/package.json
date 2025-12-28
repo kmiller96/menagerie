@@ -10,7 +10,8 @@
     "03": "node 03_stream_responses.ts",
     "04": "node 04_chat_history.ts",
     "05": "node 05_structured_outputs.ts",
-    "06": "node 06_classifier.ts"
+    "06": "node 06_classifier.ts",
+    "07": "node 07_tools.ts"
   },
   "keywords": [],
   "author": "",
