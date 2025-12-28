@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "00": "node 00_hello_world.ts",
-    "01": "node 01_generate_text.ts"
+    "01": "node 01_generate_text.ts",
+    "02": "node 02_system_prompt.ts"
   },
   "keywords": [],
   "author": "",
