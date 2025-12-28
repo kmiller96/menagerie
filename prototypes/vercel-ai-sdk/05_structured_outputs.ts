@@ -26,6 +26,7 @@ const model = openai("gpt-5-mini");
 const prompt =
   "Give me a recipe for a spaghetti bolognese using lentils instead of minced meat.";
 
+// NOTE: We can use `generateText` here as well for non-streaming structured outputs
 const { textStream } = await streamText({
   model,
   prompt,
