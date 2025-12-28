@@ -2,9 +2,10 @@
   "name": "01_hello_world",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "00": "node 00_hello_world.ts"
+    "00": "node 00_hello_world.ts",
+    "01": "node 01_generate_text.ts"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,7 @@
   "packageManager": "pnpm@10.15.1",
   "dependencies": {
     "@ai-sdk/openai": "^3.0.1",
-    "ai": "^6.0.3"
+    "ai": "^6.0.3",
+    "dotenv": "^17.2.3"
   }
 }
