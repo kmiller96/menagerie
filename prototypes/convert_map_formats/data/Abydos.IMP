@@ -1,0 +1,20 @@
+CompeGPS MAP File
+<Header>
+Version=2
+VerCompeGPS=6.8.2
+Projection=1,Lat/Long,
+Coordinates=1
+Datum=WGS 84
+</Header>
+<Map>
+Bitmap=Abydos.ECW
+BitsPerPixel=0
+BitmapWidth=4275
+BitmapHeight=4274
+Type=10
+</Map>
+<Calibration>
+P0=0.00000000,0.00000000,A,118.75130341,-21.24864919
+P1=4275.00000000,4274.00000000,A,119.00136407,-21.49865135
+P2=4275.00000000,0.00000000,A,119.00136407,-21.24864919
+</Calibration>
