@@ -1,0 +1,56 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "Abydos.IMP",
+        "datum": "WGS 84",
+        "projection": "1,Lat/Long,",
+        "bitmap_width": 4275,
+        "bitmap_height": 4274,
+        "calibration_points": [
+          {
+            "lon": 118.75130341,
+            "lat": -21.24864919
+          },
+          {
+            "lon": 119.00136407,
+            "lat": -21.49865135
+          },
+          {
+            "lon": 119.00136407,
+            "lat": -21.24864919
+          }
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.75130341,
+              -21.49865135
+            ],
+            [
+              119.00136407,
+              -21.49865135
+            ],
+            [
+              119.00136407,
+              -21.24864919
+            ],
+            [
+              118.75130341,
+              -21.24864919
+            ],
+            [
+              118.75130341,
+              -21.49865135
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
