@@ -43,6 +43,12 @@ def list_room_available_slots(id: str):
     return common.list_available_slots_for_room(id)
 
 
+@app.get("/rooms/{id}")
+def room_info(id: str):
+    """Retrieve full information for a specific room."""
+    return common.get_room(id)
+
+
 @app.get("/rooms/{id}/{time}")
 def room_availablity(id: str, time: str):
     """Retrieve availability for a room at a specific booking time."""
