@@ -75,3 +75,24 @@ def book_room(id: str, time: str):
         "status": "error",
         "message": message,
     }
+
+
+@app.post("/rooms/{id}/{time}/cancel")
+def cancel_booking(id: str, time: str):
+    """Cancel a room booking at a specific time."""
+    if common.cancel_booking(id, time):
+        return {
+            "status": "success",
+            "message": f"Room {id} booking canceled for {time}.",
+        }
+
+    status = common.get_room_availability(id, time)
+    if status == "unknown":
+        message = f"Room {id} has no slot defined at {time}."
+    else:
+        message = f"Room {id} is not booked at {time}."
+
+    return {
+        "status": "error",
+        "message": message,
+    }

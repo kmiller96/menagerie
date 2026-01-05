@@ -160,3 +160,11 @@ def book_room(id: str, time: str) -> bool:
         return False
 
     return update_room_status(id, time, "booked")
+
+
+def cancel_booking(id: str, time: str) -> bool:
+    """Marks a room/time slot as available if currently booked."""
+    if get_room_availability(id, time) != "booked":
+        return False
+
+    return update_room_status(id, time, "available")
