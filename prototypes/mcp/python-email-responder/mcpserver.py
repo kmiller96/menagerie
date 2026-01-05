@@ -75,7 +75,7 @@ def list_rooms() -> list[dict]:
     return common.list_rooms()
 
 
-@mcp.resource("rooms://available")
+@mcp.resource("rooms://available/{time}")
 def list_available_slots(time: str) -> list[str]:
     """Retrieves all available slots for a given time."""
     return common.find_available_rooms(time)
