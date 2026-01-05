@@ -53,15 +53,19 @@ def room_availablity(id: str, time: str):
 @app.post("/rooms/{id}/{time}/book")
 def book_room(id: str, time: str):
     """Book a room at a specific time."""
-    status = common.get_room_availability(id, time)
-
-    if status != "available":
-        return {
-            "status": "error",
-            "message": f"Room {id} is not available at {time}.",
-        }
-    else:
+    if common.book_room(id, time):
         return {
             "status": "success",
             "message": f"Room {id} booked for {time}.",
         }
+
+    status = common.get_room_availability(id, time)
+    if status == "unknown":
+        message = f"Room {id} has no slot defined at {time}."
+    else:
+        message = f"Room {id} is not available at {time}."
+
+    return {
+        "status": "error",
+        "message": message,
+    }

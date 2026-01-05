@@ -41,3 +41,21 @@ def get_room_availability(id: str, time: str) -> str:
     room = ROOMS.get(id, {})
     status = room.get(time, "unknown")
     return status
+
+
+def update_room_status(id: str, time: str, status: str) -> bool:
+    """Updates the in-memory availability status for a room/time slot."""
+    room = ROOMS.get(id)
+    if room is None:
+        return False
+
+    room[time] = status
+    return True
+
+
+def book_room(id: str, time: str) -> bool:
+    """Marks a room/time slot as booked if available."""
+    if get_room_availability(id, time) != "available":
+        return False
+
+    return update_room_status(id, time, "booked")
