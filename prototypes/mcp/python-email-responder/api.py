@@ -18,6 +18,7 @@ from fastapi import FastAPI
 import common
 
 app = FastAPI()
+app.openapi_version = "3.0.0"
 
 
 @app.get("/")
