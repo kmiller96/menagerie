@@ -1,0 +1,14 @@
+* {
+  font-family: "Courier New", Courier, monospace;
+}
+
+#title {
+  font-weight: bold;
+  text-decoration: underline;
+  font-style: italic;
+  color: #333333;
+}
+
+ul {
+  list-style-type: "> ";
+}

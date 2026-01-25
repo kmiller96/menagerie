@@ -1,0 +1,15 @@
+{%- extends "layout.jinja" -%}
+
+{%- block content -%}
+<main>
+    <h1 id="title">{{ title }}</h1>
+    <p>Hello from the home page!</p>
+    <div>
+        <ul>
+            <li><a href="{{ url_for('subpage', id=1) }}">Subpage 1</a></li>
+            <li><a href="{{ url_for('subpage', id=2) }}">Subpage 2</a></li>
+            <li><a href="{{ url_for('subpage', id=3) }}">Subpage 3</a></li>
+        </ul>
+    </div>
+</main>
+{%- endblock -%}
