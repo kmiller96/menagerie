@@ -1,3 +1,8 @@
 :80 {
-	respond "Hello, world!"
+	basic_auth {
+		Default $2a$14$qrAe956zPO0I1Q7oCl1SwudVduuy5wNkkWkvDyxWPV3Kk3SdpRFiK # password: "password"
+		Kale $2a$14$xuM6MIYkRG9zUq2R5FHsLettU0vur7FPkBhDlFBcpVJ9L4/jdg8Tm # password: "kale"
+	}
+
+	respond "Welcome to the protected Caddy server!"
 }
