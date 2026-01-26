@@ -7,6 +7,7 @@ from email.parser import BytesParser
 from email.utils import getaddresses
 
 import dotenv
+import requests
 
 # TODO: Throttle the processing to avoid hitting email provider limits.
 
@@ -68,8 +69,12 @@ def process_email(mail, email_id):
     logging.debug("Processing email.")
     raw_email = data[0][1]
     details = extract_email_details(raw_email)
-
     logging.info(f"Processed email {email_id}.")
+
+    logging.debug("POSTing email details to destination.")
+    # requests.post("http://127.0.0.1", json=details)
+    # NOTE: This is an example of how the data could be posted. Commented out as it's purely illustrative.
+
     mail.store(email_id, "+FLAGS", "\\Seen")
     logging.debug(f"Marked email {email_id} as seen.")
 
