@@ -22,3 +22,14 @@ for big orgs...
 1. Create an App password
 2. Set the `EMAIL_USER` and `EMAIL_PASS` environment variables (or set a `.env` file).
 3. `uv run main.py`
+
+## Extensions
+
+### Self-Hosted Mail Server for Many Users
+
+I've run this prototype using Gmail because it's simple and easy. But if you
+wanted separate destinations (e.g. per user) you would probably want to run your
+own mail server instead.
+
+I saw this docker image which was interesting:
+https://docker-mailserver.github.io/docker-mailserver/latest/.
