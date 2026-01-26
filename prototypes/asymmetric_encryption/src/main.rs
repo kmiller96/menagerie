@@ -1,9 +1,15 @@
 use std::{fs, path::PathBuf};
 
+use base64::{engine::general_purpose, Engine as _};
 use clap::Parser;
 use rand::rngs::OsRng;
 use rsa::{
-    pkcs1::{EncodeRsaPrivateKey, EncodeRsaPublicKey, LineEnding},
+    pkcs1::{
+        DecodeRsaPrivateKey, DecodeRsaPublicKey, EncodeRsaPrivateKey, EncodeRsaPublicKey,
+        LineEnding,
+    },
+    pkcs1v15::Pkcs1v15Encrypt,
+    traits::PublicKeyParts,
     RsaPrivateKey, RsaPublicKey,
 };
 
@@ -30,10 +36,18 @@ enum Commands {
     },
 
     /// Encrypts a file with the given key
-    Encrypt { key: PathBuf, path: PathBuf },
+    Encrypt {
+        key: PathBuf,
+        input: PathBuf,
+        output: Option<PathBuf>,
+    },
 
     /// Decrypts a file with the given key
-    Decrypt { key: PathBuf, path: PathBuf },
+    Decrypt {
+        key: PathBuf,
+        input: PathBuf,
+        output: Option<PathBuf>,
+    },
 }
 
 // ----------------- //
@@ -60,22 +74,71 @@ fn generate_key(public: PathBuf, private: PathBuf) {
     fs::write(&public, public_pem.as_bytes()).expect("failed to write public key");
 }
 
-fn encrypt_file(key: PathBuf, path: PathBuf) {
-    // Placeholder for file encryption logic
-    println!(
-        "Encrypting file at {} with key {}",
-        path.display(),
-        key.display()
+fn encrypt_file(key: PathBuf, input: PathBuf, output: Option<PathBuf>) {
+    let public_pem = fs::read_to_string(&key).expect("failed to read public key");
+    let public_key = RsaPublicKey::from_pkcs1_pem(&public_pem).expect("invalid public key PEM");
+
+    let plaintext = fs::read(&input).expect("failed to read input file");
+    let max_chunk_len = public_key.size().saturating_sub(11);
+    assert!(
+        max_chunk_len > 0,
+        "public key size too small for encryption"
     );
+
+    let mut rng = OsRng;
+    let mut ciphertext = Vec::new();
+
+    for chunk in plaintext.chunks(max_chunk_len) {
+        let encrypted = public_key
+            .encrypt(&mut rng, Pkcs1v15Encrypt, chunk)
+            .expect("failed to encrypt chunk");
+        ciphertext.extend_from_slice(&encrypted);
+    }
+
+    match output {
+        Some(ref path) => {
+            fs::write(&path, &ciphertext).expect("failed to write encrypted file");
+        }
+        None => println!("{}", general_purpose::STANDARD.encode(&ciphertext)),
+    }
 }
 
-fn decrypt_file(key: PathBuf, path: PathBuf) {
-    // Placeholder for file decryption logic
-    println!(
-        "Decrypting file at {} with key {}",
-        path.display(),
-        key.display()
+fn decrypt_file(key: PathBuf, input: PathBuf, output: Option<PathBuf>) {
+    let private_pem = fs::read_to_string(&key).expect("failed to read private key");
+    let private_key = RsaPrivateKey::from_pkcs1_pem(&private_pem).expect("invalid private key PEM");
+
+    let key_size = private_key.size();
+    let mut ciphertext = fs::read(&input).expect("failed to read input file");
+
+    if ciphertext.len() % key_size != 0 {
+        // Accept base64-encoded ciphertext if the file isn't aligned to key size.
+        let encoded = fs::read_to_string(&input).expect("failed to read base64 input file");
+        ciphertext = general_purpose::STANDARD
+            .decode(encoded.trim())
+            .expect("failed to decode base64 ciphertext");
+    }
+
+    assert!(
+        ciphertext.len() % key_size == 0,
+        "ciphertext length must be a multiple of key size"
     );
+
+    let mut plaintext = Vec::new();
+    for chunk in ciphertext.chunks(key_size) {
+        let decrypted = private_key
+            .decrypt(Pkcs1v15Encrypt, chunk)
+            .expect("failed to decrypt chunk");
+        plaintext.extend_from_slice(&decrypted);
+    }
+
+    match output {
+        Some(ref path) => {
+            fs::write(&path, &plaintext).expect("failed to write decrypted file");
+        }
+        None => {
+            println!("{}", String::from_utf8_lossy(&plaintext));
+        }
+    }
 }
 
 // ------------------ //
@@ -87,7 +150,7 @@ fn main() {
 
     match args.command {
         Commands::Generate { public, private } => generate_key(public, private),
-        Commands::Encrypt { key, path } => encrypt_file(key, path),
-        Commands::Decrypt { key, path } => decrypt_file(key, path),
+        Commands::Encrypt { key, input, output } => encrypt_file(key, input, output),
+        Commands::Decrypt { key, input, output } => decrypt_file(key, input, output),
     }
 }
