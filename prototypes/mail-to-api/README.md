@@ -13,3 +13,12 @@ In theory it could be a micro SaaS if it was a real niche in the industry. I
 think it's valuable. Maybe others would too? Especially with a PAYG credit
 system or reasonable usage tiers. Hell, even on-prem deployments would be handy
 for big orgs...
+
+## Quickstart
+
+> [!NOTE]
+> It is essential that you have an App Password setup with Gmail!
+
+1. Create an App password
+2. Set the `EMAIL_USER` and `EMAIL_PASS` environment variables (or set a `.env` file).
+3. `uv run main.py`
