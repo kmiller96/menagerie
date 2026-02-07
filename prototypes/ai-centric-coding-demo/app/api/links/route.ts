@@ -1,12 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createWithGeneratedSlug } from "@/lib/slug";
 import { isValidHttpUrl } from "@/lib/validation/url";
 
-const SLUG_LENGTH = 7;
-const MAX_SLUG_RETRIES = 5;
-const SLUG_ALPHABET =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 
@@ -25,12 +22,6 @@ type LinkListResponse = Array<{
   createdAt: string;
   clickCount: number;
 }>;
-
-function generateSlug(): string {
-  const randomBytes = crypto.getRandomValues(new Uint8Array(SLUG_LENGTH));
-
-  return Array.from(randomBytes, (value) => SLUG_ALPHABET[value % SLUG_ALPHABET.length]).join("");
-}
 
 function isUniqueConstraintError(error: unknown): boolean {
   return (
@@ -74,41 +65,40 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  for (let attempt = 0; attempt < MAX_SLUG_RETRIES; attempt += 1) {
-    try {
-      const slug = generateSlug();
-      const created = await prisma.link.create({
-        data: {
-          slug,
-          targetUrl: url,
-        },
-      });
+  try {
+    const created = await createWithGeneratedSlug({
+      create: async (slug) =>
+        prisma.link.create({
+          data: {
+            slug,
+            targetUrl: url,
+          },
+        }),
+      isCollisionError: isUniqueConstraintError,
+    });
 
-      const response: LinkCreateResponse = {
-        id: created.id,
-        slug: created.slug,
-        shortUrl: `${request.nextUrl.origin}/s/${created.slug}`,
-        targetUrl: created.targetUrl,
-        createdAt: created.createdAt.toISOString(),
-      };
-
-      return NextResponse.json(response, { status: 201 });
-    } catch (error) {
-      if (isUniqueConstraintError(error)) {
-        continue;
-      }
-
+    if (!created) {
       return NextResponse.json(
-        { error: "Failed to create short link." },
+        { error: "Failed to generate a unique slug." },
         { status: 500 },
       );
     }
-  }
 
-  return NextResponse.json(
-    { error: "Failed to generate a unique slug." },
-    { status: 500 },
-  );
+    const response: LinkCreateResponse = {
+      id: created.id,
+      slug: created.slug,
+      shortUrl: `${request.nextUrl.origin}/s/${created.slug}`,
+      targetUrl: created.targetUrl,
+      createdAt: created.createdAt.toISOString(),
+    };
+
+    return NextResponse.json(response, { status: 201 });
+  } catch {
+    return NextResponse.json(
+      { error: "Failed to create short link." },
+      { status: 500 },
+    );
+  }
 }
 
 export async function GET(request: NextRequest) {

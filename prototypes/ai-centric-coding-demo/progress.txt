@@ -42,3 +42,19 @@
 - Verification run:
   - `pnpm lint` ✅
   - `pnpm build` ✅
+
+2026-02-07 - Completed Task 5: Tests + CI scripts
+- Added Vitest test runner and `pnpm test` script to run Prisma migrations and execute tests against SQLite test database (`file:./test.db`).
+- Added unit tests:
+  - `tests/unit/url-validation.test.ts` for HTTP/HTTPS URL validation behavior.
+  - `tests/unit/slug.test.ts` for 7-char base62 slug format and collision retry branch coverage.
+- Added integration tests in `tests/integration/routes.test.ts` for:
+  - Create link success/failure (`POST /api/links`).
+  - Redirect success increments `clickCount` and logs `ClickEvent` (`GET /s/{slug}`).
+  - Unknown slug returns `404`.
+  - Recent links API returns newest-first ordering (`GET /api/links`).
+- Refactored slug generation/retry into `lib/slug.ts` and updated `app/api/links/route.ts` to use shared logic, enabling direct unit testing of collision retries.
+- Verification run:
+  - `pnpm lint` ✅
+  - `pnpm test` ✅
+  - `pnpm build` ✅
