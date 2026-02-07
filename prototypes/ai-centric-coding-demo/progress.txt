@@ -12,3 +12,11 @@
   - `pnpm exec prisma generate` ✅
   - `pnpm lint` ✅
   - `pnpm build` ✅
+
+2026-02-07 - Completed Task 2: Create/list API routes
+- Added `app/api/links/route.ts` with:
+  - `POST /api/links` to validate URL input, generate 7-char base62 slugs, retry on collisions (up to 5), and return `id`, `slug`, `shortUrl`, `targetUrl`, `createdAt`.
+  - `GET /api/links` to return newest-first recent links with `id`, `slug`, `targetUrl`, `createdAt`, `clickCount`, with `limit` query support (default 20, max 100).
+- Added request-level error handling for invalid JSON, invalid URL input, invalid `limit` values, and internal failures.
+- Verification run:
+  - `pnpm lint` ✅
