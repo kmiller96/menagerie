@@ -20,3 +20,14 @@
 - Added request-level error handling for invalid JSON, invalid URL input, invalid `limit` values, and internal failures.
 - Verification run:
   - `pnpm lint` ✅
+
+2026-02-07 - Completed Task 3: Redirect route + analytics writes
+- Added `app/s/[slug]/route.ts` with `GET /s/{slug}` implemented on the Node.js runtime.
+- Implemented transactional redirect flow:
+  - Look up link by slug.
+  - Increment `clickCount` atomically.
+  - Insert `ClickEvent` timestamp row.
+  - Return `307` redirect to `targetUrl`.
+- Added unknown-slug handling to return `404`.
+- Verification run:
+  - `pnpm lint` ✅
