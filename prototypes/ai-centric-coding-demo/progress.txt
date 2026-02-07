@@ -1,0 +1,14 @@
+2026-02-07 - Completed Task 1: Data layer + Prisma setup
+- Added Prisma dependencies and initialized Prisma config for environment-driven `DATABASE_URL`.
+- Implemented SQLite schema models for `Link` and `ClickEvent` with required indexes/relations.
+- Created initial migration at `prisma/migrations/20260207091342_init/migration.sql`.
+- Added shared runtime utilities:
+  - `lib/env.ts` for fail-fast `DATABASE_URL` validation.
+  - `lib/prisma.ts` singleton Prisma client configured with Prisma 7 libsql adapter.
+  - `lib/validation/url.ts` HTTP/HTTPS URL validation helper.
+- Added `.env.example` and ignored local SQLite files in `.gitignore`.
+- Verification run:
+  - `pnpm exec prisma migrate dev --name init` ✅
+  - `pnpm exec prisma generate` ✅
+  - `pnpm lint` ✅
+  - `pnpm build` ✅
