@@ -31,3 +31,14 @@
 - Added unknown-slug handling to return `404`.
 - Verification run:
   - `pnpm lint` ✅
+
+2026-02-07 - Completed Task 4: Home UI flow
+- Replaced `app/page.tsx` with a client-rendered single-page experience:
+  - URL input form with submit handling for `POST /api/links`.
+  - Success output panel showing created short link and destination URL.
+  - Copy button for generated short link (clipboard API + fallback message).
+  - “Recent links” list powered by `GET /api/links?limit=20`, including click counts and created timestamps.
+  - Refresh button plus loading/empty/error states for both create and list flows.
+- Verification run:
+  - `pnpm lint` ✅
+  - `pnpm build` ✅
