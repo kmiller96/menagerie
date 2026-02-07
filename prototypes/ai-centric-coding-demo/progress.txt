@@ -58,3 +58,25 @@
   - `pnpm lint` ✅
   - `pnpm test` ✅
   - `pnpm build` ✅
+
+2026-02-07 - Completed Task 6: Postgres migration + Vercel deploy config
+- Added Postgres Prisma schema at `prisma/schema.postgres.prisma` while keeping SQLite schema for local development and test workflows.
+- Added Postgres migration path assets:
+  - `prisma/migrations-postgres/migration_lock.toml`
+  - `prisma/migrations-postgres/20260207203000_init/migration.sql`
+- Updated Prisma config (`prisma.config.ts`) to support environment-selected schema and migration directories via:
+  - `PRISMA_SCHEMA`
+  - `PRISMA_MIGRATIONS_PATH`
+- Updated runtime Prisma client (`lib/prisma.ts`) to choose driver adapter by `DATABASE_URL`:
+  - SQLite/libsql URLs -> `PrismaLibSql`
+  - Postgres URLs -> `PrismaPg`
+- Added DB scripts in `package.json`:
+  - `db:migrate:sqlite`
+  - `db:migrate:postgres`
+  - `db:smoke:postgres`
+- Updated `.env.example` and `README.md` with Postgres cutover instructions and Vercel build/migration command configuration.
+- Verification run:
+  - `pnpm exec prisma generate` ✅
+  - `pnpm lint` ✅
+  - `pnpm test` ✅
+  - `pnpm build` ✅
