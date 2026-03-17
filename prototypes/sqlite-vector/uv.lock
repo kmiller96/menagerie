@@ -1,0 +1,26 @@
+version = 1
+revision = 3
+requires-python = ">=3.14"
+
+[[package]]
+name = "sqlite-vector"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "sqliteai-vector" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "sqliteai-vector", specifier = ">=0.9.93" }]
+
+[[package]]
+name = "sqliteai-vector"
+version = "0.9.93"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/d8/4c43436c08970523275512050f1bfb78098204f5e25ca6f0c5a4430268c9/sqliteai_vector-0.9.93-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:a9d3e6b40354ae45eb3489e24fa827177cf2d20af5a770323fe26c75fa5b7133", size = 117291, upload-time = "2026-03-11T17:55:12.726Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/a1/aabc6b1c01d0f466e579535c61bd782b9740f8c5b0e1a29d2b23b2c35917/sqliteai_vector-0.9.93-py3-none-macosx_11_0_arm64.whl", hash = "sha256:ea32df6b1d23ba5d6be9f93a6eada826e378938b3c6fee86f879acb7f0a54513", size = 117287, upload-time = "2026-03-11T17:55:07.169Z" },
+    { url = "https://files.pythonhosted.org/packages/9d/c8/ef9c499acb8a1e10d4401056a72198b59215973c5bb5d209174f0d032918/sqliteai_vector-0.9.93-py3-none-manylinux2014_aarch64.whl", hash = "sha256:d6c91389218d97509152e38f2a8552c07e05c0642b35e954077d7fa17ccd8f0a", size = 54731, upload-time = "2026-03-11T17:55:08.159Z" },
+    { url = "https://files.pythonhosted.org/packages/22/e4/23360b5bda934bd488f86c8d81b973a3e7ff355e0d154839546b5d31c1c0/sqliteai_vector-0.9.93-py3-none-manylinux2014_x86_64.whl", hash = "sha256:df55e136a056b81508dd1a01f2815f8041a427401bd47642117ed6bad0345479", size = 70383, upload-time = "2026-03-11T17:55:05.763Z" },
+    { url = "https://files.pythonhosted.org/packages/ac/14/48368e4f478fc80a704afc03c5e28cab77f43d906232e6d7071a8ff193ca/sqliteai_vector-0.9.93-py3-none-win_amd64.whl", hash = "sha256:6bd51ad8e558699d429a6d49ec867ff44392c535e01ea684bdce5b6347771b8a", size = 70416, upload-time = "2026-03-11T17:55:11.372Z" },
+]
