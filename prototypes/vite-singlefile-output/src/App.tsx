@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import Img from "./image.jpg";
+
 function Button({
   onClick,
   children,
@@ -31,6 +33,7 @@ function App() {
         <span>{count}</span>
         <Button onClick={() => setCount((count) => count - 1)}>-</Button>
       </div>
+      <img src={Img} alt="Demo" className="w-[320px]" />
     </div>
   );
 }
