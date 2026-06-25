@@ -3,6 +3,7 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 
 import tailwindcss from "@tailwindcss/vite";
 import babel from "@rolldown/plugin-babel";
+import { viteSingleFile } from "vite-plugin-singlefile";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -10,5 +11,6 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
+    viteSingleFile({ removeViteModuleLoader: true }),
   ],
 });
