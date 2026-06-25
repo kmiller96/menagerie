@@ -1,5 +1,22 @@
 import { useState } from "react";
 
+function Button({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      className="px-2 py-1 bg-blue-500 text-white rounded"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -10,9 +27,9 @@ function App() {
         This is a demo showing how you can make a single page output with Vite.
       </aside>
       <div className="flex gap-2 items-center">
-        <button onClick={() => setCount((count) => count + 1)}>+</button>
+        <Button onClick={() => setCount((count) => count + 1)}>+</Button>
         <span>{count}</span>
-        <button onClick={() => setCount((count) => count - 1)}>-</button>
+        <Button onClick={() => setCount((count) => count - 1)}>-</Button>
       </div>
     </div>
   );
