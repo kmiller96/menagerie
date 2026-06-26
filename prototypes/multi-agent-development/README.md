@@ -6,6 +6,13 @@ they train on my data, but in a client environment you should use a paid offerin
 
 ## Task
 
-Let's focus on creating a very simple note taking app in Next.js.
+Let's focus on creating a very simple note taking app in Next.js. We will store
+the notes in a sqlite database.
 
-We will store the notes in a sqlite database.
+## Notes / Learnings
+
+### Creating Worktrees
+
+```bash
+git worktree add <path>
+```
