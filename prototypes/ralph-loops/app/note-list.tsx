@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { editNote, deleteNote } from "@/lib/actions";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Note {
   id: number;
@@ -11,7 +11,13 @@ interface Note {
   updated_at: string;
 }
 
-export function NoteList({ notes }: { notes: Note[] }) {
+export function NoteList({
+  notes,
+  allTags,
+}: {
+  notes: Note[];
+  allTags: { id: number; name: string }[];
+}) {
   if (notes.length === 0) {
     return <p className="text-gray-500">No notes yet.</p>;
   }
@@ -19,17 +25,62 @@ export function NoteList({ notes }: { notes: Note[] }) {
   return (
     <div className="space-y-4">
       {notes.map((note) => (
-        <NoteItem key={note.id} note={note} />
+        <NoteItem key={note.id} note={note} allTags={allTags} />
       ))}
     </div>
   );
 }
 
-function NoteItem({ note }: { note: Note }) {
+const TAG_PATTERN = /(#[\w-]+)/gi;
+
+function NoteItem({
+  note,
+  allTags,
+}: {
+  note: Note;
+  allTags: { id: number; name: string }[];
+}) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState(note.body);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const tagNameToId = useMemo(
+    () => new Map(allTags.map((t) => [t.name.toLowerCase(), t.id])),
+    [allTags],
+  );
+
+  function handleTagClick(tagName: string) {
+    const tagId = tagNameToId.get(tagName.toLowerCase());
+    if (tagId === undefined) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tags", String(tagId));
+    router.push(`?${params.toString()}`);
+  }
+
+  function renderBody(text: string) {
+    const parts = text.split(TAG_PATTERN);
+    return parts.map((part, i) => {
+      const match = part.match(/^#([\w-]+)$/i);
+      if (match) {
+        return (
+          <button
+            key={i}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTagClick(match[1]);
+            }}
+            className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
+          >
+            {match[0]}
+          </button>
+        );
+      }
+      return part;
+    });
+  }
 
   async function handleSave() {
     await editNote(note.id, body);
@@ -74,7 +125,7 @@ function NoteItem({ note }: { note: Note }) {
         </>
       ) : (
         <>
-          <p className="whitespace-pre-wrap">{note.body}</p>
+          <p className="whitespace-pre-wrap">{renderBody(note.body)}</p>
           <div className="flex items-center justify-between text-sm text-gray-500">
             <span>{timeAgo(note.created_at)}</span>
             <div className="flex gap-2">
