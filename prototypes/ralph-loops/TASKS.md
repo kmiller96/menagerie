@@ -49,21 +49,21 @@ Implementation tasks grouped by phase.
   - Search bar (controlled input, drives query param)
   - Tag filter pills (click to toggle, drives query param)
   - Note list (server component that reads from DB with filters)
-- [ ] Compose form — calls `createNote`, resets on success
-- [ ] Search bar — filters list as user types (client-side nav or
+- [x] Compose form — calls `createNote`, resets on success
+- [x] Search bar — filters list as user types (client-side nav or
       `router.push` with search param)
-- [ ] Tag filter pills — fetch all tags, render as buttons, highlight active,
+- [x] Tag filter pills — fetch all tags, render as buttons, highlight active,
       toggle inclusion; combine with search
-- [ ] Note list — iterate notes, render body, `created_at`, edit/delete buttons
-- [ ] Inline edit — clicking edit replaces body with textarea + save/cancel;
+- [x] Note list — iterate notes, render body, `created_at`, edit/delete buttons
+- [x] Inline edit — clicking edit replaces body with textarea + save/cancel;
       calls `editNote`
-- [ ] Delete with confirmation — confirm dialog, calls `deleteNote`
+- [x] Delete with confirmation — confirm dialog, calls `deleteNote`
 
 ---
 
 ## Phase 5 — Polish
 
 - [x] Highlight `#tags` in rendered note bodies (distinct colour, clickable)
-- [ ] Empty state — message when no notes yet, or no results match filter
+- [x] Empty state — message when no notes yet, or no results match filter
 - [ ] Loading / pending states for Server Actions
 - [ ] Responsive layout, clean Tailwind styling throughout

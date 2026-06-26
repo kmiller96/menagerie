@@ -14,12 +14,20 @@ interface Note {
 export function NoteList({
   notes,
   allTags,
+  hasActiveFilters = false,
 }: {
   notes: Note[];
   allTags: { id: number; name: string }[];
+  hasActiveFilters?: boolean;
 }) {
   if (notes.length === 0) {
-    return <p className="text-gray-500">No notes yet.</p>;
+    return (
+      <p className="text-gray-500">
+        {hasActiveFilters
+          ? "No notes match your search or filters."
+          : "No notes yet. Write one above!"}
+      </p>
+    );
   }
 
   return (

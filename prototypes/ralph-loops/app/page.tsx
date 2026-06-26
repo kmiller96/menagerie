@@ -63,7 +63,11 @@ export default async function Home({ searchParams }: Props) {
       <ComposeForm />
       <SearchBar initialValue={searchQuery} />
       <TagPills tags={allTags} selectedIds={selectedTagIds} />
-      <NoteList notes={notes} allTags={allTags} />
+      <NoteList
+        notes={notes}
+        allTags={allTags}
+        hasActiveFilters={!!(searchQuery || selectedTagIds.length > 0)}
+      />
     </div>
   );
 }
