@@ -1,6 +1,5 @@
 import type Database from "better-sqlite3";
-
-const TAG_PATTERN = /#[\w-]+/gi;
+import { TAG_PATTERN } from "./shared";
 
 export function parseTags(body: string): string[] {
   const seen = new Set<string>();

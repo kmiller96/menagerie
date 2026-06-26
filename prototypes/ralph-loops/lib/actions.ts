@@ -2,13 +2,9 @@
 
 import db from "./db";
 import { parseTags, syncTags } from "./tags";
+import type { Note } from "./shared";
 
-export interface Note {
-  id: number;
-  body: string;
-  created_at: string;
-  updated_at: string;
-}
+export type { Note };
 
 export async function createNoteAction(_prevState: unknown, formData: FormData) {
   const body = formData.get("body") as string;

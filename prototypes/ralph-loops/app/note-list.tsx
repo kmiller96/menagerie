@@ -2,14 +2,9 @@
 
 import { useState, useMemo, useTransition } from "react";
 import { editNote, deleteNote } from "@/lib/actions";
+import type { Note } from "@/lib/shared";
+import { TAG_PATTERN, timeAgo } from "@/lib/shared";
 import { useRouter, useSearchParams } from "next/navigation";
-
-interface Note {
-  id: number;
-  body: string;
-  created_at: string;
-  updated_at: string;
-}
 
 export function NoteList({
   notes,
@@ -38,8 +33,6 @@ export function NoteList({
     </div>
   );
 }
-
-const TAG_PATTERN = /(#[\w-]+)/gi;
 
 function NoteItem({
   note,
@@ -193,15 +186,4 @@ function NoteItem({
   );
 }
 
-function timeAgo(dateStr: string): string {
-  const now = Date.now();
-  const date = new Date(dateStr.endsWith("Z") ? dateStr : `${dateStr}Z`).getTime();
-  const diff = now - date;
-  const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes} min ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hr ago`;
-  const days = Math.floor(hours / 24);
-  return `${days} day${days > 1 ? "s" : ""} ago`;
-}
+
