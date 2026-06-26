@@ -8,6 +8,7 @@ export interface Note {
 // Capturing group so split() in client components preserves tag delimiters
 export const TAG_PATTERN = /(#[\w-]+)/gi;
 
+/** Format a date string as a human-friendly relative time. */
 export function timeAgo(dateStr: string): string {
   const now = Date.now();
   const date = new Date(

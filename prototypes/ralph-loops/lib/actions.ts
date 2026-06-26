@@ -6,6 +6,7 @@ import type { Note } from "./shared";
 
 export type { Note };
 
+/** Server action wrapper for creating a note from a form submission. */
 export async function createNoteAction(_prevState: unknown, formData: FormData) {
   const body = formData.get("body") as string;
   if (!body?.trim()) return { error: "Note body cannot be empty" };
@@ -13,6 +14,7 @@ export async function createNoteAction(_prevState: unknown, formData: FormData) 
   return { ok: true };
 }
 
+/** Insert a new note and sync its inline tags. */
 export async function createNote(body: string): Promise<Note> {
   const trimmed = body.trim();
   if (!trimmed) throw new Error("Note body cannot be empty");
@@ -33,6 +35,7 @@ export async function createNote(body: string): Promise<Note> {
   return note;
 }
 
+/** Update an existing note's body and re-sync its tags. */
 export async function editNote(id: number, body: string): Promise<Note> {
   const trimmed = body.trim();
   if (!trimmed) throw new Error("Note body cannot be empty");
@@ -53,6 +56,7 @@ export async function editNote(id: number, body: string): Promise<Note> {
   return note;
 }
 
+/** Delete a note by id; throws if the note does not exist. */
 export async function deleteNote(id: number): Promise<void> {
   const result = db.prepare("DELETE FROM notes WHERE id = ?").run(id);
   if (result.changes === 0) throw new Error("Note not found");

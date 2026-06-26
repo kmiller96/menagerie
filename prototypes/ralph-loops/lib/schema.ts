@@ -1,5 +1,6 @@
 import db from "./db";
 
+/** Create tables and indexes if they don't already exist. */
 export function initSchema() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS notes (

@@ -1,6 +1,7 @@
 import db from "./db";
 import { TAG_PATTERN } from "./shared";
 
+/** Extract unique, lowercased tag names (without `#` prefix) from note body text. */
 export function parseTags(body: string): string[] {
   const seen = new Set<string>();
   for (const match of body.matchAll(TAG_PATTERN)) {
@@ -9,6 +10,7 @@ export function parseTags(body: string): string[] {
   return [...seen];
 }
 
+/** Replace all tag associations for a note with the given tag names. */
 export function syncTags(
   noteId: number,
   tagNames: string[],
@@ -34,6 +36,7 @@ export function syncTags(
   txn();
 }
 
+/** Return all tags ordered by name. */
 export function getAllTags(): { id: number; name: string }[] {
   return db.prepare("SELECT id, name FROM tags ORDER BY name").all() as {
     id: number;

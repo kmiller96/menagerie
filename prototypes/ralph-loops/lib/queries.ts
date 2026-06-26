@@ -6,42 +6,26 @@ export interface NoteFilters {
   selectedTagIds?: number[];
 }
 
+/** Fetch notes with optional search text and tag filters. */
 export function getNotes(filters: NoteFilters = {}): Note[] {
   const { searchQuery, selectedTagIds } = filters;
-  const hasTags = selectedTagIds && selectedTagIds.length > 0;
-  const hasSearch = !!searchQuery;
+  const conditions: string[] = [];
+  const params: unknown[] = [];
 
-  if (hasTags) {
-    const placeholders = selectedTagIds!.map(() => "?").join(",");
-    const sql = hasSearch
-      ? `SELECT DISTINCT n.id, n.body, n.created_at, n.updated_at
-         FROM notes n
-         JOIN note_tags nt ON n.id = nt.note_id
-         WHERE nt.tag_id IN (${placeholders})
-           AND n.body LIKE ?
-         ORDER BY n.created_at DESC`
-      : `SELECT DISTINCT n.id, n.body, n.created_at, n.updated_at
-         FROM notes n
-         JOIN note_tags nt ON n.id = nt.note_id
-         WHERE nt.tag_id IN (${placeholders})
-         ORDER BY n.created_at DESC`;
-    const params = hasSearch
-      ? [...selectedTagIds!, `%${searchQuery}%`]
-      : selectedTagIds!;
-    return db.prepare(sql).all(...params) as Note[];
+  if (selectedTagIds && selectedTagIds.length > 0) {
+    const placeholders = selectedTagIds.map(() => "?").join(",");
+    conditions.push(`n.id IN (SELECT note_id FROM note_tags WHERE tag_id IN (${placeholders}))`);
+    params.push(...selectedTagIds);
   }
 
-  if (hasSearch) {
-    return db
-      .prepare(
-        "SELECT id, body, created_at, updated_at FROM notes WHERE body LIKE ? ORDER BY created_at DESC",
-      )
-      .all(`%${searchQuery}%`) as Note[];
+  if (searchQuery) {
+    conditions.push("n.body LIKE ?");
+    params.push(`%${searchQuery}%`);
   }
 
-  return db
-    .prepare(
-      "SELECT id, body, created_at, updated_at FROM notes ORDER BY created_at DESC",
-    )
-    .all() as Note[];
+  const select = "SELECT n.id, n.body, n.created_at, n.updated_at FROM notes n";
+  const where = conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
+  const sql = select + where + " ORDER BY n.created_at DESC";
+
+  return db.prepare(sql).all(...params) as Note[];
 }
