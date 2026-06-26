@@ -6,21 +6,23 @@ Implementation tasks grouped by phase.
 
 ## Phase 1 — Setup
 
-- [ ] Install production deps: `better-sqlite3`
-- [ ] Install dev deps: `@types/better-sqlite3`, `tailwindcss`, `postcss`,
+- [x] Install production deps: `better-sqlite3`
+- [x] Install dev deps: `@types/better-sqlite3`, `tailwindcss`, `postcss`,
       `autoprefixer`
-- [ ] Configure Tailwind (`tailwind.config.ts`, `postcss.config.js`, add
-      `@tailwind` directives to `app/globals.css`)
-- [ ] Create `lib/db.ts` — initialise better-sqlite3, point at `.data/notes.db`,
+- [x] Configure Tailwind (`postcss.config.js`, add `@import "tailwindcss"` to
+      `app/globals.css`) — Tailwind v4 uses CSS-first config via `@theme`
+      blocks instead of `tailwind.config.ts`, and `tailwindcss/plugin` PostCSS
+      plugin instead of v3's `@tailwind` directives
+- [x] Create `lib/db.ts` — initialise better-sqlite3, point at `.data/notes.db`,
       expose a `db` singleton
-- [ ] Create `lib/schema.ts` — run `CREATE TABLE IF NOT EXISTS` for `notes`,
+- [x] Create `lib/schema.ts` — run `CREATE TABLE IF NOT EXISTS` for `notes`,
       `tags`, `note_tags` with indexes; call on app startup
 
 ---
 
 ## Phase 2 — Tag utilities
 
-- [ ] Create `lib/tags.ts`:
+- [x] Create `lib/tags.ts`:
   - `parseTags(body: string): string[]` — extract `#[\w-]+`, strip `#`,
     lowercase, deduplicate
   - `syncTags(db, noteId: number, tagNames: string[]): void` — insert any
@@ -31,7 +33,7 @@ Implementation tasks grouped by phase.
 
 ## Phase 3 — Server Actions
 
-- [ ] `lib/actions.ts`:
+- [x] `lib/actions.ts`:
   - `createNote(body: string): Note` — parse tags, INSERT note, sync tags,
     return note
   - `editNote(id: number, body: string): Note` — parse tags, UPDATE note,
