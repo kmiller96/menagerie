@@ -30,6 +30,12 @@ export function ComposeForm() {
         rows={3}
         required
         disabled={isPending}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            (e.currentTarget.form as HTMLFormElement).requestSubmit();
+          }
+        }}
       />
       <button
         type="submit"

@@ -120,6 +120,12 @@ function NoteItem({
             onChange={(e) => setBody(e.target.value)}
             className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
             rows={3}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSave();
+              }
+            }}
           />
           <div className="flex gap-2">
             <button
