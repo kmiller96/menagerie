@@ -27,7 +27,7 @@ export async function createNote(body: string): Promise<Note> {
 
   const tags = parseTags(trimmed);
   if (tags.length > 0) {
-    syncTags(db, note.id, tags);
+    syncTags(note.id, tags);
   }
 
   return note;
@@ -48,7 +48,7 @@ export async function editNote(id: number, body: string): Promise<Note> {
   if (!note) throw new Error("Note not found");
 
   const tags = parseTags(trimmed);
-  syncTags(db, note.id, tags);
+  syncTags(note.id, tags);
 
   return note;
 }

@@ -1,4 +1,4 @@
-import type Database from "better-sqlite3";
+import db from "./db";
 import { TAG_PATTERN } from "./shared";
 
 export function parseTags(body: string): string[] {
@@ -10,7 +10,6 @@ export function parseTags(body: string): string[] {
 }
 
 export function syncTags(
-  db: Database.Database,
   noteId: number,
   tagNames: string[],
 ): void {
@@ -35,9 +34,7 @@ export function syncTags(
   txn();
 }
 
-export function getAllTags(
-  db: Database.Database,
-): { id: number; name: string }[] {
+export function getAllTags(): { id: number; name: string }[] {
   return db.prepare("SELECT id, name FROM tags ORDER BY name").all() as {
     id: number;
     name: string;
