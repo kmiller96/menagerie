@@ -7,3 +7,11 @@ works well with AI. So it could carve a place in my development workflow.
 
 **NOTE**: I downloaded the binary manually and am running it locally in this
 folder. You probably want to install it using homebrew or similar.
+
+## TUI
+
+As a human, I'll probably want to use this most of the time.
+
+```bash
+kanban-md tui
+```
