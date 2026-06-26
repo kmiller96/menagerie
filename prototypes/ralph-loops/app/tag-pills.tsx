@@ -31,10 +31,10 @@ export function TagPills({
         <button
           key={tag.id}
           onClick={() => toggleTag(tag.id)}
-          className={`px-3 py-1 rounded-full text-sm border cursor-pointer ${
+          className={`px-3 py-1 rounded-full text-sm border cursor-pointer transition-colors ${
             selectedIds.includes(tag.id)
               ? "bg-blue-500 text-white border-blue-500"
-              : "bg-white text-gray-700 border-gray-300"
+              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
         >
           #{tag.name}

@@ -58,8 +58,8 @@ export default async function Home({ searchParams }: Props) {
   const allTags = getAllTags(db);
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Notes</h1>
+    <div className="max-w-2xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Notes</h1>
       <ComposeForm />
       <SearchBar initialValue={searchQuery} />
       <TagPills tags={allTags} selectedIds={selectedTagIds} />

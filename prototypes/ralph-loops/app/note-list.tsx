@@ -31,7 +31,7 @@ export function NoteList({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {notes.map((note) => (
         <NoteItem key={note.id} note={note} allTags={allTags} />
       ))}
@@ -112,26 +112,26 @@ function NoteItem({
   }
 
   return (
-    <div className="border rounded p-3 space-y-2">
+    <div className="bg-white rounded-xl shadow-sm border p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow">
       {editing ? (
         <>
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow"
             rows={3}
           />
           <div className="flex gap-2">
             <button
               onClick={handleSave}
               disabled={isPending}
-              className="bg-green-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors hover:bg-green-600 active:bg-green-700"
             >
               {isPending ? "Saving..." : "Save"}
             </button>
             <button
               onClick={handleCancel}
-              className="bg-gray-300 px-3 py-1 rounded text-sm"
+              className="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
             >
               Cancel
             </button>
@@ -139,16 +139,16 @@ function NoteItem({
         </>
       ) : (
         <>
-          <p className="whitespace-pre-wrap">{renderBody(note.body)}</p>
-          <div className="flex items-center justify-between text-sm text-gray-500">
+          <p className="whitespace-pre-wrap leading-relaxed">{renderBody(note.body)}</p>
+          <div className="flex items-center justify-between text-sm text-gray-500 pt-1">
             <span>{timeAgo(note.created_at)}</span>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 onClick={() => {
                   setBody(note.body);
                   setEditing(true);
                 }}
-                className="text-blue-500 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-blue-500 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                 disabled={isPending}
               >
                 edit
@@ -158,14 +158,14 @@ function NoteItem({
                   <button
                     onClick={handleDelete}
                     disabled={isPending}
-                    className="text-red-600 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-red-600 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {isPending ? "Deleting..." : "Confirm delete?"}
                   </button>
                   <button
                     onClick={() => setConfirmDelete(false)}
                     disabled={isPending}
-                    className="text-gray-500 hover:underline disabled:opacity-50"
+                    className="text-gray-500 hover:text-gray-700 disabled:opacity-50 transition-colors"
                   >
                     cancel
                   </button>
@@ -174,7 +174,7 @@ function NoteItem({
                 <button
                   onClick={() => setConfirmDelete(true)}
                   disabled={isPending}
-                  className="text-red-500 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                 >
                   del
                 </button>
