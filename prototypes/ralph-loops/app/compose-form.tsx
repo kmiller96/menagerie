@@ -1,30 +1,22 @@
 "use client";
 
-import { useRef, useTransition } from "react";
-import { createNote } from "@/lib/actions";
-import { useRouter } from "next/navigation";
+import { useActionState, useRef, useEffect } from "react";
+import { createNoteAction } from "@/lib/actions";
 
 export function ComposeForm() {
-  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [isPending, startTransition] = useTransition();
+  const [state, formAction, isPending] = useActionState(createNoteAction, null);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const body = formData.get("body") as string;
-    if (!body.trim()) return;
-    startTransition(async () => {
-      await createNote(body);
+  useEffect(() => {
+    if (state?.ok) {
       formRef.current?.reset();
       textareaRef.current?.focus();
-      router.refresh();
-    });
-  }
+    }
+  }, [state]);
 
   return (
-    <form onSubmit={handleSubmit} ref={formRef} className="space-y-3 bg-white rounded-xl shadow-sm border p-4 sm:p-5">
+    <form action={formAction} ref={formRef} className="space-y-3 bg-white rounded-xl shadow-sm border p-4 sm:p-5">
       <textarea
         ref={textareaRef}
         name="body"

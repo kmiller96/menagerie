@@ -10,6 +10,13 @@ export interface Note {
   updated_at: string;
 }
 
+export async function createNoteAction(_prevState: unknown, formData: FormData) {
+  const body = formData.get("body") as string;
+  if (!body?.trim()) return { error: "Note body cannot be empty" };
+  await createNote(body.trim());
+  return { ok: true };
+}
+
 export async function createNote(body: string): Promise<Note> {
   const trimmed = body.trim();
   if (!trimmed) throw new Error("Note body cannot be empty");
