@@ -112,6 +112,8 @@ while true; do
 
   opencode run "Read OVERVIEW.md for full project context, then read TASKS.md and implement exactly ONE currently incomplete task (marked with '- [ ]'). Do not implement more than one task per run. After implementing, update TASKS.md to mark the task as complete (replace '- [ ]' with '- [x]').
 
+When you're done, make sure you commit your changes to git with a clear commit message.
+
 At the very end of your response, include a structured RALPH_STATUS block:
 
 ---RALPH_STATUS---
