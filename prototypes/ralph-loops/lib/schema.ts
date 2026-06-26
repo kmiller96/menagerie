@@ -1,8 +1,8 @@
-import db from "./db";
+import { getDatabase } from "./db";
 
 /** Create tables and indexes if they don't already exist. */
 export function initSchema() {
-  db.exec(`
+  getDatabase().exec(`
     CREATE TABLE IF NOT EXISTS notes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       body TEXT NOT NULL,

@@ -1,4 +1,4 @@
-import db from "./db";
+import { getDatabase } from "./db";
 import type { Note } from "./shared";
 
 export interface NoteFilters {
@@ -27,5 +27,5 @@ export function getNotes(filters: NoteFilters = {}): Note[] {
   const where = conditions.length > 0 ? " WHERE " + conditions.join(" AND ") : "";
   const sql = select + where + " ORDER BY n.created_at DESC";
 
-  return db.prepare(sql).all(...params) as Note[];
+  return getDatabase().prepare(sql).all(...params) as Note[];
 }

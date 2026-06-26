@@ -1,5 +1,7 @@
-import db from "./db";
+import { getDatabase } from "./db";
 import { TAG_PATTERN } from "./shared";
+
+const db = getDatabase();
 
 /** Extract unique, lowercased tag names (without `#` prefix) from note body text. */
 export function parseTags(body: string): string[] {

@@ -2,21 +2,27 @@ import Database from "better-sqlite3";
 import path from "node:path";
 import fs from "node:fs";
 
-const dataDir = path.join(process.cwd(), ".data");
-fs.mkdirSync(dataDir, { recursive: true });
+let db: Database.Database | undefined;
 
-const dbPath = path.join(dataDir, "notes.db");
+const DATABASE_DIR = ".data";
+const DATABASE_FILE_NAME = "notes.db";
 
-const globalForDb = globalThis as typeof globalThis & {
-  _db?: Database.Database;
-};
+export function getDatabase(): Database.Database {
+  if (db) return db; // If the database instance already exists, return it
 
-const db = globalForDb._db ?? new Database(dbPath);
-if (process.env.NODE_ENV !== "production") {
-  globalForDb._db = db;
+  // Prepare paths
+  const here = process.cwd();
+  const dbDir = path.join(here, DATABASE_DIR);
+  const dbFilePath = path.join(dbDir, DATABASE_FILE_NAME);
+
+  // Ensure the database directory exists
+  fs.mkdirSync(dbDir, { recursive: true });
+  db = new Database(dbFilePath);
+
+  // Enable Write-Ahead Logging (WAL) mode and enforce foreign key constraints
+  db.pragma("journal_mode = WAL");
+  db.pragma("foreign_keys = ON");
+
+  // Return the database instance
+  return db;
 }
-
-db.pragma("journal_mode = WAL");
-db.pragma("foreign_keys = ON");
-
-export default db;

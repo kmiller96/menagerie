@@ -1,8 +1,10 @@
 "use server";
 
-import db from "./db";
+import { getDatabase } from "./db";
 import { parseTags, syncTags } from "./tags";
 import type { Note } from "./shared";
+
+const db = getDatabase();
 
 export type { Note };
 
