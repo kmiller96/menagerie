@@ -140,7 +140,7 @@ function NoteItem({
         <>
           <p className="whitespace-pre-wrap leading-relaxed">{renderBody(note.body)}</p>
           <div className="flex items-center justify-between text-sm text-gray-500 pt-1">
-            <span>{timeAgo(note.created_at)}</span>
+            <span suppressHydrationWarning>{timeAgo(note.created_at)}</span>
             <div className="flex gap-3">
               <button
                 onClick={() => {
