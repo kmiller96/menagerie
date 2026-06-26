@@ -10,7 +10,7 @@ export interface Note {
   updated_at: string;
 }
 
-export function createNote(body: string): Note {
+export async function createNote(body: string): Promise<Note> {
   const trimmed = body.trim();
   if (!trimmed) throw new Error("Note body cannot be empty");
 
@@ -30,7 +30,7 @@ export function createNote(body: string): Note {
   return note;
 }
 
-export function editNote(id: number, body: string): Note {
+export async function editNote(id: number, body: string): Promise<Note> {
   const trimmed = body.trim();
   if (!trimmed) throw new Error("Note body cannot be empty");
 
@@ -50,7 +50,7 @@ export function editNote(id: number, body: string): Note {
   return note;
 }
 
-export function deleteNote(id: number): void {
+export async function deleteNote(id: number): Promise<void> {
   const result = db.prepare("DELETE FROM notes WHERE id = ?").run(id);
   if (result.changes === 0) throw new Error("Note not found");
 }

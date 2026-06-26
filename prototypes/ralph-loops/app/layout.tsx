@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { initSchema } from "@/lib/schema";
+import "./globals.css";
 
 initSchema();
 

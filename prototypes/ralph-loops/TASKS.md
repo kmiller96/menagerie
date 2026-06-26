@@ -44,7 +44,7 @@ Implementation tasks grouped by phase.
 
 ## Phase 4 — Page & Components
 
-- [ ] Update `app/page.tsx`:
+- [x] Update `app/page.tsx`:
   - Compose form (textarea + submit button)
   - Search bar (controlled input, drives query param)
   - Tag filter pills (click to toggle, drives query param)
