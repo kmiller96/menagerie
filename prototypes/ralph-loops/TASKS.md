@@ -1,0 +1,67 @@
+# Tasks
+
+Implementation tasks grouped by phase.
+
+---
+
+## Phase 1 — Setup
+
+- [ ] Install production deps: `better-sqlite3`
+- [ ] Install dev deps: `@types/better-sqlite3`, `tailwindcss`, `postcss`,
+      `autoprefixer`
+- [ ] Configure Tailwind (`tailwind.config.ts`, `postcss.config.js`, add
+      `@tailwind` directives to `app/globals.css`)
+- [ ] Create `lib/db.ts` — initialise better-sqlite3, point at `.data/notes.db`,
+      expose a `db` singleton
+- [ ] Create `lib/schema.ts` — run `CREATE TABLE IF NOT EXISTS` for `notes`,
+      `tags`, `note_tags` with indexes; call on app startup
+
+---
+
+## Phase 2 — Tag utilities
+
+- [ ] Create `lib/tags.ts`:
+  - `parseTags(body: string): string[]` — extract `#[\w-]+`, strip `#`,
+    lowercase, deduplicate
+  - `syncTags(db, noteId: number, tagNames: string[]): void` — insert any
+    new tags into `tags`, reconcile `note_tags` (delete removed, insert new)
+  - `getAllTags(db): { id: number; name: string }[]` — list all known tags
+
+---
+
+## Phase 3 — Server Actions
+
+- [ ] `lib/actions.ts`:
+  - `createNote(body: string): Note` — parse tags, INSERT note, sync tags,
+    return note
+  - `editNote(id: number, body: string): Note` — parse tags, UPDATE note,
+    re-sync tags
+  - `deleteNote(id: number): void` — DELETE note (tags cleaned via FK CASCADE)
+
+---
+
+## Phase 4 — Page & Components
+
+- [ ] Update `app/page.tsx`:
+  - Compose form (textarea + submit button)
+  - Search bar (controlled input, drives query param)
+  - Tag filter pills (click to toggle, drives query param)
+  - Note list (server component that reads from DB with filters)
+- [ ] Compose form — calls `createNote`, resets on success
+- [ ] Search bar — filters list as user types (client-side nav or
+      `router.push` with search param)
+- [ ] Tag filter pills — fetch all tags, render as buttons, highlight active,
+      toggle inclusion; combine with search
+- [ ] Note list — iterate notes, render body, `created_at`, edit/delete buttons
+- [ ] Inline edit — clicking edit replaces body with textarea + save/cancel;
+      calls `editNote`
+- [ ] Delete with confirmation — confirm dialog, calls `deleteNote`
+
+---
+
+## Phase 5 — Polish
+
+- [ ] Highlight `#tags` in rendered note bodies (distinct colour, clickable)
+- [ ] Empty state — message when no notes yet, or no results match filter
+- [ ] Loading / pending states for Server Actions
+- [ ] Responsive layout, clean Tailwind styling throughout
