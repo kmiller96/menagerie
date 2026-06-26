@@ -1,12 +1,22 @@
 "use client";
 
-import { useActionState, useRef, useEffect } from "react";
+import { useActionState, useRef, useEffect, useState } from "react";
 import { createNoteAction } from "@/lib/actions";
 
 export function ComposeForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [state, formAction, isPending] = useActionState(createNoteAction, null);
+  const [showLoading, setShowLoading] = useState(false);
+
+  useEffect(() => {
+    if (isPending) {
+      const timer = setTimeout(() => setShowLoading(true), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowLoading(false);
+    }
+  }, [isPending]);
 
   useEffect(() => {
     if (state?.ok) {
@@ -38,7 +48,7 @@ export function ComposeForm() {
         disabled={isPending}
         className="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
       >
-        {isPending ? "Submitting..." : "Submit"}
+        {showLoading ? "Submitting..." : "Submit"}
       </button>
     </form>
   );
