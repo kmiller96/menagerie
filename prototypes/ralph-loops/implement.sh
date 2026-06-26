@@ -6,8 +6,8 @@ set -u
 #
 # The loop will continue until either:
 # 1. The user interrupts it (e.g., with Ctrl+C)
-# 2. The LLM returns a special exit token (`<EXIT />`) in its output,
-#    indicating that it has finished processing.
+# 2. The LLM returns `[[EXIT]]` (all done) or `[[CONTINUE]]` (more work remains)
+#    on its own line at the end of its output.
 # 3. Max iterations is reached (if specified).
 #
 # Usage:
@@ -15,7 +15,8 @@ set -u
 
 MAX_ITERATIONS="${1:-0}"
 ITERATION=0
-EXIT_TOKEN='<EXIT />'
+EXIT_TOKEN='[[EXIT]]'
+CONTINUE_TOKEN='[[CONTINUE]]'
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -56,7 +57,7 @@ while true; do
 
   tmpfile=$(mktemp)
 
-  opencode run "Read OVERVIEW.md for full project context, then read TASKS.md and implement exactly ONE currently incomplete task (marked with '- [ ]'). Do not implement more than one task per run. After implementing, update TASKS.md to mark the task as complete (replace '- [ ]' with '- [x]'). If after doing so there are no remaining incomplete tasks, output '${EXIT_TOKEN}' on its own line at the very end of your response. Otherwise, do not output '${EXIT_TOKEN}'." 2>&1 | tee "$tmpfile"
+  opencode run "Read OVERVIEW.md for full project context, then read TASKS.md and implement exactly ONE currently incomplete task (marked with '- [ ]'). Do not implement more than one task per run. After implementing, update TASKS.md to mark the task as complete (replace '- [ ]' with '- [x]'). At the very end of your response, output exactly one of these tokens on its own line: '${EXIT_TOKEN}' if all tasks are complete, or '${CONTINUE_TOKEN}' if there are still incomplete tasks remaining." 2>&1 | tee "$tmpfile"
 
   output=$(<"$tmpfile")
   rm -f "$tmpfile"
@@ -64,8 +65,11 @@ while true; do
   if echo "$output" | grep -qF "$EXIT_TOKEN"; then
     log "$GREEN" "DONE" "All tasks complete!"
     exit 0
+  elif echo "$output" | grep -qF "$CONTINUE_TOKEN"; then
+    log "$MAGENTA" "CONTINUE" "Starting next iteration..."
+  else
+    log "$RED" "ERROR" "Neither ${EXIT_TOKEN} nor ${CONTINUE_TOKEN} found in output."
+    exit 1
   fi
-
-  log "$MAGENTA" "CONTINUE" "Starting next iteration..."
 done
 
