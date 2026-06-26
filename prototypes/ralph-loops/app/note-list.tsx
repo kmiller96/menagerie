@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useTransition } from "react";
 import { editNote, deleteNote } from "@/lib/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -53,6 +53,7 @@ function NoteItem({
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState(note.body);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const tagNameToId = useMemo(
     () => new Map(allTags.map((t) => [t.name.toLowerCase(), t.id])),
@@ -91,9 +92,11 @@ function NoteItem({
   }
 
   async function handleSave() {
-    await editNote(note.id, body);
-    setEditing(false);
-    router.refresh();
+    startTransition(async () => {
+      await editNote(note.id, body);
+      setEditing(false);
+      router.refresh();
+    });
   }
 
   function handleCancel() {
@@ -102,8 +105,10 @@ function NoteItem({
   }
 
   async function handleDelete() {
-    await deleteNote(note.id);
-    router.refresh();
+    startTransition(async () => {
+      await deleteNote(note.id);
+      router.refresh();
+    });
   }
 
   return (
@@ -119,9 +124,10 @@ function NoteItem({
           <div className="flex gap-2">
             <button
               onClick={handleSave}
-              className="bg-green-500 text-white px-3 py-1 rounded text-sm"
+              disabled={isPending}
+              className="bg-green-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save
+              {isPending ? "Saving..." : "Save"}
             </button>
             <button
               onClick={handleCancel}
@@ -142,7 +148,8 @@ function NoteItem({
                   setBody(note.body);
                   setEditing(true);
                 }}
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isPending}
               >
                 edit
               </button>
@@ -150,13 +157,15 @@ function NoteItem({
                 <>
                   <button
                     onClick={handleDelete}
-                    className="text-red-600 font-bold"
+                    disabled={isPending}
+                    className="text-red-600 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Confirm delete?
+                    {isPending ? "Deleting..." : "Confirm delete?"}
                   </button>
                   <button
                     onClick={() => setConfirmDelete(false)}
-                    className="text-gray-500 hover:underline"
+                    disabled={isPending}
+                    className="text-gray-500 hover:underline disabled:opacity-50"
                   >
                     cancel
                   </button>
@@ -164,7 +173,8 @@ function NoteItem({
               ) : (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="text-red-500 hover:underline"
+                  disabled={isPending}
+                  className="text-red-500 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   del
                 </button>

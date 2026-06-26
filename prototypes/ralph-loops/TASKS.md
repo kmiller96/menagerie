@@ -65,5 +65,5 @@ Implementation tasks grouped by phase.
 
 - [x] Highlight `#tags` in rendered note bodies (distinct colour, clickable)
 - [x] Empty state — message when no notes yet, or no results match filter
-- [ ] Loading / pending states for Server Actions
+- [x] Loading / pending states for Server Actions
 - [ ] Responsive layout, clean Tailwind styling throughout
