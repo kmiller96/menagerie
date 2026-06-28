@@ -1,0 +1,5 @@
+# kanban/
+
+# NOTE: Usually `kanban-md` ignores the `kanban/` directory. But I want to keep
+# it here as it's useful for understanding the prototype without having to run 
+# the code locally.
