@@ -1,2 +1,7 @@
 /target
 /logs
+
+# Keep queue folders in Git without tracking queued work.
+/queue/**
+!/queue/**/
+!/queue/**/.gitkeep
