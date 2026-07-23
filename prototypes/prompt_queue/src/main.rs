@@ -1,17 +1,20 @@
 use std::{
     fs::{self, File},
     io::Write,
+    path::{Path, PathBuf},
     process::Command,
     thread,
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 
-use log::{error, info};
+use log::{debug, error, info, warn};
 
 const INVOCATION_INTERVAL: Duration = Duration::from_secs(10);
 
-const PROMPT: &str = "respond hello";
 const MODEL: &str = "opencode/deepseek-v4-flash-free";
+const TODO_DIRECTORY: &str = "queue/todo";
+const DOING_DIRECTORY: &str = "queue/doing";
+const DONE_DIRECTORY: &str = "queue/done";
 
 /// Removes terminal control sequences that do not belong in a plain-text log file.
 fn strip_ansi(input: &[u8]) -> Vec<u8> {
@@ -38,8 +41,40 @@ fn strip_ansi(input: &[u8]) -> Vec<u8> {
 // -- Subroutines -- //
 // ----------------- //
 
-/// Runs OpenCode with the configured prompt and model, saving its output to a timestamped log file.
-fn invoke_opencode() {
+/// Returns the next supported prompt file in a stable order.
+fn next_prompt() -> std::io::Result<Option<PathBuf>> {
+    let entries = fs::read_dir(TODO_DIRECTORY)?
+        .filter_map(Result::ok)
+        .map(|entry| entry.path())
+        .filter(|path| path.is_file())
+        .collect::<Vec<_>>();
+
+    let (mut prompts, invalid_files): (Vec<_>, Vec<_>) =
+        entries.into_iter().partition(|path| is_prompt_file(path));
+
+    if !invalid_files.is_empty() {
+        warn!(
+            "Found {} invalid files in {TODO_DIRECTORY}",
+            invalid_files.len()
+        );
+        for path in invalid_files {
+            debug!("Invalid prompt file: {}", path.display());
+        }
+    }
+
+    prompts.sort();
+    Ok(prompts.into_iter().next())
+}
+
+fn is_prompt_file(path: &Path) -> bool {
+    matches!(
+        path.extension().and_then(|extension| extension.to_str()),
+        Some("md" | "txt")
+    )
+}
+
+/// Runs OpenCode with a prompt, saving the prompt and output to a timestamped log file.
+fn invoke_opencode(prompt: &str, prompt_path: &Path) {
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("system clock is before the Unix epoch")
@@ -50,11 +85,15 @@ fn invoke_opencode() {
     info!("Invoking OpenCode at {timestamp}; writing output to {log_path}");
 
     let mut log_file = File::create(&log_path).expect("failed to create OpenCode log file");
-    writeln!(log_file, "Input prompt:\n{PROMPT}\n\nOutput:")
-        .expect("failed to write OpenCode log header");
+    writeln!(
+        log_file,
+        "Input prompt ({}):\n{prompt}\n\nOutput:",
+        prompt_path.display()
+    )
+    .expect("failed to write OpenCode log header");
 
     match Command::new("opencode")
-        .args(["run", "--model", MODEL, PROMPT])
+        .args(["run", "--model", MODEL, prompt])
         .output()
     {
         Ok(output) => {
@@ -74,9 +113,53 @@ fn invoke_opencode() {
     }
 }
 
+/// Atomically claims one prompt before processing it, so another runner cannot consume it.
+fn process_next_prompt() {
+    let Some(todo_path) = next_prompt().expect("failed to read the prompt queue") else {
+        return;
+    };
+    let filename = todo_path
+        .file_name()
+        .expect("prompt path does not have a filename");
+    let doing_path = Path::new(DOING_DIRECTORY).join(filename);
+
+    if let Err(error) = fs::rename(&todo_path, &doing_path) {
+        error!("Could not claim {}: {error}", todo_path.display());
+        return;
+    }
+
+    let prompt = match fs::read_to_string(&doing_path) {
+        Ok(prompt) => prompt,
+        Err(error) => {
+            error!("Could not read {}: {error}", doing_path.display());
+            return;
+        }
+    };
+
+    info!("Processing {}", doing_path.display());
+    invoke_opencode(&prompt, &doing_path);
+
+    let done_path = Path::new(DONE_DIRECTORY).join(filename);
+    if let Err(error) = fs::rename(&doing_path, &done_path) {
+        error!(
+            "OpenCode finished, but could not move {} to {}: {error}",
+            doing_path.display(),
+            done_path.display()
+        );
+        return;
+    }
+
+    info!(
+        "Completed {}; moved it to {}",
+        filename.to_string_lossy(),
+        done_path.display()
+    );
+}
+
 #[cfg(test)]
 mod tests {
-    use super::strip_ansi;
+    use super::{is_prompt_file, strip_ansi};
+    use std::path::Path;
 
     #[test]
     fn removes_ansi_sequences_from_output() {
@@ -84,6 +167,13 @@ mod tests {
             strip_ansi(b"hello\n\x1b[0m\n> build\n"),
             b"hello\n\n> build\n"
         );
+    }
+
+    #[test]
+    fn accepts_only_markdown_and_text_prompts() {
+        assert!(is_prompt_file(Path::new("prompt.md")));
+        assert!(is_prompt_file(Path::new("prompt.txt")));
+        assert!(!is_prompt_file(Path::new("prompt.json")));
     }
 }
 
@@ -94,14 +184,22 @@ mod tests {
 /// Repeatedly runs OpenCode, enforcing the configured minimum invocation interval.
 fn main() {
     fs::create_dir_all("logs").expect("failed to create logs directory");
+    fs::create_dir_all(TODO_DIRECTORY).expect("failed to create todo queue directory");
+    fs::create_dir_all(DOING_DIRECTORY).expect("failed to create doing queue directory");
+    fs::create_dir_all(DONE_DIRECTORY).expect("failed to create done queue directory");
 
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
         .target(env_logger::Target::Stdout)
         .init();
 
+    println!(
+        "Prompt queue is running. Add .txt or .md prompt files to {TODO_DIRECTORY}.\n\
+         Each prompt is moved to {DOING_DIRECTORY} while OpenCode runs, then to {DONE_DIRECTORY} when complete."
+    );
+
     loop {
         let started_at = Instant::now();
-        invoke_opencode();
+        process_next_prompt();
 
         if let Some(remaining) = INVOCATION_INTERVAL.checked_sub(started_at.elapsed()) {
             thread::sleep(remaining);
