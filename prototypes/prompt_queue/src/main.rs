@@ -88,7 +88,10 @@ fn invoke_opencode(prompt: &str, prompt_path: &Path) {
 
     let log_path = format!("logs/{timestamp}.log");
 
-    info!("Invoking OpenCode at {timestamp}; writing output to {log_path}");
+    info!(
+        "Starting OpenCode session for {}; writing output to {log_path}",
+        prompt_path.display()
+    );
 
     let mut log_file = File::create(&log_path).expect("failed to create OpenCode log file");
     writeln!(
@@ -210,9 +213,14 @@ fn main() {
          Each prompt is moved to {DOING_DIRECTORY} while OpenCode runs, then to {DONE_DIRECTORY} when complete."
     );
 
+    let mut loop_number = 0_u64;
+
     loop {
+        loop_number += 1;
+        info!("Starting loop {loop_number}");
         let started_at = Instant::now();
         process_next_prompt();
+        info!("Completed loop {loop_number}");
 
         if let Some(remaining) = INVOCATION_INTERVAL.checked_sub(started_at.elapsed()) {
             thread::sleep(remaining);
