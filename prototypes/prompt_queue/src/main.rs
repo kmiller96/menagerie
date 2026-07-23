@@ -12,9 +12,10 @@ use log::{debug, error, info, warn};
 const INVOCATION_INTERVAL: Duration = Duration::from_secs(10);
 
 const MODEL: &str = "opencode/deepseek-v4-flash-free";
-const TODO_DIRECTORY: &str = "queue/todo";
+const TRIAGE_DIRECTORY: &str = "queue/triage";
 const DOING_DIRECTORY: &str = "queue/doing";
 const DONE_DIRECTORY: &str = "queue/done";
+const BACKLOG_DIRECTORY: &str = "queue/backlog";
 
 /// Removes terminal control sequences that do not belong in a plain-text log file.
 fn strip_ansi(input: &[u8]) -> Vec<u8> {
@@ -43,7 +44,7 @@ fn strip_ansi(input: &[u8]) -> Vec<u8> {
 
 /// Returns the next supported prompt file in a stable order.
 fn next_prompt() -> std::io::Result<Option<PathBuf>> {
-    let entries = fs::read_dir(TODO_DIRECTORY)?
+    let entries = fs::read_dir(TRIAGE_DIRECTORY)?
         .filter_map(Result::ok)
         .map(|entry| entry.path())
         .filter(|path| path.is_file() && !is_hidden_file(path))
@@ -54,7 +55,7 @@ fn next_prompt() -> std::io::Result<Option<PathBuf>> {
 
     if !invalid_files.is_empty() {
         warn!(
-            "Found {} invalid files in {TODO_DIRECTORY}",
+            "Found {} invalid files in {TRIAGE_DIRECTORY}",
             invalid_files.len()
         );
         for path in invalid_files {
@@ -122,37 +123,31 @@ fn invoke_opencode(prompt: &str, prompt_path: &Path) {
     }
 }
 
-/// Atomically claims one prompt before processing it, so another runner cannot consume it.
+/// Processes the next prompt in triage, then records it in done.
 fn process_next_prompt() {
-    let Some(todo_path) = next_prompt().expect("failed to read the prompt queue") else {
+    let Some(triage_path) = next_prompt().expect("failed to read the prompt queue") else {
         return;
     };
-    let filename = todo_path
+    let filename = triage_path
         .file_name()
         .expect("prompt path does not have a filename");
-    let doing_path = Path::new(DOING_DIRECTORY).join(filename);
 
-    if let Err(error) = fs::rename(&todo_path, &doing_path) {
-        error!("Could not claim {}: {error}", todo_path.display());
-        return;
-    }
-
-    let prompt = match fs::read_to_string(&doing_path) {
+    let prompt = match fs::read_to_string(&triage_path) {
         Ok(prompt) => prompt,
         Err(error) => {
-            error!("Could not read {}: {error}", doing_path.display());
+            error!("Could not read {}: {error}", triage_path.display());
             return;
         }
     };
 
-    info!("Processing {}", doing_path.display());
-    invoke_opencode(&prompt, &doing_path);
+    info!("Processing {}", triage_path.display());
+    invoke_opencode(&prompt, &triage_path);
 
     let done_path = Path::new(DONE_DIRECTORY).join(filename);
-    if let Err(error) = fs::rename(&doing_path, &done_path) {
+    if let Err(error) = fs::rename(&triage_path, &done_path) {
         error!(
             "OpenCode finished, but could not move {} to {}: {error}",
-            doing_path.display(),
+            triage_path.display(),
             done_path.display()
         );
         return;
@@ -200,17 +195,19 @@ mod tests {
 /// Repeatedly runs OpenCode, enforcing the configured minimum invocation interval.
 fn main() {
     fs::create_dir_all("logs").expect("failed to create logs directory");
-    fs::create_dir_all(TODO_DIRECTORY).expect("failed to create todo queue directory");
+    fs::create_dir_all(TRIAGE_DIRECTORY).expect("failed to create triage queue directory");
     fs::create_dir_all(DOING_DIRECTORY).expect("failed to create doing queue directory");
     fs::create_dir_all(DONE_DIRECTORY).expect("failed to create done queue directory");
+    fs::create_dir_all(BACKLOG_DIRECTORY).expect("failed to create backlog queue directory");
 
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
         .target(env_logger::Target::Stdout)
         .init();
 
     println!(
-        "Prompt queue is running. Add .txt or .md prompt files to {TODO_DIRECTORY}.\n\
-         Each prompt is moved to {DOING_DIRECTORY} while OpenCode runs, then to {DONE_DIRECTORY} when complete."
+        "Prompt queue is running. Add .txt or .md prompt files to {TRIAGE_DIRECTORY}.\n\
+         Prompts in triage are processed, then moved to {DONE_DIRECTORY}.\n\
+         {DOING_DIRECTORY} and {BACKLOG_DIRECTORY} are not processed."
     );
 
     let mut loop_number = 0_u64;
