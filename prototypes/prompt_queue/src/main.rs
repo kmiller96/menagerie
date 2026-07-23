@@ -46,7 +46,7 @@ fn next_prompt() -> std::io::Result<Option<PathBuf>> {
     let entries = fs::read_dir(TODO_DIRECTORY)?
         .filter_map(Result::ok)
         .map(|entry| entry.path())
-        .filter(|path| path.is_file())
+        .filter(|path| path.is_file() && !is_hidden_file(path))
         .collect::<Vec<_>>();
 
     let (mut prompts, invalid_files): (Vec<_>, Vec<_>) =
@@ -64,6 +64,12 @@ fn next_prompt() -> std::io::Result<Option<PathBuf>> {
 
     prompts.sort();
     Ok(prompts.into_iter().next())
+}
+
+fn is_hidden_file(path: &Path) -> bool {
+    path.file_name()
+        .and_then(|filename| filename.to_str())
+        .is_some_and(|filename| filename.starts_with('.'))
 }
 
 fn is_prompt_file(path: &Path) -> bool {
@@ -158,7 +164,7 @@ fn process_next_prompt() {
 
 #[cfg(test)]
 mod tests {
-    use super::{is_prompt_file, strip_ansi};
+    use super::{is_hidden_file, is_prompt_file, strip_ansi};
     use std::path::Path;
 
     #[test]
@@ -174,6 +180,13 @@ mod tests {
         assert!(is_prompt_file(Path::new("prompt.md")));
         assert!(is_prompt_file(Path::new("prompt.txt")));
         assert!(!is_prompt_file(Path::new("prompt.json")));
+    }
+
+    #[test]
+    fn ignores_hidden_files() {
+        assert!(is_hidden_file(Path::new(".gitkeep")));
+        assert!(is_hidden_file(Path::new(".draft.md")));
+        assert!(!is_hidden_file(Path::new("prompt.md")));
     }
 }
 
