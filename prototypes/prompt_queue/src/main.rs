@@ -12,10 +12,10 @@ use log::{debug, error, info, warn};
 const INVOCATION_INTERVAL: Duration = Duration::from_secs(10);
 
 const MODEL: &str = "opencode/deepseek-v4-flash-free";
-const TRIAGE_DIRECTORY: &str = "queue/00-triage";
-const DOING_DIRECTORY: &str = "queue/01-doing";
-const DONE_DIRECTORY: &str = "queue/02-done";
-const BACKLOG_DIRECTORY: &str = "queue/03-backlog";
+const BACKLOG_DIRECTORY: &str = "queue/00-backlog";
+const TRIAGE_DIRECTORY: &str = "queue/01-triage";
+const DOING_DIRECTORY: &str = "queue/02-doing";
+const DONE_DIRECTORY: &str = "queue/03-done";
 
 /// Removes terminal control sequences that do not belong in a plain-text log file.
 fn strip_ansi(input: &[u8]) -> Vec<u8> {
